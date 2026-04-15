@@ -69,11 +69,17 @@ Requirements:
       prompt,
       size: "1024x1024",
       n: 3,
-      images: [
-    {
-      image_url: image_url
-    }
-    ]
+      //
+input: [{
+        role: "user",
+        content: [
+            {
+                type: "input_image",
+                image_url: image_url,
+            },
+        ],
+    }]
+      
 
     });
 
