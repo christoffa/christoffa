@@ -16,16 +16,7 @@ app.get("/", (req, res) => {
 
 app.post("/generate-preview", async (req, res) => {
   try {
-    const { text } = "";//req.body;
-    console.log("TEXT:", text);
-
-    res.json({ ok: true });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "fail" });
-  }
-
-
+    const { text } = req.body;
 
     const prompt = `
 Create ONE single modern comic-style cartoon image.
@@ -55,7 +46,7 @@ Requirements:
 `;
 
     const result = await openai.images.generate({
-      model: "gpt-image-1.5",
+      model: "gpt-image-1",
       prompt,
       size: "1024x1024",
       n: 3
@@ -68,7 +59,7 @@ Requirements:
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Image generation failed"});
+    res.status(500).json({ error: "Image generation failed" });
   }
 });
 
