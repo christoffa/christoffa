@@ -57,7 +57,7 @@ Requirements:
     //const images = result.data.map(img => img.b64_json);
     const images = result.data.map(img => ({
   base64: img.b64_json,
-  url: `data:image/png;base64,${img.b64_json}`
+  url: `data:image/png;base64,${img.url}`
 }));
     res.json({ images });
 
