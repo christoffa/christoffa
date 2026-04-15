@@ -24,7 +24,7 @@ app.post("/generate-preview", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "fail" });
   }
-});
+
 
 
     const prompt = `
