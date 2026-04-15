@@ -35,6 +35,7 @@ app.post("/generate-preview", async (req, res) => {
   try {
     //const { text } = req.body;
     const text = req.body?.text || "Default text";
+    const image_url = req.body?.image_url || "";
 
     const prompt = `
 Create ONE single modern comic-style cartoon image.
@@ -67,7 +68,13 @@ Requirements:
       model: "gpt-image-1.5",
       prompt,
       size: "1024x1024",
-      n: 3
+      n: 3,
+      images: [
+    {
+      image_url: image_url
+    }
+    ]
+
     });
 
     // Extract base64 images
