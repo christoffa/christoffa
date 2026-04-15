@@ -17,6 +17,14 @@ app.get("/", (req, res) => {
 app.post("/generate-preview", async (req, res) => {
   try {
     const { text } = req.body;
+    console.log("TEXT:", text);
+
+    res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "fail" });
+  }
+});
 
     const prompt = `
 Create ONE single modern comic-style cartoon image.
