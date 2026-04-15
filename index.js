@@ -46,7 +46,7 @@ Requirements:
 `;
 
     const result = await openai.images.generate({
-      model: "gpt-image-1",
+      model: "gpt-image-1.5",
       prompt,
       size: "1024x1024",
       n: 3
