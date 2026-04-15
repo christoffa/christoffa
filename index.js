@@ -59,7 +59,7 @@ Requirements:
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Image generation failed" });
+    res.status(500).json({ error: "Image generation failed"}, errorCode: 0);
   }
 });
 
