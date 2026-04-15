@@ -2,6 +2,23 @@ import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
 
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+const uploadImage = async (base64) => {
+  return await cloudinary.uploader.upload(
+    `data:image/png;base64,${base64}`,
+    {
+      folder: "toffa"
+    }
+  );
+};
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
@@ -59,7 +76,16 @@ Requirements:
   base64: img.b64_json,
   url: `data:image/png;base64,${img.url}`
 }));
+    //
+    const uploads = await Promise.all(
+      result.data.map(img => uploadImage(img.b64_json))
+    );
+    
+    const images = uploads.map(u => u.secure_url);
+    
     res.json({ images });
+    //
+    //res.json({ images });
 
   } catch (error) {
     console.error(error);
