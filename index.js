@@ -26,6 +26,7 @@ app.post("/generate-preview", async (req, res) => {
   }
 });
 
+
     const prompt = `
 Create ONE single modern comic-style cartoon image.
 
