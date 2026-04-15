@@ -65,8 +65,7 @@ Requirements:
 `;
 
     //openai.responses.create
-    //const result = await openai.images.generate({
-    const result = await openai.responses.create({
+    const result = await openai.images.generate({
       model: "gpt-image-1.5",
       prompt,
       size: "1024x1024",
