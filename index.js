@@ -24,7 +24,7 @@ app.post(
       // 👉 These are buffers
       console.log(uploadedImage.buffer);
       //upload to Cloudinary
-      cont uploadedURL = await cloudinary.uploader.upload(file, { upload_preset: "profile_photos" });
+      const uploadedURL = await cloudinary.uploader.upload(file, { upload_preset: "profile_photos" });
 
       res.json({ ok: true });
     } catch (err) {
