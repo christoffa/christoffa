@@ -113,7 +113,7 @@ app.post(
       - Watermark "created at toffa.ai"
       `;
       //SEND TO OpenAI
-      const result = await openai.images.generate({
+      const result = await openai.images.edit({
       model: "gpt-image-1.5",
       prompt,
       size: "1024x1024",
