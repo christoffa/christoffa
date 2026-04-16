@@ -135,7 +135,7 @@ const result = await openai.responses.create({
       const result = await openai.responses.edit({
       model: "gpt-image-1.5",
       prompt,
-      n: 3,
+      //n: 3,
       input: [
         {
           role: "user",
