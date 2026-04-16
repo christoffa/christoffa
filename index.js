@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import OpenAI from "openai";
+import OpenAI from "openai"; 
 
 import { v2 as cloudinary } from "cloudinary";
 
