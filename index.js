@@ -134,9 +134,9 @@ app.post(
       ]
     });
 
-      res.json({ result });
       
-      /* NEED UPDATE FOR MODEL
+      
+    // NEED UPDATE FOR MODEL
     //upload result images to cloudinary
       const uploads = await Promise.all(
       result.data.map(img =>
