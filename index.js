@@ -132,7 +132,7 @@ const result = await openai.responses.create({
 });
       */
       //SEND TO OpenAI
-      const result = await openai.responses.openai.create({
+      const result = await openai.responses.create({
       model: "gpt-image-1.5",
       prompt,
       //n: 3,
