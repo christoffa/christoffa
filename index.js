@@ -119,7 +119,6 @@ app.post(
       n: 3,
       input: [
         {
-          role: "user",
           content: [
             {
               type: "input_text",
