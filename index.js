@@ -57,7 +57,7 @@ app.get("/", (req, res) => {
 app.post(
   "/generate-preview",
   upload.fields([
-    { name: "image", maxCount: 1 },
+    { name: "image", maxCount: 1 }
   ]),
   async (req, res) => {
     try {
