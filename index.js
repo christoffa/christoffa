@@ -70,13 +70,18 @@ app.post(
       if (!imageFile ) {
         return res.status(400).json({ error: "Missing image" });
       }
+      console.log("imageFile:", imageFile);
       //convert to base64
       const imageBase64 = imageFile.buffer.toString("base64");
+      console.log("imageBase64:", imageBase64);
+      
       //upload to cloudinary
       const imageUpload = await cloudinary.uploader.upload(
   `data:image/png;base64,${imageBase64}`,
   { folder: "toffa/faces" }
 );
+      console.log("imageUpload:", imageUpload);
+      
 //BUILD PROMPT
       const prompt = `
       Create ONE single modern comic-style cartoon image.
