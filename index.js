@@ -146,7 +146,7 @@ const result = await openai.responses.create({
               text: prompt        },
             {
               type: "input_image",
-              image_url: imageUrl // from Cloudinary
+              image_url: imageUpload // from Cloudinary
             }
           ]
         }
