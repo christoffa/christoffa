@@ -13,9 +13,7 @@ cloudinary.config({
 const app = express();
 app.use(cors());
 //app.use(express.json());
-//app.use(express.json({ limit: "15mb" }));
-app.use(express.json({ limit: "25mb" }));
-app.use(express.urlencoded({ limit: "25mb", extended: true }));
+app.use(express.json({ limit: "10mb" }));
 
 app.post(
   "/upload-user-image",
@@ -26,6 +24,7 @@ app.post(
     try {
       const uploadedImage = req.files["uploadedImage"][0];
       const { text } = req.body;
+      const image_url = req.body?.image_url || "";
 
       // 👉 These are buffers
       console.log(uploadedImage.buffer);
@@ -71,22 +70,103 @@ const openai = new OpenAI({
 app.get("/", (req, res) => {
   res.send("Toffa backend is running 🚀");
 });
+
+
 //updated /generate-preview to accept base64 image
 app.post(
   "/generate-preview",
   upload.fields([
-    { name: "userUploadedImage", maxCount: 1 }
+    { name: "image", maxCount: 1 },
   ]),
   async (req, res) => {
     try {
-      const userUploadedImage = req.files?.userUploadedImage?.[0];
+      console.log("FILES:", req.files);
+      console.log("BODY:", req.body);
+
+      const imageFile = req.files?.image?.[0];
+      const text = req.body?.text;
+
+      if (!imageFile ) {
+        return res.status(400).json({ error: "Missing image" });
+      }
+      //convert to base64
+      const imageBase64 = imageFile.buffer.toString("base64");
+      //upload to cloudinary
+      const imageUpload = await cloudinary.uploader.upload(
+  `data:image/png;base64,${imageBase64}`,
+  { folder: "toffa/faces" }
+);
+//BUILD PROMPT
+      const prompt = `
+      Create ONE single modern comic-style cartoon image.
+      
+      Each generated image should have a slightly different pose and expression.
+      
+      Scene: Couple in a cosy home setting.
+      
+      Characters:
+      - Female: arms crossed, slightly annoyed but warm
+      - Male: confused, adjusting hearing aid
+      
+      IMPORTANT:
+      Use the uploaded images as the exact facial reference for each character.
+      Preserve likeness while rendering in a modern comic style.
+      
+      Speech bubble (female):
+      "${text}"
+      
+      Include:
+      - Behind-the-ear hearing aid (Oticon style)
+      
+      Tone:
+      Light, playful humour
+      
+      Requirements:
+      - Square (1:1)
+      - Clean composition
+      - Watermark "created at toffa.ai"
+      `;
+      //SEND TO OpenAI
+      const result = await openai.images.generate({
+      model: "gpt-image-1.5",
+      prompt,
+      size: "1024x1024",
+      n: 3,
+      images: [
+        { image_url: imageUpload.secure_url }
+      ]
+    });
+    //upload result images to cloudinary
+      const uploads = await Promise.all(
+      result.data.map(img =>
+        cloudinary.uploader.upload(
+          `data:image/png;base64,${img.b64_json}`,
+          { folder: "toffa/previews" }
+        )
+      )
+    );
+    
+    const images = uploads.map(u => u.secure_url);
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({ error: "failed" });
+        }
+      }
+    );
+    
+
+
+
+/*  
+app.post("/generate-preview", async (req, res) => {
+    try {
+      const image_url = req.body?.image_url || "";
       const text = req.body?.text || "So… are you ignoring me or didn’t you hear me?";
 
-      if (!userUploadedImage ) {
-        return res.status(400).json({ error: "Missing userUploaded images" });
+      if (!image_url ) {
+        return res.status(400).json({ error: "Missing image_url" });
       }
 
-      const userUploadedImageBase64 = userUploadedImage.buffer.toString("base64");
       
       const userUpload = await cloudinary.uploader.upload(
         `data:image/png;base64,${userUploadedImageBase64}`,
@@ -143,7 +223,7 @@ Square format. Watermark "created at toffa.ai"
     }
   }
 );
-//
+*/
 /*
 app.post("/generate-preview", async (req, res) => {
   try {
