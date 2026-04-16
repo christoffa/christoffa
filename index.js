@@ -112,25 +112,7 @@ app.post(
       - Clean composition
       - Watermark "created at toffa.ai"
       `;
-      /*
-const result = await openai.responses.create({
-  model: "gpt-4.1",
-  input: [
-    {
-      role: "user",
-      content: [
-        {
-          type: "input_text",
-          text: prompt        },
-        {
-          type: "input_image",
-          image_url: imageUrl // from Cloudinary
-        }
-      ]
-    }
-  ]
-});
-      */
+     
       //SEND TO OpenAI
       const result = await openai.responses.create({
       model: "gpt-5.4",
@@ -151,18 +133,10 @@ const result = await openai.responses.create({
         }
       ]
     });
-      /*
-      const result = await openai.images.edit({
-      model: "gpt-image-1.5",
-      prompt,
-      size: "1024x1024",
-      n: 3,
-      images: [
-        { image_url: imageUpload.secure_url }
-      ]
-    });
-    */
+
+      res.json({ result });
       
+      /* NEED UPDATE FOR MODEL
     //upload result images to cloudinary
       const uploads = await Promise.all(
       result.data.map(img =>
@@ -181,7 +155,7 @@ const result = await openai.responses.create({
       }
     );
     
-
+*******/
 
 
 /*  
