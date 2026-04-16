@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import OpenAI from "openai"; 
+import multer from "multer";
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 import { v2 as cloudinary } from "cloudinary";
 
