@@ -114,9 +114,9 @@ app.post(
       `;
      
       //SEND TO OpenAI
-      const result = await openai.responses.create({
-      model: "gpt-5.4",
-      //n: 3,
+      const result = await openai.images.edits({
+      model: "gpt-image-1",
+      n: 3,
       input: [
         {
           role: "user",
