@@ -135,7 +135,6 @@ const result = await openai.responses.create({
       const result = await openai.responses.create({
       model: "gpt-image-1.5",
       prompt,
-      size: "1024x1024",
       n: 3,
       input: [
         {
