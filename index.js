@@ -134,7 +134,6 @@ const result = await openai.responses.create({
       //SEND TO OpenAI
       const result = await openai.responses.create({
       model: "gpt-image-1.5",
-      prompt,
       //n: 3,
       input: [
         {
@@ -142,7 +141,8 @@ const result = await openai.responses.create({
           content: [
             {
               type: "input_text",
-              text: prompt        },
+              text: prompt        
+            },
             {
               type: "input_image",
               image_url: imageUpload.url // from Cloudinary
