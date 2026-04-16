@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 });
 
 
-//updated /generate-preview to accept base64 image
+//updated /generate-preview to accept files
 app.post(
   "/generate-preview",
   upload.fields([
@@ -112,7 +112,47 @@ app.post(
       - Clean composition
       - Watermark "created at toffa.ai"
       `;
+      /*
+const result = await openai.responses.create({
+  model: "gpt-4.1",
+  input: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "input_text",
+          text: prompt        },
+        {
+          type: "input_image",
+          image_url: imageUrl // from Cloudinary
+        }
+      ]
+    }
+  ]
+});
+      */
       //SEND TO OpenAI
+      const result = await openai.responses.create({
+      model: "gpt-image-1.5",
+      prompt,
+      size: "1024x1024",
+      n: 3,
+      input: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text: prompt        },
+            {
+              type: "input_image",
+              image_url: imageUrl // from Cloudinary
+            }
+          ]
+        }
+      ]
+    });
+      /*
       const result = await openai.images.edit({
       model: "gpt-image-1.5",
       prompt,
@@ -122,6 +162,8 @@ app.post(
         { image_url: imageUpload.secure_url }
       ]
     });
+    */
+      
     //upload result images to cloudinary
       const uploads = await Promise.all(
       result.data.map(img =>
