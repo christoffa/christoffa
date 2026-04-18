@@ -16,7 +16,7 @@ cloudinary.config({
 });
 
 const app = express();
-//const cors = require('cors');
+
 
 app.use(cors({
   origin: 'https://toffa.ai',
@@ -26,21 +26,6 @@ app.use(cors({
 //app.use(express.json());
 app.use(express.json({ limit: "10mb" }));
 
-
-//
-
-/*
-return await cloudinary.uploader.unsigned_upload(
-  `data:image/png;base64,${base64}`,
-  "your_unsigned_preset_name"
-);
-
-// Flow A: upload with preset “profile_photos”
-await cloudinary.uploader.upload(file, { upload_preset: "profile_photos" });
-
-// Flow B: upload with preset “product_images”
-await cloudinary.uploader.upload(file, { upload_preset: "product_images" });
-*/
 
 const uploadImage = async (base64) => {
   return await cloudinary.uploader.upload(
@@ -70,7 +55,7 @@ app.post(
   async (req, res) => {
     try {
 
-      console.log("Whai i got:", req);
+      //console.log("Whai i got:", req);
       console.log("FILES:", req.files);
       console.log("BODY:", req.body);
 
@@ -90,7 +75,7 @@ app.post(
   `data:image/png;base64,${imageBase64}`,
   { folder: "toffa/faces" }
 );
-      console.log("imageUpload:", imageUpload);
+      //console.log("imageUpload:", imageUpload);
       
 //BUILD PROMPT
       const prompt = `
