@@ -16,7 +16,7 @@ cloudinary.config({
 });
 
 const app = express();
-const cors = require('cors');
+//const cors = require('cors');
 
 app.use(cors({
   origin: 'https://christoffa.onrender.com',
