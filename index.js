@@ -19,7 +19,7 @@ const app = express();
 //const cors = require('cors');
 
 app.use(cors({
-  origin: 'https://christoffa.onrender.com',
+  origin: 'https://toffa.ai',
   methods: ['GET', 'POST'],
   credentials: true
 }));
