@@ -16,8 +16,10 @@ cloudinary.config({
 });
 
 const app = express();
-app.use(cors());
-  origin: 'ttps://christoffa.onrender.com/generate-preview', // 👈 important
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'https://christoffa.onrender.com',
   methods: ['GET', 'POST'],
   credentials: true
 }));
