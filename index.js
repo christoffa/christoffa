@@ -31,7 +31,7 @@ const uploadImage = async (base64) => {
   return await cloudinary.uploader.upload(
     `data:image/png;base64,${base64}`,
     {
-      folder: "toffa"
+      folder: "toffa" 
     }
   );
 };
