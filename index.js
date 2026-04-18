@@ -4,12 +4,6 @@ import OpenAI from "openai";
 import multer from "multer";
 
 //
-const cors = require('cors');
-app.use(cors({
-  origin: 'ttps://christoffa.onrender.com/generate-preview', // 👈 important
-  methods: ['GET', 'POST'],
-  credentials: true
-}));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -23,6 +17,10 @@ cloudinary.config({
 
 const app = express();
 app.use(cors());
+  origin: 'ttps://christoffa.onrender.com/generate-preview', // 👈 important
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 //app.use(express.json());
 app.use(express.json({ limit: "10mb" }));
 
