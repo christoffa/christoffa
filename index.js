@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import multer from "multer";
 
 //
+const cors = require('cors');
 app.use(cors({
   origin: 'ttps://christoffa.onrender.com/generate-preview', // 👈 important
   methods: ['GET', 'POST'],
