@@ -69,6 +69,8 @@ app.post(
   ]),
   async (req, res) => {
     try {
+
+      console.log("Whai i got:", req);
       console.log("FILES:", req.files);
       console.log("BODY:", req.body);
 
