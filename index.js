@@ -121,7 +121,7 @@ app.post(
             },
             {
               type: "input_image",
-              image_url: imageUpload.url // from Cloudinary
+              image: imageFile//image_url: imageUpload.url // from Cloudinary imageFile
             }
           ]
         }
