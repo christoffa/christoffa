@@ -3,6 +3,13 @@ import cors from "cors";
 import OpenAI from "openai"; 
 import multer from "multer";
 
+//
+app.use(cors({
+  origin: 'ttps://christoffa.onrender.com/generate-preview', // 👈 important
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
 const upload = multer({ storage: multer.memoryStorage() });
 
 import { v2 as cloudinary } from "cloudinary";
