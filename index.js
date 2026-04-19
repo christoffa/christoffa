@@ -116,7 +116,7 @@ app.post(
     form.append("prompt", prompt);
     form.append("n", "3");
     form.append("size", "512x512");
-    form.append("image", req.files.image);
+    form.append("image", req.files.image.[0]);
 
     const response = await fetch("https://api.openai.com/v1/images/edits", {
       method: "POST",
