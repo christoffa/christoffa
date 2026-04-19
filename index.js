@@ -116,9 +116,11 @@ app.post(
       const result = await openai.images.generate({
         model: "gpt-image-1",
         n:3,
+        
         input: [
           {
             role: "user",
+            prompt: prompt,
             content: [
               { type: "input_text", text: prompt },
               { type: "input_image", image: imageFile }
