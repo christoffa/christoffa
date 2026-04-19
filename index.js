@@ -117,6 +117,8 @@ app.post(
       input: imageFile
     });
 
+      console.log("openai response:", result);
+
       
       
     // NEED UPDATE FOR MODEL
