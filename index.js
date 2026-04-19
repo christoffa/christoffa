@@ -119,7 +119,7 @@ app.post(
         n: 3,
         size: "512x512",
         //image: fs.createReadStream(req.file.path),
-        image: imageFile.buffer, // 👈 THIS is correct in v6
+        input_image: imageFile.buffer, // 👈 THIS is correct in v6
       });
       /*
       const result = await openai.images.generate({
