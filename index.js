@@ -126,7 +126,7 @@ const openaiImages = await Promise.all(
       
       //SEND TO OpenAI
       const result = await openai.images.edit({
-      model: "gpt-image-1",
+      model: "gpt-image-1.5",
       n: 3,//<< NOT SURE SUPPORTED
       image: imageFile,
       prompt: prompt
