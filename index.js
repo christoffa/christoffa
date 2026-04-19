@@ -112,7 +112,7 @@ app.post(
       
       //SEND TO OpenAI
       const result = await openai.images.edit({
-      model: model: "gpt-image-1.5",
+      model: "gpt-image-1.5",
       //n: 3,
       image: imageFile,
       prompt: prompt
