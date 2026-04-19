@@ -108,30 +108,32 @@ app.post(
       - Watermark "created at toffa.ai"
       `;
 
-/*
-const imageFiles = [
-    imageUpload.url
-];
 
-const openaiImages = await Promise.all(
-    imageFiles.map(async (file) =>
-        await toFile(fs.createReadStream(file), null, {
-            type: "image/png",
-        })
-    ),
-);
-*/
 
 
       
       //SEND TO OpenAI
+      const result = await openai.images.generate({
+        model: "gpt-image-1",
+        n:3,
+        input: [
+          {
+            role: "user",
+            content: [
+              { type: "input_text", text: prompt },
+              { type: "input_image", image: imageFile },
+            ],
+          },
+        ],
+      });
+      /*
       const result = await openai.images.generate({
       model: "gpt-image-1",
       n: 3,
       prompt: prompt,
       input_image: req.files,//imageFile
     });
-
+*/
       console.log("openai response:", result);
 
       
