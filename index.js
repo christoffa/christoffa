@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
-import OpenAI from "openai"; 
+//import OpenAI from "openai"; 
 //import OpenAI, { toFile } from "openai";//<<<<<
 import multer from "multer";
 import fs from "fs";//<<<<<
-
+import fetch from "node-fetch";
+import FormData from "form-data";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -36,11 +37,11 @@ const uploadImage = async (base64) => {
     }
   );
 };
-
+/*
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
-
+*/
 
 app.get("/", (req, res) => {
   res.send("Toffa backend is running 🚀");
@@ -109,9 +110,25 @@ app.post(
       `;
 
 
+      //FORM DATA
+     const form = new FormData();
+    form.append("model", "gpt-image-1.5"); // or dall-e-2 if needed
+    form.append("prompt", prompt);
+    form.append("n", "3");
+    form.append("size", "512x512");
+    form.append("image", fs.createReadStream(req.file));
 
+    const response = await fetch("https://api.openai.com/v1/images/edits", {
+      method: "POST",
+      headers: {
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: form,
+    });
 
-      
+    
+
+      /*
       //SEND TO OpenAI
       const result = await openai.images.generate({
         model: "gpt-image-1",
@@ -121,6 +138,9 @@ app.post(
         //image: fs.createReadStream(req.file.path),
         input_image: imageFile.buffer, // 👈 THIS is correct in v6
       });
+      */
+
+      
       /*
       const result = await openai.images.generate({
       model: "gpt-image-1",
