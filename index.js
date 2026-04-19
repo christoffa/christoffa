@@ -114,7 +114,8 @@ app.post(
       const result = await openai.images.edit({
       model: "gpt-image-1.5",
       n: 3,
-      image: imageFile
+      image: imageFile,
+      prompt: prompt
     });
 
       console.log("openai response:", result);
