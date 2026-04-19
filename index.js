@@ -112,8 +112,8 @@ app.post(
       
       //SEND TO OpenAI
       const result = await openai.images.edit({
-      model: "dall-e-2",//"gpt-image-1.5",
-      n: 3,
+      model: model: "gpt-image-1.5",
+      //n: 3,
       image: imageFile,
       prompt: prompt
     });
