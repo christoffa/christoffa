@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-//import OpenAI from "openai"; 
-import OpenAI, { toFile } from "openai";//<<<<<
+import OpenAI from "openai"; 
+//import OpenAI, { toFile } from "openai";//<<<<<
 import multer from "multer";
 import fs from "fs";//<<<<<
 
@@ -108,7 +108,7 @@ app.post(
       - Watermark "created at toffa.ai"
       `;
 
-
+/*
 const imageFiles = [
     imageUpload.url
 ];
@@ -120,7 +120,7 @@ const openaiImages = await Promise.all(
         })
     ),
 );
-
+*/
 
 
       
@@ -128,7 +128,7 @@ const openaiImages = await Promise.all(
       const result = await openai.images.edit({
       model: "gpt-image-1",
       n: 3,//<< NOT SURE SUPPORTED
-      image: openaiImages,
+      image: imageFile,
       prompt: prompt
     });
 
