@@ -111,9 +111,9 @@ app.post(
       
       
       //SEND TO OpenAI
-      const result = await openai.images.edit({
+      const result = await openai.images.generate({//const result = await openai.images.edit({
       model: "gpt-image-1",
-      //n: 3,
+      n: 3,
       image: imageFile,
       prompt: prompt
     });
