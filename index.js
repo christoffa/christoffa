@@ -115,18 +115,10 @@ app.post(
       //SEND TO OpenAI
       const result = await openai.images.generate({
         model: "gpt-image-1",
-        n:3,
-        
-        input: [
-          {
-            role: "user",
-            prompt: prompt,
-            content: [
-              { type: "input_text", text: prompt },
-              { type: "input_image", image: imageFile }
-              ],
-          },
-        ],
+        prompt: prompt,
+        n: 3,
+        size: "512x512",
+        image: fs.createReadStream(req.file.path), // 👈 THIS is correct in v6
       });
       /*
       const result = await openai.images.generate({
