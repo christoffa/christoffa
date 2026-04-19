@@ -118,7 +118,7 @@ app.post(
         prompt: prompt,
         n: 3,
         size: "512x512",
-        image: imageFile, // 👈 THIS is correct in v6
+        image: imageUpload.url, // 👈 THIS is correct in v6
       });
       /*
       const result = await openai.images.generate({
