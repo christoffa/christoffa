@@ -118,7 +118,8 @@ app.post(
         prompt: prompt,
         n: 3,
         size: "512x512",
-        image: imageUpload.url, // 👈 THIS is correct in v6
+        image: fs.createReadStream(req.file.path),
+        //image: imageUpload.url, // 👈 THIS is correct in v6
       });
       /*
       const result = await openai.images.generate({
