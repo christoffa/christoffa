@@ -1,9 +1,37 @@
 import express from "express";
 import cors from "cors";
-import OpenAI from "openai"; 
+//import OpenAI from "openai"; 
+import OpenAI, { toFile } from "openai";//<<<<<
 import multer from "multer";
+import fs from "fs";//<<<<<
+/*
+import fs from "fs";
+import OpenAI, { toFile } from "openai";
 
-//
+const client = new OpenAI();
+
+const imageFiles = [
+    "bath-bomb.png",
+    "body-lotion.png",
+    "incense-kit.png",
+    "soap.png",
+];
+
+const images = await Promise.all(
+    imageFiles.map(async (file) =>
+        await toFile(fs.createReadStream(file), null, {
+            type: "image/png",
+        })
+    ),
+);
+
+const rsp = await client.images.edit({
+    model: "gpt-image-1.5",
+    image: images,
+    prompt: "Create a lovely gift basket with these four items in it",
+});
+
+*/
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -44,7 +72,6 @@ const openai = new OpenAI({
 app.get("/", (req, res) => {
   res.send("Toffa backend is running 🚀");
 });
-
 
 //updated /generate-preview to accept files
 app.post(
@@ -108,13 +135,27 @@ app.post(
       - Watermark "created at toffa.ai"
       `;
 
-      
+
+const imageFiles = [
+    imageUpload.url
+];
+
+const images = await Promise.all(
+    imageFiles.map(async (file) =>
+        await toFile(fs.createReadStream(file), null, {
+            type: "image/png",
+        })
+    ),
+);
+
+
+
       
       //SEND TO OpenAI
-      const result = await openai.images.generate({//const result = await openai.images.edit({
+      const result = await openai.images.edit({
       model: "gpt-image-1",
-      n: 3,
-      image: imageFile,
+      n: 3,//<< NOT SURE SUPPORTED
+      image: images,
       prompt: prompt
     });
 
