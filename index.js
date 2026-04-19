@@ -120,9 +120,9 @@ app.post(
           {
             role: "user",
             content: [
-              { type: "input_image", image: imageFile },
-              { type: "input_text", prompt: prompt }
-            ],
+              { type: "input_text", text: prompt },
+              { type: "input_image", image: imageFile }
+              ],
           },
         ],
       });
