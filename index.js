@@ -107,25 +107,14 @@ app.post(
       - Clean composition
       - Watermark "created at toffa.ai"
       `;
-     
+
+      
+      
       //SEND TO OpenAI
       const result = await openai.images.edit({
       model: "gpt-image-1.5",
       n: 3,
-      input: [
-        {
-          content: [
-            {
-              type: "input_text",
-              text: prompt        
-            },
-            {
-              type: "input_image",
-              image: imageFile//image_url: imageUpload.url // from Cloudinary imageFile
-            }
-          ]
-        }
-      ]
+      input: imageFile
     });
 
       
