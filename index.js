@@ -126,8 +126,8 @@ app.post(
       body: form,
     });
 
-    
-
+    console.log("FORMDATA:", form);
+    console.log("POST RESPONSE:", result);
       /*
       //SEND TO OpenAI
       const result = await openai.images.generate({
@@ -149,7 +149,7 @@ app.post(
       input_image: req.files,//imageFile
     });
 */
-      console.log("openai response:", result);
+      
 
       
       
