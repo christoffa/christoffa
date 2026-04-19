@@ -109,7 +109,27 @@ app.post(
       - Watermark "created at toffa.ai"
       `;
 
+/*
+const raw = JSON.stringify({
+  "model": "gpt-image-1.5",
+  "prompt": "A bright, funny cartoon of a man mishearing his wife, speech bubbles, British humour, clean simple style",
+  "size": "1024x1024",
+  "n": 3,
+  "images": "//res.cloudinary.com/dgfr49wwa/image/upload/v1774984269/j9v9gxsrqqfcbxe8qf5z.jpg"
+});
 
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch("https://api.openai.com/v1/images/edits", requestOptions)
+  .then((response) => response.text())
+  .then((result) => console.log(result))
+  .catch((error) => console.error(error));
+*/
       //FORM DATA
      const form = new FormData();
     form.append("model", "gpt-image-1.5"); // or dall-e-2 if needed
@@ -117,16 +137,23 @@ app.post(
     form.append("n", "3");
     form.append("size", "512x512");
     form.append("image", req.files.image[0]);
-
+const raw = JSON.stringify({
+  "model": "gpt-image-1.5",
+  "prompt": "A bright, funny cartoon of a man mishearing his wife, speech bubbles, British humour, clean simple style",
+  "size": "1024x1024",
+  "n": 3,
+  "images": imageUpload.url
+});
+      
     const response = await fetch("https://api.openai.com/v1/images/edits", {
       method: "POST",
       headers: {
       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
-      body: form,
+      body: raw,
     });
 
-    console.log("FORMDATA:", form);
+   // console.log("FORMDATA:", form);
     console.log("POST RESPONSE:", result);
       /*
       //SEND TO OpenAI
