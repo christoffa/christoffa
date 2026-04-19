@@ -128,7 +128,7 @@ const openaiImages = await Promise.all(
       const result = await openai.images.generate({
       model: "gpt-image-1",
       n: 3,
-      image: imageFile,
+      input_image: imageFile,
       prompt: prompt
     });
 
