@@ -121,7 +121,7 @@ app.post(
             role: "user",
             content: [
               { type: "input_image", image: imageFile },
-              { type: "text", prompt: prompt }
+              { type: "input_text", prompt: prompt }
             ],
           },
         ],
