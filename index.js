@@ -128,8 +128,8 @@ const openaiImages = await Promise.all(
       const result = await openai.images.generate({
       model: "gpt-image-1",
       n: 3,
-      input_image: imageFile,
-      prompt: prompt
+      prompt: prompt,
+      input_image: req.files,//imageFile
     });
 
       console.log("openai response:", result);
