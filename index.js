@@ -4,34 +4,7 @@ import cors from "cors";
 import OpenAI, { toFile } from "openai";//<<<<<
 import multer from "multer";
 import fs from "fs";//<<<<<
-/*
-import fs from "fs";
-import OpenAI, { toFile } from "openai";
 
-const client = new OpenAI();
-
-const imageFiles = [
-    "bath-bomb.png",
-    "body-lotion.png",
-    "incense-kit.png",
-    "soap.png",
-];
-
-const images = await Promise.all(
-    imageFiles.map(async (file) =>
-        await toFile(fs.createReadStream(file), null, {
-            type: "image/png",
-        })
-    ),
-);
-
-const rsp = await client.images.edit({
-    model: "gpt-image-1.5",
-    image: images,
-    prompt: "Create a lovely gift basket with these four items in it",
-});
-
-*/
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -140,7 +113,7 @@ const imageFiles = [
     imageUpload.url
 ];
 
-const images = await Promise.all(
+const openaiImages = await Promise.all(
     imageFiles.map(async (file) =>
         await toFile(fs.createReadStream(file), null, {
             type: "image/png",
@@ -155,7 +128,7 @@ const images = await Promise.all(
       const result = await openai.images.edit({
       model: "gpt-image-1",
       n: 3,//<< NOT SURE SUPPORTED
-      image: images,
+      image: openaiImages,
       prompt: prompt
     });
 
@@ -185,135 +158,6 @@ const images = await Promise.all(
 
 
 
-/*  
-app.post("/generate-preview", async (req, res) => {
-    try {
-      const image_url = req.body?.image_url || "";
-      const text = req.body?.text || "So… are you ignoring me or didn’t you hear me?";
-
-      if (!image_url ) {
-        return res.status(400).json({ error: "Missing image_url" });
-      }
-
-      
-      const userUpload = await cloudinary.uploader.upload(
-        `data:image/png;base64,${userUploadedImageBase64}`,
-        { folder: "toffa/userUploads" }
-      );
-
-      
-      const prompt = `
-Create ONE single modern comic-style cartoon image.
-
-Each generated image should have a slightly different pose and expression.
-
-Scene: Couple in a cosy home setting.
-
-Characters:
-- Female: arms crossed, slightly annoyed but warm
-- Male: confused, adjusting hearing aid
-
-IMPORTANT:
-Use the uploaded images as the exact facial reference for each character.
-
-Speech bubble (female):
-"${text}"
-
-Square format. Watermark "created at toffa.ai"
-`;
-
-      const result = await openai.images.generate({
-        model: "gpt-image-1",
-        prompt,
-        size: "1024x1024",
-        n: 3,
-        images: [
-          { image_url: userUpload.secure_url }
-        ]
-      });
-
-      const uploads = await Promise.all(
-        result.data.map(img =>
-          cloudinary.uploader.upload(
-            `data:image/png;base64,${img.b64_json}`,
-            { folder: "toffa/previews" }
-          )
-        )
-      );
-
-      const images = uploads.map(u => u.secure_url);
-
-      res.json({ images });
-
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Generation failed" });
-    }
-  }
-);
-*/
-/*
-app.post("/generate-preview", async (req, res) => {
-  try {
-    //const { text } = req.body;
-    const text = req.body?.text || "Default text";
-    const image_url = req.body?.image_url || "";
-
-    const prompt = `
-Create ONE single modern comic-style cartoon image.
-
-Each generated image should have a slightly different pose and expression.
-
-Scene: Couple in a cosy home setting.
-
-Characters:
-- Female: arms crossed, slightly annoyed but warm
-- Male: confused, adjusting hearing aid
-- Use uploaded face references
-
-Speech bubble (female):
-"${text}"
-
-Include:
-- Behind-the-ear hearing aid (Oticon style)
-
-Tone:
-Light, playful humour
-
-Requirements:
-- Square (1:1)
-- Clean composition
-- Watermark "created at toffa.ai"
-`;
-
-    //openai.responses.create
-    const result = await openai.images.generate({
-      model: "gpt-image-1.5",
-      prompt,
-      size: "1024x1024",
-      n: 3,
-    images: [
-    {
-      image_base64: femaleBase64
-    }
-    ]
-    });
-;
-
-    // Extract base64 images
-    const uploads = await Promise.all(
-      result.data.map(img => uploadImage(img.b64_json))
-    );
-    
-    const images = uploads.map(u => u.secure_url);
-    res.json({ images });
-  } 
-  catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Image generation failed" });
-  }
-});
-*/
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
