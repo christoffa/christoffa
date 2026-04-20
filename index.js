@@ -202,8 +202,8 @@ app.post(
     
 
     // Nano Banana 2 returns image data which you can then save or process
-
-    res = uploadMultipleToCloudinary(response);
+    const imageUrls = uploadMultipleToCloudinary(response);
+    res.status(200).json({success: true, data: imageUrls)};
     /*
      const result2 = response.candidates[0].content.parts;//response.artifacts[0]; 
     fs.writeFileSync("output.png", Buffer.from(result2, "image/jpeg"));
