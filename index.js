@@ -13,6 +13,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
 //const fs = require("fs");
 
+const result2;
 // Initialize the API with your key
 const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 /*
@@ -170,7 +171,7 @@ app.post(
     
 
     // Nano Banana 2 returns image data which you can then save or process
-    const result2 = response.candidates[0].content.parts;//response.artifacts[0]; 
+     result2 = response.candidates[0].content.parts;//response.artifacts[0]; 
     fs.writeFileSync("output.png", Buffer.from(result2, "image/jpeg"));
 
     console.log("Image generated successfully!");
