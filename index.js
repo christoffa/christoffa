@@ -157,7 +157,9 @@ app.post(
   try {
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    
+
+    console.error("RESPONSE:", response);
+
     // Nano Banana 2 returns image data which you can then save or process
     const artifact = response.artifacts[0]; 
     fs.writeFileSync("output.png", Buffer.from(artifact.base64, "base64"));
