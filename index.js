@@ -170,9 +170,9 @@ app.post(
     
 
     // Nano Banana 2 returns image data which you can then save or process
-    const artifact = response.candidates[0].content.parts[0];//response.artifacts[0]; 
+    const artifact = response.candidates[0].content.parts[0].inlineData.data;//response.artifacts[0]; 
     fs.writeFileSync("output.png", Buffer.from(artifact.base64, "base64"));
-    
+
     console.log("Image generated successfully!");
   } catch (error) {
     console.error("Error generating image:", error);
