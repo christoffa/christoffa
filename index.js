@@ -203,6 +203,8 @@ app.post(
 
     // Nano Banana 2 returns image data which you can then save or process
     const imageUrls = uploadMultipleToCloudinary(response);
+    console.log("All images uploaded imageUrls:", imageUrls);
+   
     //res.status(500).json({ error: "MAP failed" });
     res.status(200).json({success: true, data: imageUrls});
     /*
