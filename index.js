@@ -193,6 +193,7 @@ app.post(
       // THIS CONFIG IS REQUIRED TO GET AN IMAGE BACK
       generationConfig: {
         responseModalities: ["IMAGE"],
+        candidateCount: 3
       },
     });
     const response = await result.response;
