@@ -14,7 +14,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 //const fs = require("fs");
 
 // Initialize the API with your key
-const genAI = new GoogleGenerativeAI(env.GEM_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 /*
 async function generateImage() {
   // Use the Nano Banana 2 model ID
