@@ -13,7 +13,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
 //const fs = require("fs");
 
-const result2;
+const result2 = [];
 // Initialize the API with your key
 const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 /*
