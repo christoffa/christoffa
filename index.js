@@ -13,7 +13,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
 //const fs = require("fs");
 
-const result2 = [];
+
 // Initialize the API with your key
 const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 /*
@@ -175,6 +175,24 @@ app.post(
     fs.writeFileSync("output.png", Buffer.from(result2, "image/jpeg"));
 
     console.log("Image generated successfully!");
+    //upload result images to cloudinary
+      const uploads = await Promise.all(
+      response.candidates[0].content.parts.map(img =>
+        cloudinary.uploader.upload(
+          `data:image/jpeg;base64,${img.b64_json}`,
+          { folder: "toffa/previews" }
+        )
+      )
+    );
+    
+    const images = uploads.map(u => u.secure_url);
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({ error: "MAP failed" });
+        }
+      }
+    );
+    
   } catch (error) {
     console.error("Error generating image:", error);
   }
@@ -252,7 +270,7 @@ const raw = JSON.stringify({
 */
       
 
-      
+    /*  
       //image/jpeg
     // NEED UPDATE FOR MODEL
     //upload result images to cloudinary
@@ -273,7 +291,7 @@ const raw = JSON.stringify({
       }
     );
     
-
+*/
 
 
 const PORT = process.env.PORT || 3000;
