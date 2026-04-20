@@ -6,10 +6,41 @@ import multer from "multer";
 import fs from "fs";//<<<<<
 import fetch from "node-fetch";
 import FormData from "form-data";
-
 const upload = multer({ storage: multer.memoryStorage() });
-
 import { v2 as cloudinary } from "cloudinary";
+
+//
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const fs = require("fs");
+
+// Initialize the API with your key
+const genAI = new GoogleGenerativeAI("GEM_API_KEY");
+/*
+async function generateImage() {
+  // Use the Nano Banana 2 model ID
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-3.1-flash-image-preview" 
+  });
+
+  const prompt = "A futuristic cyberpunk city with neon banana-shaped skyscrapers";
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    
+    // Nano Banana 2 returns image data which you can then save or process
+    const artifact = response.artifacts[0]; 
+    fs.writeFileSync("output.png", Buffer.from(artifact.base64, "base64"));
+    
+    console.log("Image generated successfully!");
+  } catch (error) {
+    console.error("Error generating image:", error);
+  }
+}
+*/
+//generateImage();
+
+//
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -46,6 +77,11 @@ const openai = new OpenAI({
 app.get("/", (req, res) => {
   res.send("Toffa backend is running 🚀");
 });
+
+
+//NANO BANANA 2 GEM_API_KEY
+
+
 
 //updated /generate-preview to accept files
 app.post(
@@ -109,6 +145,30 @@ app.post(
       - Watermark "created at toffa.ai"
       `;
 
+      //GEMINI
+
+// Use the Nano Banana 2 model ID
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-3.1-flash-image-preview" 
+  });
+
+  //const prompt = "A futuristic cyberpunk city with neon banana-shaped skyscrapers";
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    
+    // Nano Banana 2 returns image data which you can then save or process
+    const artifact = response.artifacts[0]; 
+    fs.writeFileSync("output.png", Buffer.from(artifact.base64, "base64"));
+    
+    console.log("Image generated successfully!");
+  } catch (error) {
+    console.error("Error generating image:", error);
+  }
+
+      //
+      
 /*
 const raw = JSON.stringify({
   "model": "gpt-image-1.5",
@@ -129,7 +189,7 @@ fetch("https://api.openai.com/v1/images/edits", requestOptions)
   .then((response) => response.text())
   .then((result) => console.log(result))
   .catch((error) => console.error(error));
-*/
+
       //FORM DATA
      const form = new FormData();
     form.append("model", "gpt-image-1.5"); // or dall-e-2 if needed
@@ -155,6 +215,8 @@ const raw = JSON.stringify({
 
    // console.log("FORMDATA:", form);
     console.log("POST RESPONSE:", result);
+   */
+      
       /*
       //SEND TO OpenAI
       const result = await openai.images.generate({
