@@ -170,8 +170,8 @@ app.post(
     
 
     // Nano Banana 2 returns image data which you can then save or process
-    const artifact = response.candidates[0].content.parts;//response.artifacts[0]; 
-    fs.writeFileSync("output.png", Buffer.from(artifact, "image/jpeg"));
+    const result = response.candidates[0].content.parts;//response.artifacts[0]; 
+    fs.writeFileSync("output.png", Buffer.from(result, "image/jpeg"));
 
     console.log("Image generated successfully!");
   } catch (error) {
@@ -252,13 +252,13 @@ const raw = JSON.stringify({
       
 
       
-      
+      //image/jpeg
     // NEED UPDATE FOR MODEL
     //upload result images to cloudinary
       const uploads = await Promise.all(
       result.data.map(img =>
         cloudinary.uploader.upload(
-          `data:image/png;base64,${img.b64_json}`,
+          `data:image/jpeg;base64,${img.b64_json}`,
           { folder: "toffa/previews" }
         )
       )
