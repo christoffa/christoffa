@@ -152,10 +152,10 @@ app.post(
     model: "gemini-3.1-flash-image-preview" 
   });
 
-  prompt = "A futuristic cyberpunk city with neon banana-shaped skyscrapers";
+  const prompt2 = "A futuristic cyberpunk city with neon banana-shaped skyscrapers";
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(prompt2);
     const response = await result.response;
 
     console.error("RESPONSE:", response);
