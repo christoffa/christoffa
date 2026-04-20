@@ -3,7 +3,7 @@ import cors from "cors";
 //import OpenAI from "openai"; 
 //import OpenAI, { toFile } from "openai";//<<<<<
 import multer from "multer";
-import fs from "fs";//<<<<<
+//import fs from "fs";//<<<<<
 import fetch from "node-fetch";
 import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
