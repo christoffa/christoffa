@@ -155,7 +155,14 @@ app.post(
   const prompt2 = "A futuristic cyberpunk city with neon banana-shaped skyscrapers";
 
   try {
-    const result = await model.generateContent(prompt2);
+    //const result = await model.generateContent(prompt2);
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      // THIS CONFIG IS REQUIRED TO GET AN IMAGE BACK
+      generationConfig: {
+        responseModalities: ["IMAGE"],
+      },
+    });
     const response = await result.response;
 
     console.error("RESPONSE:", response);
@@ -270,3 +277,47 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
+/*
+
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const fs = require("fs");
+
+const genAI = new GoogleGenerativeAI("YOUR_API_KEY");
+
+async function generateImage() {
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-3.1-flash-image-preview" 
+  });
+
+  const prompt = "A high-quality cartoon of a dog and owner at a pub";
+
+  try {
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      // THIS CONFIG IS REQUIRED TO GET AN IMAGE BACK
+      generationConfig: {
+        responseModalities: ["IMAGE"],
+      },
+    });
+
+    const response = await result.response;
+    
+    // In Gemini 3.1, images are returned as 'parts' within the candidate content
+    const candidate = response.candidates[0];
+    const imagePart = candidate.content.parts.find(part => part.inlineData);
+
+    if (imagePart) {
+      const buffer = Buffer.from(imagePart.inlineData.data, "base64");
+      fs.writeFileSync("output.png", buffer);
+      console.log("Image saved as output.png");
+    } else {
+      console.log("No image found. Response text:", response.text());
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+generateImage();
+
+*/
