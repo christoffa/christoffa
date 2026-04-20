@@ -8,9 +8,9 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
-
+import { GoogleGenerativeAI } from @google/generative-ai;
 //
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+//const { GoogleGenerativeAI } = require("@google/generative-ai");
 const fs = require("fs");
 
 // Initialize the API with your key
