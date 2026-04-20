@@ -51,8 +51,8 @@ cloudinary.config({
 //UPLOAD TO CLOUDINARY
 async function uploadMultipleToCloudinary(response) {
   // 1. Filter out only the parts that contain image data
-  //const imageParts = response.candidates[0].content.parts.filter(part => part.inlineData);
-  const imageParts = response.candidates.content.parts.filter(part => part.inlineData);
+  const imageParts = response.candidates[0].content.parts.filter(part => part.inlineData);
+  //const imageParts = response.candidates.content.parts.filter(part => part.inlineData);
 
   // 2. Map the parts to an array of Cloudinary upload promises
   const uploadPromises = imageParts.map(async (part, index) => {
@@ -194,7 +194,7 @@ app.post(
       // THIS CONFIG IS REQUIRED TO GET AN IMAGE BACK
       generationConfig: {
         responseModalities: ["IMAGE"],
-        candidateCount: 3
+       // candidateCount: 3
       },
     });
     const response = await result.response;
