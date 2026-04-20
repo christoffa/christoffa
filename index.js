@@ -179,7 +179,7 @@ app.post(
       const uploads = await Promise.all(
       response.candidates[0].content.parts.map(img =>
         cloudinary.uploader.upload(
-          `data:image/jpeg;base64,${img.b64_json}`,
+          `data:image/jpeg;base64,${img}`,
           { folder: "toffa/previews" }
         )
       )
