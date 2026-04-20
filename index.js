@@ -171,7 +171,7 @@ app.post(
     
 
     // Nano Banana 2 returns image data which you can then save or process
-     //result2 = response.candidates[0].content.parts;//response.artifacts[0]; 
+     cont result2 = response.candidates[0].content.parts;//response.artifacts[0]; 
     fs.writeFileSync("output.png", Buffer.from(result2, "image/jpeg"));
 
     console.log("Image generated successfully!");
