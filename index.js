@@ -166,6 +166,8 @@ app.post(
     const response = await result.response;
 
     console.error("RESPONSE:", response);
+    console.error("resp.....:", response.candidates[0].content.parts);
+    
 
     // Nano Banana 2 returns image data which you can then save or process
     const artifact = response.artifacts[0]; 
