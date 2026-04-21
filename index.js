@@ -24,7 +24,7 @@ cloudinary.config({
 });
 //UPLOAD TO CLOUDINARY
 async function uploadMultipleToCloudinary2(data) {
-/ 2. Map through ALL returned images
+//Map through ALL returned images
 
       const uploads = await Promise.all(
       data.map(async (img, index) => {
