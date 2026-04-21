@@ -187,7 +187,7 @@ const response = await openai.images.generate({
 // Extract image
 console.log("RESPONSE:>>>>>>>>>>>>", response);
    
-const image = response.data(c => c.type === "output_image");
+const image = response.data[0](c => c.type === "output_image");
 
 fs.writeFileSync("output.png", Buffer.from(image.b64_json, "base64"));
 //GPT      
