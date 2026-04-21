@@ -30,7 +30,7 @@ async function uploadMultipleToCloudinary2(data) {
 
   // 2. Map the parts to an array of Cloudinary upload promises
   const uploadPromises = data.map(async (part, index) => {
-    const fileStr = `data:image/png;base64,${part.inlineData.data}`;
+    const fileStr = `data:image/png;base64,${data.b64_json}`;
     
     // Return the promise from Cloudinary
     return cloudinary.uploader.upload(fileStr, {
@@ -218,8 +218,9 @@ const response = await openai.images.generate({
 console.log("RESPONSE:>>>>>>>>>>>>", response);
 console.log("RESPONSE.data:>>>>>>>>>>>>", response.data);
    
-const image = response.data[0];
-
+const URLS = uploadMultipleToCloudinary2(response.data);
+console.log("URLS:>>>>>>>>>>>>", URLS);
+res.status(200).json({success: true, data: URLS});
 //fs.writeFileSync("output.png", Buffer.from(image.b64_json, "base64"));
 //GPT      
 /*
