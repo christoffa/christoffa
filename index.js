@@ -157,18 +157,13 @@ app.post(
       
       Each generated image should have a slightly different pose and expression.
       
-      Scene: Couple in a cosy home setting.
-      
-      Characters:
-      - Female: arms crossed, slightly annoyed but warm
-      - Male: confused, adjusting hearing aid
+      Cartoon should be a joke around hearing loss
       
       IMPORTANT:
       Use the uploaded images as the exact facial reference for each character.
       Preserve likeness while rendering in a modern comic style.
       
-      Speech bubble (female):
-      "${text}"
+      
       
       Include:
       - Behind-the-ear hearing aid (Oticon style)
