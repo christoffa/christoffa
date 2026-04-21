@@ -23,6 +23,36 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 //UPLOAD TO CLOUDINARY
+async function uploadMultipleToCloudinary2(data) {
+  // 1. Filter out only the parts that contain image data
+  //const imageParts = response.candidates[0].content.parts.filter(part => part.inlineData);
+  //const imageParts = response.candidates.content.parts.filter(part => part.inlineData);
+
+  // 2. Map the parts to an array of Cloudinary upload promises
+  const uploadPromises = data.map(async (part, index) => {
+    const fileStr = `data:image/png;base64,${part.inlineData.data}`;
+    
+    // Return the promise from Cloudinary
+    return cloudinary.uploader.upload(fileStr, {
+      folder: "gemini_batch",
+      public_id: `gen_image_${Date.now()}_${index}`
+    });
+  });
+
+  try {
+    // 3. Wait for all uploads to complete
+    const results = await Promise.all(uploadPromises);
+    
+    // 4. Map the results to just get the URLs
+    const urls = results.map(res => res.secure_url);
+    
+    console.log("All images uploaded:", urls);
+    return urls;
+  } catch (error) {
+    console.error("One or more uploads failed:", error);
+  }
+}
+
 async function uploadMultipleToCloudinary(response) {
   // 1. Filter out only the parts that contain image data
   const imageParts = response.candidates[0].content.parts.filter(part => part.inlineData);
@@ -186,10 +216,11 @@ const response = await openai.images.generate({
 
 // Extract image
 console.log("RESPONSE:>>>>>>>>>>>>", response);
+console.log("RESPONSE.data:>>>>>>>>>>>>", response.data);
    
-const image = response.data[0](c => c.type === "output_image");
+const image = response.data[0];
 
-fs.writeFileSync("output.png", Buffer.from(image.b64_json, "base64"));
+//fs.writeFileSync("output.png", Buffer.from(image.b64_json, "base64"));
 //GPT      
 /*
 // Use the Nano Banana 2 model ID //GEMINI
