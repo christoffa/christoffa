@@ -46,7 +46,7 @@ async function uploadMultipleToCloudinary2(data) {
   return uploads;
   } catch (error) {
     console.error("One or more uploads failed:", error);
-    retrun null;    
+    retrun;    
   }
 
 
