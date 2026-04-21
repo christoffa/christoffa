@@ -24,36 +24,29 @@ cloudinary.config({
 });
 //UPLOAD TO CLOUDINARY
 async function uploadMultipleToCloudinary2(data) {
-  // 1. Filter out only the parts that contain image data
-  //const imageParts = response.candidates[0].content.parts.filter(part => part.inlineData);
-  //const imageParts = response.candidates.content.parts.filter(part => part.inlineData);
+/ 2. Map through ALL returned images
 
-  // 2. Map the parts to an array of Cloudinary upload promises
-   const imageParts = data(part => part.b64_json);
-  //const imageParts = response.candidates.content.parts.filter(part => part.inlineData);
+      const uploads = await Promise.all(
+      data.map(async (img, index) => {
+        const dataUri = `data:image/png;base64,${img.b64_json}`;
+        const upload = await cloudinary.uploader.upload(dataUri, {
+          folder: "toffa-previews",
+          public_id: `preview_${Date.now()}_${index}`,
+          transformation: [
+            { quality: "auto" },
+            { fetch_format: "auto" },
+          ],
+      });
+        return upload.secure_url;
+      })
+    );
 
-  // 2. Map the parts to an array of Cloudinary upload promises
-  const uploadPromises = imageParts.map(async (part, index) => {
-    const fileStr = `data:image/png;b64_json,${data.b64_json}`;
-    console.log("fileStrv >>>>>>>>>:", fileStr);
-    
-    // Return the promise from Cloudinary
-    return cloudinary.uploader.upload(fileStr, {
-      folder: "gemini_batch",
-      public_id: `gen_image_${Date.now()}_${index}`
-    });
-  });
+    // 3. Return ALL image URLs
+  return uploads;
+  
 
-  try {
-    // 3. Wait for all uploads to complete
-    const results = await Promise.all(uploadPromises);
-    
-    // 4. Map the results to just get the URLs
-    const urls = results.map(res => res.secure_url);
-    
-    console.log("All images uploaded:", urls);
-    return urls;
-  } catch (error) {
+
+} catch (error) {
     console.error("One or more uploads failed:", error);
   }
 }
