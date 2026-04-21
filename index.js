@@ -187,9 +187,9 @@ const response = await openai.images.generate({
 // Extract image
 console.log("RESPONSE:>>>>>>>>>>>>", response);
    
-const image = response.output[0].content.find(c => c.type === "output_image");
+const image = response.data(c => c.type === "output_image");
 
-fs.writeFileSync("output.png", Buffer.from(image.image_base64, "base64"));
+fs.writeFileSync("output.png", Buffer.from(image.b64_json, "base64"));
 //GPT      
 /*
 // Use the Nano Banana 2 model ID //GEMINI
