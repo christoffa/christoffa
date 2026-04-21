@@ -25,11 +25,12 @@ cloudinary.config({
 //UPLOAD TO CLOUDINARY
 async function uploadMultipleToCloudinary2(data) {
 //Map through ALL returned images
-
+console.log("uploadMultipleToCloudinary2:");
       try {
       const uploads = await Promise.all(
       data.map(async (img, index) => {
         const dataUri = `data:image/png;base64,${img.b64_json}`;
+      console.log("dataUri:",dataUri);
         const upload = await cloudinary.uploader.upload(dataUri, {
           folder: "toffa-previews",
           public_id: `preview_${Date.now()}_${index}`,
