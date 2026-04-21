@@ -170,7 +170,7 @@ const response = await openai.responses.create({
         },
         {
           type: "input_image",
-          image_base64: fs.readFileSync(imageFile, { encoding: "base64" })
+          image_base64: fs.readFileSync(imageFile.buffer, { encoding: "base64" })
         }
       ]
     }
