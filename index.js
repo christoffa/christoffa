@@ -16,32 +16,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Initialize the API with your key
 const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
-/*
-async function generateImage() {
-  // Use the Nano Banana 2 model ID
-  const model = genAI.getGenerativeModel({ 
-    model: "gemini-3.1-flash-image-preview" 
-  });
-
-  const prompt = "A futuristic cyberpunk city with neon banana-shaped skyscrapers";
-
-  try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    
-    // Nano Banana 2 returns image data which you can then save or process
-    const artifact = response.artifacts[0]; 
-    fs.writeFileSync("output.png", Buffer.from(artifact.base64, "base64"));
-    
-    console.log("Image generated successfully!");
-  } catch (error) {
-    console.error("Error generating image:", error);
-  }
-}
-*/
-//generateImage();
-
-//
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -177,10 +151,40 @@ app.post(
       - Clean composition
       - Watermark "created at toffa.ai"
       `;
+//GPT
 
-      //GEMINI
 
-// Use the Nano Banana 2 model ID
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const response = await openai.responses.create({
+  model: "gpt-4.1-mini",
+  input: [
+    {
+      role: "user",
+      content: [
+        {
+          type: "input_text",
+          text: "Turn this into a funny cartoon with bold lines and bright colours"
+        },
+        {
+          type: "input_image",
+          image_base64: fs.readFileSync("input.jpg", { encoding: "base64" })
+        }
+      ]
+    }
+  ],
+  tools: [{ type: "image_generation" }]
+});
+
+// Extract image
+const image = response.output[0].content.find(c => c.type === "output_image");
+
+fs.writeFileSync("output.png", Buffer.from(image.image_base64, "base64"));
+//GPT      
+/*
+// Use the Nano Banana 2 model ID //GEMINI
   const model = genAI.getGenerativeModel({ 
     model: "gemini-3.1-flash-image-preview" 
   });
@@ -209,32 +213,14 @@ app.post(
    
     //res.status(500).json({ error: "MAP failed" });
     res.status(200).json({success: true, data: imageUrls});
-    /*
-     const result2 = response.candidates[0].content.parts;//response.artifacts[0]; 
-    fs.writeFileSync("output.png", Buffer.from(result2, "image/jpeg"));
-
-    console.log("Image generated successfully!");
-   //upload result images to cloudinary
-      const uploads = await Promise.all(
-      response.candidates[0].content.parts.map(img =>
-        cloudinary.uploader.upload(
-          `data:image/jpeg;base64,${img}`,
-          { folder: "toffa/previews" }
-        )
-      )
-    );
-    
-    const images = uploads.map(u => u.secure_url);
-   //upload result images to cloudinary
-    */
-
-
     
   } catch (error) {
     console.error("Error generating image:", error);
   }
+// Use the Nano Banana 2 model ID
+*/
 
-      //
+
       
 /*
 const raw = JSON.stringify({
