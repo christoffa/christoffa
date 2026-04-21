@@ -26,6 +26,7 @@ cloudinary.config({
 async function uploadMultipleToCloudinary2(data) {
 //Map through ALL returned images
 
+      try {
       const uploads = await Promise.all(
       data.map(async (img, index) => {
         const dataUri = `data:image/png;base64,${img.b64_json}`;
@@ -43,13 +44,13 @@ async function uploadMultipleToCloudinary2(data) {
 
     // 3. Return ALL image URLs
   return uploads;
-  
-
-
-} catch (error) {
+  } catch (error) {
     console.error("One or more uploads failed:", error);
+    retrun null;    
   }
-}
+
+
+} 
 
 async function uploadMultipleToCloudinary(response) {
   // 1. Filter out only the parts that contain image data
@@ -217,6 +218,9 @@ console.log("RESPONSE:>>>>>>>>>>>>", response);
 console.log("RESPONSE.data:>>>>>>>>>>>>", response.data);
    
 const URLS = await uploadMultipleToCloudinary2(response.data);
+if (!URLS){
+  res.status(500).json({ error: "uploadMultipleToCloudinary2 failed" });;
+}
 console.log("URLS:>>>>>>>>>>>>", URLS);
 res.status(200).json({success: true, data: URLS});
 //fs.writeFileSync("output.png", Buffer.from(image.b64_json, "base64"));
