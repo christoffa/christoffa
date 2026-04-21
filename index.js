@@ -29,8 +29,12 @@ async function uploadMultipleToCloudinary2(data) {
   //const imageParts = response.candidates.content.parts.filter(part => part.inlineData);
 
   // 2. Map the parts to an array of Cloudinary upload promises
-  const uploadPromises = data.map(async (part, index) => {
-    const fileStr = `data:image/png;base64,${data.b64_json}`;
+   const imageParts = data(part => part.b64_json);
+  //const imageParts = response.candidates.content.parts.filter(part => part.inlineData);
+
+  // 2. Map the parts to an array of Cloudinary upload promises
+  const uploadPromises = imageParts.map(async (part, index) => {
+    const fileStr = `data:image/png;b64_json,${data.b64_json}`;
     console.log("fileStrv >>>>>>>>>:", fileStr);
     
     // Return the promise from Cloudinary
