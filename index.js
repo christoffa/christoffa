@@ -158,8 +158,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const response = await openai.responses.create({
+const response = await openai.images.generate({
   model: "gpt-image-1",
+  image:imageUpload.buffer,
+  size: 1024x1024
+    /*
   input: [
     {
       role: "user",
@@ -176,6 +179,8 @@ const response = await openai.responses.create({
     }
   ],
   tools: [{ type: "image_generation" }]
+  */
+
 });
 
 // Extract image
