@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 //import OpenAI from "openai"; 
-//import OpenAI, { toFile } from "openai";//<<<<<
+import OpenAI, { toFile } from "openai";//<<<<<
 import multer from "multer";
 import fs from "fs";//<<<<<
 import fetch from "node-fetch";
