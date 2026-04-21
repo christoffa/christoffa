@@ -185,6 +185,8 @@ const response = await openai.images.generate({
 });
 
 // Extract image
+console.log("RESPONSE:>>>>>>>>>>>>", response);
+   
 const image = response.output[0].content.find(c => c.type === "output_image");
 
 fs.writeFileSync("output.png", Buffer.from(image.image_base64, "base64"));
