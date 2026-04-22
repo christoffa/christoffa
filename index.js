@@ -182,20 +182,23 @@ app.post(
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-//fs.createReadStream(file)
-const response = await openai.images.edit({//generate({
+/*
+const response = await openai.generate({
   model: "gpt-image-1.5",
-  image[]:fs.createReadStream(imageUpload.buffer),
+  image:imageUpload.buffer,
   size: "1024x1024",
     prompt: prompt
-    /*
+  */
+      
+  const response = await openai.responses.create({
+  model: "gpt-image-1.5",
   input: [
     {
       role: "user",
       content: [
         {
           type: "input_text",
-          text: "Turn this into a funny cartoon with bold lines and bright colours"
+          text: prompt
         },
         {
           type: "input_image",
@@ -205,7 +208,7 @@ const response = await openai.images.edit({//generate({
     }
   ],
   tools: [{ type: "image_generation" }]
-  */
+  
 
 });
 
