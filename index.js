@@ -183,7 +183,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const response = await openai.generate({
+const response = await openai.images.edit({
   model: "gpt-image-1.5",
   //image:imageUpload.buffer,
   image: [imageUpload.buffer],
