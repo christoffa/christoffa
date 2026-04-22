@@ -184,10 +184,10 @@ const openai = new OpenAI({
 });
 
 //PROCESS IMAGE
-      const imageUrl = imageUpload.url;
+      const iURL = imageUpload.url;
 
 // Download the image
-const response = await fetch(imageUrl);
+const response = await fetch(iURL);
 const arrayBuffer = await response.arrayBuffer();
 
 // Convert to a File object the API can accept
