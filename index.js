@@ -32,7 +32,7 @@ async function uploadMultipleToCloudinary3(data, jobId) {
         });
 
         // 👁️ 2. Create PREVIEW (public derived URL)
-        const preview = await cloudinary.uploader.upload(dataUri, {
+        const previewUrl = await cloudinary.uploader.upload(dataUri, {
         folder: `toffa/${jobId}/previews`,
         public_id: `img_${index}`,
         resource_type: "image",
