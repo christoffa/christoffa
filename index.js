@@ -32,6 +32,18 @@ async function uploadMultipleToCloudinary3(data, jobId) {
         });
 
         // 👁️ 2. Create PREVIEW (public derived URL)
+        const preview = await cloudinary.uploader.upload(dataUri, {
+        folder: `toffa/${jobId}/previews`,
+        public_id: `img_${index}`,
+        resource_type: "image",
+        transformation: [
+          { width: 400, crop: "scale" },
+          { quality: "auto:low" },
+          { fetch_format: "jpg" },
+          
+        ]
+      });
+        /*
         const previewUrl = cloudinary.url(master.public_id, {
           width: 400,
           quality: "auto:low",
@@ -41,7 +53,7 @@ async function uploadMultipleToCloudinary3(data, jobId) {
           //x: 15,
           //y: 15
         });
-
+        */
         return {
           image_id: index,
           preview_url: previewUrl,
