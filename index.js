@@ -182,10 +182,10 @@ app.post(
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
+//fs.createReadStream(file)
 const response = await openai.images.edit({//generate({
   model: "gpt-image-1.5",
-  image:imageUpload.buffer,
+  image:fs.createReadStream(imageUpload.buffer),
   size: "1024x1024",
     prompt: prompt
     /*
