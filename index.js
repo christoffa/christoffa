@@ -191,14 +191,14 @@ const response = await fetch(iURL);
 const arrayBuffer = await response.arrayBuffer();
 
 // Convert to a File object the API can accept
-const imageFile = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
+const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
   type: "image/jpeg",
 });
 //PROCESS IMAGE      
 const response = await openai.images.edit({
   model: "gpt-image-1.5",
   //image:imageUpload.buffer,
-  image: [imageFile],//[imageUpload.buffer],
+  image: [imageFile2],//[imageUpload.buffer],
   size: "1024x1024",
     prompt: prompt
   
