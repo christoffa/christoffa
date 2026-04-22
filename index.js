@@ -183,10 +183,22 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+//PROCESS IMAGE
+      const imageUrl = imageUpload.url;
+
+// Download the image
+const response = await fetch(imageUrl);
+const arrayBuffer = await response.arrayBuffer();
+
+// Convert to a File object the API can accept
+const imageFile = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
+  type: "image/jpeg",
+});
+//PROCESS IMAGE      
 const response = await openai.images.edit({
   model: "gpt-image-1.5",
   //image:imageUpload.buffer,
-  image: [imageUpload.buffer],
+  image: [imageFile],//[imageUpload.buffer],
   size: "1024x1024",
     prompt: prompt
   
