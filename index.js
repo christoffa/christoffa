@@ -185,7 +185,7 @@ const response = await openai.images.edit({
     
     // Extract image
       //
-const images = await uploadMultipleToCloudinary(response.data, jobId);
+const images = await uploadMultipleToCloudinary3(response.data, jobId);
 
 if (!images) {
   return res.status(500).json({ error: "Upload failed" });
