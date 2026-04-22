@@ -186,7 +186,7 @@ const openai = new OpenAI({
 const response = await openai.generate({
   model: "gpt-image-1.5",
   //image:imageUpload.buffer,
-  image: [fs.createReadStream(imageUpload.buffer)],
+  image: [imageUpload.buffer],
   size: "1024x1024",
     prompt: prompt
   
