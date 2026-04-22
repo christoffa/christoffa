@@ -13,9 +13,55 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
-//UPLOAD TO CLOUDINARY
+//UPLOAD TO CLOUDINARY3
+const jobId = `job_${Date.now()}`;
+async function uploadMultipleToCloudinary3(data, jobId) {
+  console.log("Uploading masters + previews");
+
+  try {
+    const uploads = await Promise.all(
+      data.map(async (img, index) => {
+        const dataUri = `data:image/png;base64,${img.b64_json}`;
+
+        // 🔐 1. Upload MASTER (private)
+        const master = await cloudinary.uploader.upload(dataUri, {
+          folder: `toffa/${jobId}/masters`,
+          public_id: `img_${index}`,
+          resource_type: "image",
+          type: "authenticated" // 🔥 CRITICAL
+        });
+
+        // 👁️ 2. Create PREVIEW (public derived URL)
+        const previewUrl = cloudinary.url(master.public_id, {
+          width: 400,
+          quality: "auto:low",
+          fetch_format: "jpg",
+          //overlay: "text:Arial_30:toffa.ai",
+          //gravity: "south_east",
+          //x: 15,
+          //y: 15
+        });
+
+        return {
+          image_id: index,
+          preview_url: previewUrl,
+          master_public_id: master.public_id
+        };
+      })
+    );
+
+    return uploads;
+
+  } catch (error) {
+    console.error("Upload failed:", error);
+    return null;
+  }
+}
+//UPLOAD TO CLOUDINARY3
+
 async function uploadMultipleToCloudinary2(data) {
 //Map through ALL returned images
+  
 console.log("uploadMultipleToCloudinary2:");
       try {
       const uploads = await Promise.all(
@@ -138,12 +184,30 @@ const response = await openai.images.edit({
     });
     
     // Extract image
+      //
+const images = await uploadMultipleToCloudinary(response.data, jobId);
+
+if (!images) {
+  return res.status(500).json({ error: "Upload failed" });
+}
+
+// TODO: store this in DB (for now just return it)
+res.status(200).json({
+  success: true,
+  job_id: jobId,
+  images: images.map(i => ({
+    image_id: i.image_id,
+    preview_url: i.preview_url
+  }))
+});
+      //
+      /*
     const URLS = await uploadMultipleToCloudinary2(response.data);
     if (!URLS){
       res.status(500).json({ error: "uploadMultipleToCloudinary2 failed" });;
     }
     res.status(200).json({success: true, data: URLS});
-
+    */
         } catch (err) {
           console.error(err);
           res.status(500).json({ error: "MAP failed" });
