@@ -194,6 +194,9 @@ const arrayBuffer = await response2.arrayBuffer();
 const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
   type: "image/jpeg",
 });
+      
+console.log("imageFile2:>>>>>>>>>>>>", imageFile2);
+
 //PROCESS IMAGE      
 const response = await openai.images.edit({
   model: "gpt-image-1.5",
