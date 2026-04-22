@@ -158,14 +158,14 @@ app.post(
 //BUILD PROMPT NEED TO IMPROVE PROMPT - NEED TO SWITCH ON HEARING LOSS JOKE TYPE
       const OLDprompt = `Create ONE single square modern comic-style cartoon image based on the uploaded  photo.
 Use the uploaded image as the exact facial reference for each character and preserve likeness.
-Show the same  family members in a cosy living room with a Christmas tree in the background.
 Give each person a slightly different pose and expression.
 Include one visible behind-the-ear hearing aid, Oticon style.
 Make it a light, playful hearing-loss joke with clean composition.
+Make each cartoon to have a different Hearing Loss Joke theme.
 Add a subtle watermark: "created at toffa.ai".
 Output one image only, square 1:1.`;
 //GPT
-      const prompt = 'Create a modern, high-quality cartoon illustration of the person in the uploaded image.
+      const prompt = `Create a modern, high-quality cartoon illustration of the person in the uploaded image.
 
 IMPORTANT:
 - Preserve the exact facial features, likeness, and identity of the person
@@ -187,7 +187,7 @@ Tone:
 - Subtle and relatable, not offensive
 
 Consistency:
-- Same person, same face, consistent features across all generated images';
+- Same person, same face, consistent features across all generated images`;
 
 
 const openai = new OpenAI({
