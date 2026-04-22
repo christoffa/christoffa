@@ -83,10 +83,10 @@ console.log("uploadMultipleToCloudinary2:");
         const upload = await cloudinary.uploader.upload(dataUri, {
           folder: "toffa-previews",
           public_id: `preview_${Date.now()}_${index}`,
-          transformation: [
-            { quality: "auto" },
-            { fetch_format: "auto" },
-          ],
+          //transformation: [
+          //  { quality: "auto" },
+          //  { fetch_format: "auto" },
+          //],
       });
         return upload.secure_url;
       })
