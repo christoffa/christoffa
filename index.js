@@ -187,8 +187,8 @@ const openai = new OpenAI({
       const iURL = imageUpload.url;
 
 // Download the image
-const response = await fetch(iURL);
-const arrayBuffer = await response.arrayBuffer();
+const response2 = await fetch(iURL);
+const arrayBuffer = await response2.arrayBuffer();
 
 // Convert to a File object the API can accept
 const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
