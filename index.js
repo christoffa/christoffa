@@ -182,14 +182,15 @@ app.post(
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-/*
+
 const response = await openai.generate({
   model: "gpt-image-1.5",
-  image:imageUpload.buffer,
+  //image:imageUpload.buffer,
+  image: [fs.createReadStream(imageUpload.buffer)],
   size: "1024x1024",
     prompt: prompt
-  */
-      
+  
+  /*    
   const response = await openai.responses.create({
   model: "gpt-4.1",
   input: [
@@ -208,7 +209,7 @@ const response = await openai.generate({
     }
   ],
   tools: [{ type: "image_generation" }]
-  
+  */
 
 });
 
