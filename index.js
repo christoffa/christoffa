@@ -204,7 +204,7 @@ const response = await openai.images.edit({
   image: [imageFile2],//[imageUpload.buffer],
   size: "1024x1024",
     prompt: prompt,
-  n:
+    n:3
   
   /*    
   const response = await openai.responses.create({
