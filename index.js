@@ -191,7 +191,7 @@ const response = await openai.generate({
   */
       
   const response = await openai.responses.create({
-  model: "gpt-image-1.5",
+  model: "gpt-4.1",
   input: [
     {
       role: "user",
