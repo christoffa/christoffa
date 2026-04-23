@@ -28,7 +28,11 @@ async function uploadMultipleToCloudinary3(data, jobId) {
           folder: `toffa/${jobId}/masters`,
           public_id: `img_${index}`,
           resource_type: "image",
-          type: "authenticated" // 🔥 CRITICAL
+          type: "authenticated", // 🔥 CRITICAL
+          transformation: [
+          { quality: "auto:low" },
+          { fetch_format: "jpg" },
+         ]
         });
 
         // 👁️ 2. Create PREVIEW (public derived URL)
@@ -48,10 +52,10 @@ async function uploadMultipleToCloudinary3(data, jobId) {
           width: 400,
           quality: "auto:low",
           fetch_format: "jpg",
-          //overlay: "text:Arial_30:toffa.ai",
-          //gravity: "south_east",
-          //x: 15,
-          //y: 15
+          overlay: "text:Arial_30:toffa.ai",
+          gravity: "south_east",
+          x: 15,
+          y: 15
         });
         */
         return {
@@ -171,7 +175,6 @@ IMPORTANT:
 - Preserve the exact facial features, likeness, and identity of the person
 - Do not change age, gender, or ethnicity
 - Keep it clearly recognisable as the same individual
-- Add a subtle watermark: "created at toffa.ai"
 
 Style:
 - Clean line art
@@ -188,7 +191,6 @@ Tone:
 - Subtle and relatable, not offensive
 
 Consistency:
-- Add a subtle watermark: "created at toffa.ai"
 - Same person, same face, consistent features across all generated images`;
 
 
