@@ -171,7 +171,7 @@ IMPORTANT:
 - Preserve the exact facial features, likeness, and identity of the person
 - Do not change age, gender, or ethnicity
 - Keep it clearly recognisable as the same individual
-- Add a subtle watermark: "created at toffa.ai".
+- Add a subtle watermark: "created at toffa.ai"
 
 Style:
 - Clean line art
@@ -188,6 +188,7 @@ Tone:
 - Subtle and relatable, not offensive
 
 Consistency:
+- Add a subtle watermark: "created at toffa.ai"
 - Same person, same face, consistent features across all generated images`;
 
 
