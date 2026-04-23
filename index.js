@@ -14,9 +14,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 //UPLOAD TO CLOUDINARY3
-const jobId = `job_${Date.now()}`;
+
 async function uploadMultipleToCloudinary3(data, jobId) {
-  console.log("Uploading masters + previews");
+  console.log("Uploading masters + previews jobId ",jobId);
 
   try {
     const uploads = await Promise.all(
@@ -132,7 +132,7 @@ app.post(
   ]),
   async (req, res) => {
     try {
-
+      const jobId = `job_${Date.now()}`;
       //console.log("Whai i got:", req);
       console.log("FILES:", req.files);
       console.log("BODY:", req.body);
