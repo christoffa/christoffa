@@ -30,9 +30,12 @@ async function uploadMultipleToCloudinary3(data, jobId) {
           resource_type: "image",
           type: "authenticated", // 🔥 CRITICAL
           transformation: [
-          { quality: "auto:low" },
           { fetch_format: "jpg" },
-         ]
+         {overlay: "text:Arial_30:created on toffa.ai"},
+          {gravity: "south_east"},
+          {x: 15},
+          {y: 15}
+          ]
         });
 
         // 👁️ 2. Create PREVIEW (public derived URL)
@@ -41,9 +44,11 @@ async function uploadMultipleToCloudinary3(data, jobId) {
         public_id: `img_${index}`,
         resource_type: "image",
         transformation: [
-          { width: 400, crop: "scale" },
-          { quality: "auto:low" },
           { fetch_format: "jpg" },
+          {overlay: "text:Arial_30:created on toffa.ai"},
+          {gravity: "south_east"},
+          {x: 15},
+          {y: 15}
           
         ]
       });
