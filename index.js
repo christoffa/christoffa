@@ -99,7 +99,7 @@ console.log("uploadMultipleToCloudinary2:");
 const app = express();
 app.use(cors({
   origin: 'https://toffa.ai',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST' ],
   credentials: true
 }));
 app.use(express.json({ limit: "10mb" }));
@@ -129,7 +129,7 @@ app.post(
   async (req, res) => {
     try {
       const jobId = `job_${Date.now()}`;
-      //console.log("Whai i got:", req);
+      console.log("Whai i got:", req);
       console.log("FILES:", req.files);
       console.log("BODY:", req.body);
 
