@@ -167,7 +167,7 @@ IMPORTANT:
 - Preserve the exact facial features, likeness, and identity of the people
 - Do not change age, gender, or ethnicity
 - Keep it clearly recognisable as the same individuals
-- Output one image only, square 1:1
+- Output image square 1:1
 - Make it a light, playful hearing-loss joke with clean composition.
 - Make each cartoon to have a different Hearing Loss Joke theme
 
@@ -211,8 +211,9 @@ const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
 const response = await openai.images.edit({
   model: "gpt-image-1.5",
   //image:imageUpload.buffer,
-  image: [imageFile2],//[imageUpload.buffer],
-  size: "1024x1024",
+    image: [imageFile2],//[imageUpload.buffer],
+    size: "1024x1024",
+    quality:"high",
     prompt: prompt,
     n:3
     });
