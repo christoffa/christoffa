@@ -167,6 +167,9 @@ IMPORTANT:
 - Preserve the exact facial features, likeness, and identity of the people
 - Do not change age, gender, or ethnicity
 - Keep it clearly recognisable as the same individuals
+- Output one image only, square 1:1
+- Make it a light, playful hearing-loss joke with clean composition.
+- Make each cartoon to have a different Hearing Loss Joke theme
 
 Style:
 - Clean line art
