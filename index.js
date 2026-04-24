@@ -29,7 +29,7 @@ async function uploadMultipleToCloudinary3(data, jobId) {
           public_id: `img_${index}`,
           resource_type: "image",
           type: "authenticated", // 🔥 CRITICAL
-          //transformation: ["final_watermark"]
+          transformation: ["final_watermark"]
         });
 
         // 👁️ 2. Create PREVIEW (public derived URL)
@@ -37,7 +37,7 @@ async function uploadMultipleToCloudinary3(data, jobId) {
         folder: `toffa/${jobId}/previews`,
         public_id: `img_${index}`,
         resource_type: "image",
-       //transformation: ["sample_watermark"]
+       transformation: ["sample_watermark"]
         });
         /*
         const previewUrl = cloudinary.url(master.public_id, {
