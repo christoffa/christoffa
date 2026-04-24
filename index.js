@@ -29,13 +29,7 @@ async function uploadMultipleToCloudinary3(data, jobId) {
           public_id: `img_${index}`,
           resource_type: "image",
           type: "authenticated", // 🔥 CRITICAL
-          transformation: [
-          { fetch_format: "jpg" },
-         {overlay: "text:Arial_30:created on toffa.ai"},
-          {gravity: "south_east"},
-          {x: 15},
-          {y: 15}
-          ]
+          transformation: [final_watermark"]
         });
 
         // 👁️ 2. Create PREVIEW (public derived URL)
@@ -43,15 +37,8 @@ async function uploadMultipleToCloudinary3(data, jobId) {
         folder: `toffa/${jobId}/previews`,
         public_id: `img_${index}`,
         resource_type: "image",
-        transformation: [
-          { fetch_format: "jpg" },
-          {overlay: "text:Arial_30:created on toffa.ai"},
-          {gravity: "south_east"},
-          {x: 15},
-          {y: 15}
-          
-        ]
-      });
+       transformation: [sample_watermark"]
+        });
         /*
         const previewUrl = cloudinary.url(master.public_id, {
           width: 400,
@@ -174,12 +161,12 @@ Make each cartoon to have a different Hearing Loss Joke theme.
 Add a subtle watermark: "created at toffa.ai".
 Output one image only, square 1:1.`;
 //GPT
-      const prompt = `Create a modern, high-quality cartoon illustration of the person in the uploaded image.
+      const prompt = `Create a modern, high-quality cartoon illustration of the people in the uploaded image.
 
 IMPORTANT:
-- Preserve the exact facial features, likeness, and identity of the person
+- Preserve the exact facial features, likeness, and identity of the people
 - Do not change age, gender, or ethnicity
-- Keep it clearly recognisable as the same individual
+- Keep it clearly recognisable as the same individuals
 
 Style:
 - Clean line art
@@ -189,14 +176,14 @@ Style:
 
 Scene:
 - Simple, uncluttered background
-- Focus on the character
+- Focus on the characters
 
 Tone:
 - Light humour around hearing loss
 - Subtle and relatable, not offensive
 
 Consistency:
-- Same person, same face, consistent features across all generated images`;
+- Same people, same face, consistent features across all generated images`;
 
 
 const openai = new OpenAI({
