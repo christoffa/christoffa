@@ -8,11 +8,11 @@ import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 //
-const express = require("express"); 
-const multer = require("multer"); 
+//const express = require("express"); 
+//const multer = require("multer"); 
+//const upload = multer({ storage: multer.memoryStorage() }); 
 const { buildPromptFromImage } = require("./vision-analysis");
 
-//const upload = multer({ storage: multer.memoryStorage() }); 
 const app = express();
 //
 cloudinary.config({
