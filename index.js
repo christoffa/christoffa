@@ -251,7 +251,7 @@ module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 //SOME OF THIS MAT BE DUPS
 //const express = require("express"); 
 //const multer = require("multer"); 
-const { buildPromptFromImage } = require("./vision-analysis");
+//const { buildPromptFromImage } = require("./vision-analysis");
 
 //const upload = multer({ storage: multer.memoryStorage() }); 
 const app = express();
