@@ -340,7 +340,7 @@ console.log("uploadMultipleToCloudinary2:");
   return uploads;
   } catch (error) {
     console.error("One or more uploads failed:", error);
-    retrun;    
+    retrun;     
   }
 
 } 
