@@ -248,7 +248,7 @@ console.log("Built prompt:", prompt);
 
 return { analysis, prompt }; 
 }
-export { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
+//NOT SURE export { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
 //module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
