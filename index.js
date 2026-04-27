@@ -213,11 +213,11 @@ return parts.join(", ");
 const peopleStr = descriptions.join(" and "); 
 const plural = count !== 1 ? "s" : "";
 
-return Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
+return `Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
-White background, centred composition, upper body portrait.; 
+White background, centred composition, upper body portrait.`; 
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
