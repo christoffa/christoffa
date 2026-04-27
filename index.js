@@ -254,7 +254,7 @@ module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 //const { buildPromptFromImage } = require("./vision-analysis");
 
 //const upload = multer({ storage: multer.memoryStorage() }); 
-const app = express();
+//const app = express();
 
 
 //GOOGEL BITS
