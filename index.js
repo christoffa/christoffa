@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
-import GoogleGenerativeAI from "@google/generative-ai";
+//import GoogleGenerativeAI from "@google/generative-ai";
 
 //
 //const express = require("express"); 
@@ -22,7 +22,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 // GOOGLE BITS
-//const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const sharp = require("sharp");
 const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
