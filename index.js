@@ -89,8 +89,8 @@ return getFallbackAnalysis();
 
 // ─── Validate and fill safe defaults ─────────────────────────────────────────
 
-function validateAnalysis(analysis) { const personDefaults = {
-
+function validateAnalysis(analysis) { 
+const personDefaults = {
 person_id: 1,
 gender: "unknown",
 age_group: "young_adult",
@@ -105,12 +105,10 @@ hearing_aid: {
   type: null,
   ear: null
 },
-notable_features: null
-  
+notable_features: null  
 };
 
 const topDefaults = {
-
 people_count: 1,
 people: [],
 setting: "unknown",
@@ -119,9 +117,11 @@ photo_quality: "good"
   
 };
 
-// Fill top-level defaults const validated = { ...topDefaults, ...analysis };
+// Fill top-level defaults 
+const validated = { ...topDefaults, ...analysis };
 
-// Fill per-person defaults const validatedPeople = (validated.people || []).map(person => {
+// Fill per-person defaults 
+const validatedPeople = (validated.people || []).map(person => {
 
 const merged = { ...personDefaults, ...person };
 merged.hearing_aid = {
@@ -133,7 +133,8 @@ return merged;
   
 });
 
-// If no people detected, add one default if (validatedPeople.length === 0) {
+// If no people detected, add one default 
+if (validatedPeople.length === 0) {
 
 validatedPeople.push(personDefaults);
 validated.people_count = 1;
@@ -144,10 +145,10 @@ validated.people = validatedPeople; return validated; }
 
 // ─── Fallback if vision fails entirely ───────────────────────────────────────
 
-function getFallbackAnalysis() { return {
-
-people_count: 1,
-people: [{
+function getFallbackAnalysis() { 
+return {
+  people_count: 1,
+  people: [{
   person_id: 1,
   gender: "unknown",
   age_group: "young_adult",
@@ -209,7 +210,8 @@ return parts.join(", ");
   
 });
 
-const peopleStr = descriptions.join(" and "); const plural = count !== 1 ? "s" : "";
+const peopleStr = descriptions.join(" and "); 
+const plural = count !== 1 ? "s" : "";
 
 return Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
