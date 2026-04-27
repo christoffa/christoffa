@@ -13,6 +13,249 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
+// GOOGLE BITS
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const sharp = require("sharp");
+const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
+
+// ─── Analyse photo with Gemini Vision ────────────────────────────────────────
+
+async function analysePhoto(imageBuffer) {
+  const model = genai.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const prompt = `Analyse this photo carefully and return a JSON object.
+Be precise and concise. If you cannot determine something, use null.
+Return ONLY valid JSON, no explanation, no markdown, no code blocks.
+
+{
+  "people_count": <integer>,
+  "people": [
+    {
+      "person_id": <integer starting at 1>,
+      "gender": "<male|female|unknown>",
+      "age_group": "<child|teenager|young_adult|middle_aged|elderly>",
+      "hair_colour": "<black|brown|blonde|red|grey|white|bald|unknown>",
+      "hair_length": "<bald|short|medium|long>",
+      "hair_style": "<straight|curly|wavy|afro|unknown>",
+      "facial_hair": "<none|stubble|beard|moustache|unknown>",
+      "glasses": <true|false>,
+      "skin_tone": "<very_light|light|medium|olive|dark|very_dark>",
+      "hearing_aid": {
+        "present": <true|false>,
+        "type": "<behind_ear|in_ear|cochlear_implant|unknown|null>",
+        "ear": "<left|right|both|unknown|null>"
+      },
+      "notable_features": "<string describing any distinctive features or null>"
+    }
+  ],
+  "setting": "<indoor|outdoor|unknown>",
+  "mood": "<happy|serious|neutral|laughing|unknown>",
+  "photo_quality": "<good|low_light|blurry|partially_obscured>"
+}`;
+
+  try {
+    // Convert buffer to base64
+    const base64Image = imageBuffer.toString("base64");
+
+    // Detect mime type using sharp
+    const metadata = await sharp(imageBuffer).metadata();
+    const mimeType = `image/${metadata.format}` || "image/jpeg";
+
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: base64Image,
+          mimeType
+        }
+      }
+    ]);
+
+    let raw = result.response.text().trim();
+
+    // Strip markdown code blocks if Gemini adds them anyway
+    raw = raw.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
+
+    const analysis = JSON.parse(raw);
+    return validateAnalysis(analysis);
+
+  
+  } 
+catch (err) {
+    console.error("Gemini vision error:", err.message);
+return getFallbackAnalysis();
+  } 
+}//  END async function analysePhoto(imageBuffer)
+
+// ─── Validate and fill safe defaults ─────────────────────────────────────────
+
+function validateAnalysis(analysis) { const personDefaults = {
+
+person_id: 1,
+gender: "unknown",
+age_group: "young_adult",
+hair_colour: "unknown",
+hair_length: "short",
+hair_style: "unknown",
+facial_hair: "none",
+glasses: false,
+skin_tone: "medium",
+hearing_aid: {
+  present: false,
+  type: null,
+  ear: null
+},
+notable_features: null
+  
+};
+
+const topDefaults = {
+
+people_count: 1,
+people: [],
+setting: "unknown",
+mood: "happy",
+photo_quality: "good"
+  
+};
+
+// Fill top-level defaults const validated = { ...topDefaults, ...analysis };
+
+// Fill per-person defaults const validatedPeople = (validated.people || []).map(person => {
+
+const merged = { ...personDefaults, ...person };
+merged.hearing_aid = {
+  present: person.hearing_aid?.present ?? false,
+  type: person.hearing_aid?.type ?? null,
+  ear: person.hearing_aid?.ear ?? null
+};
+return merged;
+  
+});
+
+// If no people detected, add one default if (validatedPeople.length === 0) {
+
+validatedPeople.push(personDefaults);
+validated.people_count = 1;
+  
+}
+
+validated.people = validatedPeople; return validated; }
+
+// ─── Fallback if vision fails entirely ───────────────────────────────────────
+
+function getFallbackAnalysis() { return {
+
+people_count: 1,
+people: [{
+  person_id: 1,
+  gender: "unknown",
+  age_group: "young_adult",
+  hair_colour: "unknown",
+  hair_length: "short",
+  hair_style: "unknown",
+  facial_hair: "none",
+  glasses: false,
+  skin_tone: "medium",
+  hearing_aid: { present: false, type: null, ear: null },
+  notable_features: null
+  }],
+  setting: "unknown",
+  mood: "happy",
+  photo_quality: "good"
+    
+  }; 
+}
+
+// ─── Build dynamic cartoon prompt ────────────────────────────────────────────
+function buildCartoonPrompt(analysis) { 
+const { people, people_count: count, mood = "happy" } = analysis;
+const descriptions = people.map(p => {
+const parts = [];
+  
+// Age and gender
+const age = (p.age_group || "adult").replace(/_/g, " ");
+const gender = p.gender || "person";
+parts.push(`${age} ${gender}`);
+
+// Hair
+if (p.hair_length === "bald") {
+  parts.push("bald");
+} else if (p.hair_length && p.hair_colour) {
+  const style = p.hair_style && p.hair_style !== "unknown" ? ` ${p.hair_style}` : "";
+  parts.push(`${p.hair_length} ${p.hair_colour}${style} hair`);
+}
+
+// Facial hair
+if (p.facial_hair && !["none", "unknown"].includes(p.facial_hair)) {
+  parts.push(p.facial_hair);
+}
+
+// Glasses
+if (p.glasses) parts.push("wearing glasses");
+
+// Hearing aid — critical for your use case
+const ha = p.hearing_aid || {};
+if (ha.present) {
+  const haType = (ha.type || "hearing aid").replace(/_/g, " ");
+  const haEar = ha.ear && ha.ear !== "unknown" ? ` on ${ha.ear} ear` : "";
+  parts.push(`wearing ${haType}${haEar}`);
+}
+
+// Notable features
+if (p.notable_features) parts.push(p.notable_features);
+
+return parts.join(", ");
+  
+});
+
+const peopleStr = descriptions.join(" and "); const plural = count !== 1 ? "s" : "";
+
+return Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
+Expression should be ${mood} and full of personality.
+Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
+Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
+White background, centred composition, upper body portrait.; 
+}
+
+// ─── Main pipeline ────────────────────────────────────────────────────────────
+
+async function buildPromptFromImage(imageBuffer) { 
+console.log("Analysing photo with Gemini Vision..."); 
+const analysis = await analysePhoto(imageBuffer);
+
+console.log(Detected ${analysis.people_count} person(s), mood: ${analysis.mood}); 
+console.log(Photo quality: ${analysis.photo_quality});
+
+if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
+  console.warn("Warning: low quality photo — cartoon results may vary");
+}
+
+const prompt = buildCartoonPrompt(analysis); 
+console.log("Built prompt:", prompt);
+
+return { analysis, prompt }; 
+}
+
+module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
+
+
+---
+
+/*Then in your existing Express endpoint:*/
+//SOME OF THIS MAT BE DUPS
+javascript const express = require("express"); 
+const multer = require("multer"); 
+const { buildPromptFromImage } = require("./vision-analysis");
+
+const upload = multer({ storage: multer.memoryStorage() }); 
+const app = express();
+
+
+//GOOGEL BITS
+
+
+
 //UPLOAD TO CLOUDINARY3
 
 async function uploadMultipleToCloudinary3(data, jobId) {
@@ -120,6 +363,31 @@ app.get("/", (req, res) => {
 });
 
 
+    //
+app.post("/generate-previewG", upload.single("image"), async (req, res) => { try {
+
+const imageBuffer = req.file.buffer;
+
+// Step 1: Analyse photo + build dynamic prompt
+const { analysis, prompt } = await buildPromptFromImage(imageBuffer);
+
+// Step 2: Pass prompt to your existing image generator
+// const images = await yourExistingGenerator(imageBuffer, prompt);
+
+res.json({
+  success: true,
+  prompt,                    // remove in production
+  analysis,                  // remove in production
+  // images
+});
+
+  
+} catch (err) {
+  console.error(err);
+  res.status(500).json({ success: false, error: err.message });  
+  } 
+});
+ // 
 //updated /generate-preview to accept files
 app.post(
   "/generate-preview",
