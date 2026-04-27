@@ -31,7 +31,7 @@ const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 // ─── Analyse photo with Gemini Vision ────────────────────────────────────────
 
 async function analysePhoto(imageBuffer) {
-  const model = genai.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
   const prompt = `Analyse this photo carefully and return a JSON object.
 Be precise and concise. If you cannot determine something, use null.
