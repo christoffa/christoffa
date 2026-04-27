@@ -9,7 +9,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import  sharp  from "sharp";
-import { buildPromptFromImage } from "./vision-analysis.js";
+//import { buildPromptFromImage } from "./vision-analysis.js";
 
 //
 //const express = require("express"); 
