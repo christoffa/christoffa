@@ -8,7 +8,7 @@ import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { sharp } from "sharp";
+import  sharp  from "sharp";
 
 //
 //const express = require("express"); 
