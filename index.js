@@ -232,7 +232,7 @@ White background, centred composition, upper body portrait.`;
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
 
-async function buildPromptFromImage(imageBuffer) { 
+async function buildPromptFromImage2(imageBuffer) { 
 console.log("Analysing photo with Gemini Vision..."); 
 const analysis = await analysePhoto(imageBuffer);
 
@@ -379,7 +379,7 @@ app.post("/generate-previewG", upload.single("image"), async (req, res) => { try
 const imageBuffer = req.file.buffer;
 
 // Step 1: Analyse photo + build dynamic prompt
-const { analysis, prompt } = await buildPromptFromImage(imageBuffer);
+const { analysis, prompt } = await buildPromptFromImage2(imageBuffer);
 
 // Step 2: Pass prompt to your existing image generator
 // const images = await yourExistingGenerator(imageBuffer, prompt);
