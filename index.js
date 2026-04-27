@@ -344,7 +344,7 @@ console.log("uploadMultipleToCloudinary2:");
   }
 
 } 
-const app = express();
+//const app = express();
 app.use(cors({
   origin: 'https://toffa.ai',
   methods: ['GET', 'POST' ],
