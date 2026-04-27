@@ -241,9 +241,6 @@ return { analysis, prompt };
 
 module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
-
----
-
 /*Then in your existing Express endpoint:*/
 //SOME OF THIS MAT BE DUPS
 javascript const express = require("express"); 
