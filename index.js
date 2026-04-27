@@ -249,8 +249,8 @@ module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
 /*Then in your existing Express endpoint:*/
 //SOME OF THIS MAT BE DUPS
-const express = require("express"); 
-const multer = require("multer"); 
+//const express = require("express"); 
+//const multer = require("multer"); 
 const { buildPromptFromImage } = require("./vision-analysis");
 
 //const upload = multer({ storage: multer.memoryStorage() }); 
