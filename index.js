@@ -8,11 +8,13 @@ import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { sharp } from "sharp";
 
 //
 //const express = require("express"); 
 //const multer = require("multer"); 
 //const upload = multer({ storage: multer.memoryStorage() }); 
+//const sharp = require("sharp");
 
 const app = express();
 //
@@ -23,7 +25,6 @@ cloudinary.config({
 });
 // GOOGLE BITS
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
-const sharp = require("sharp");
 const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
 // ─── Analyse photo with Gemini Vision ────────────────────────────────────────
