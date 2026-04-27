@@ -9,6 +9,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import  sharp  from "sharp";
+import { buildPromptFromImage } from "./vision-analysis.js";
 
 //
 //const express = require("express"); 
@@ -247,8 +248,9 @@ console.log("Built prompt:", prompt);
 
 return { analysis, prompt }; 
 }
+export { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
-module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
+//module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
 /*Then in your existing Express endpoint:*/
 //SOME OF THIS MAT BE DUPS
