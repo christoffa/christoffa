@@ -226,8 +226,8 @@ async function buildPromptFromImage(imageBuffer) {
 console.log("Analysing photo with Gemini Vision..."); 
 const analysis = await analysePhoto(imageBuffer);
 
-console.log(Detected ${analysis.people_count} person(s), mood: ${analysis.mood}); 
-console.log(Photo quality: ${analysis.photo_quality});
+console.log("Detected ${analysis.people_count} person(s), mood: ${analysis.mood}"); 
+console.log("Photo quality: ${analysis.photo_quality}");
 
 if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
   console.warn("Warning: low quality photo — cartoon results may vary");
