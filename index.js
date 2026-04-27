@@ -7,7 +7,14 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
+//
+const express = require("express"); 
+const multer = require("multer"); 
+const { buildPromptFromImage } = require("./vision-analysis");
 
+//const upload = multer({ storage: multer.memoryStorage() }); 
+const app = express();
+//
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -243,11 +250,11 @@ module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
 /*Then in your existing Express endpoint:*/
 //SOME OF THIS MAT BE DUPS
-javascript const express = require("express"); 
+const express = require("express"); 
 const multer = require("multer"); 
 const { buildPromptFromImage } = require("./vision-analysis");
 
-const upload = multer({ storage: multer.memoryStorage() }); 
+//const upload = multer({ storage: multer.memoryStorage() }); 
 const app = express();
 
 
