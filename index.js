@@ -709,7 +709,7 @@ Return results in JSON format.`;
             {
               inlineData: {
                 data: base64Data,
-                mimeType,
+                mimeType
               },
             },
           ],
