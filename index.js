@@ -648,7 +648,7 @@ res.status(200).json({
       }
     );
 
-//CHECK IMAGE
+//CHECK IMAGE const { GoogleGenAI, Type } = require("@google/genai");
 app.post(
   "/moderate",
   upload.fields([
@@ -657,7 +657,7 @@ app.post(
   async (req, res) => { 
     console.log("FILES:", req.files);
       console.log("BODY:", req.body);
-
+const { GoogleGenAI, Type } = require("@google/genai");
 //async function analyzeImage(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
   if (!apiKey) {
