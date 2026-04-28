@@ -414,7 +414,7 @@ try {
   });
 
   const response = await result.response;
-
+  consloe.log("response",response);//LOGGING
   // Check if the prompt was blocked
   if (response.promptFeedback && response.promptFeedback.blockReason) {
     console.warn(`Blocked: ${response.promptFeedback.blockReason}`);
