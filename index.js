@@ -443,7 +443,7 @@ try {
     console.log(">>>3");//LOGGING
   
     const result = await model.generateContent([
-      prompt,
+     // prompt,
       {
         inlineData: {
           data: base64Image,
