@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import  sharp  from "sharp";
 import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 //import { Type }  from "@google/generative-ai";
@@ -679,7 +679,7 @@ app.post(
 
 
   //const ai = new GoogleGenAI({ apiKey });
-  const ai = new GoogleGenerativeAI({ apiKey });//GoogleGenerativeAI
+  //const ai = new GoogleGenerativeAI({ apiKey });//GoogleGenerativeAI
   
   // Read image and convert to base64
   //const imageBuffer = fs.readFileSync(imagePath);
@@ -687,8 +687,60 @@ app.post(
   const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
   const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
-  const model = "gemini-3-flash-preview";
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-3-flash-preview",
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: SchemaType.OBJECT,
+        properties: {
+          overall_safe: { type: SchemaType.BOOLEAN },
+          categories: {
+            type: SchemaType.OBJECT,
+            properties: {
+              nudity: {
+                type: SchemaType.OBJECT,
+                properties: {
+                  score: { type: SchemaType.NUMBER },
+                  detected: { type: SchemaType.BOOLEAN },
+                  reason: { type: SchemaType.STRING },
+                },
+                required: ["score", "detected", "reason"],
+              },
+              abuse: {
+                type: SchemaType.OBJECT,
+                properties: {
+                  score: { type: SchemaType.NUMBER },
+                  detected: { type: SchemaType.BOOLEAN },
+                  reason: { type: SchemaType.STRING },
+                },
+                required: ["score", "detected", "reason"],
+              },
+              violence: {
+                type: SchemaType.OBJECT,
+                properties: {
+                  score: { type: SchemaType.NUMBER },
+                  detected: { type: SchemaType.BOOLEAN },
+                  reason: { type: SchemaType.STRING },
+                },
+                required: ["score", "detected", "reason"],
+              },
+            },
+            required: ["nudity", "abuse", "violence"],
+          },
+        },
+        required: ["overall_safe", "categories"],
+      },
+    },
+  });
   
+  // Read image and convert to base64
+  const imageBuffer = fs.readFileSync(imagePath);
+  const base64Data = imageBuffer.toString("base64");
+  const extension = path.extname(imagePath).slice(1);
+  const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
+
   const prompt = `Analyze this image for safety violations. Check for:
 1. Nudity or sexually explicit content.
 2. Abuse, harassment, or hate speech.
@@ -698,74 +750,25 @@ Provide a score (0 to 1) for the likelihood of each category, a boolean 'detecte
 Return results in JSON format.`;
 
   try {
-    const response = await ai.models.generateContent({
-      model,
-      contents: [
-        { text: prompt },
-        {
-          inlineData: {
-            data: base64Data,
-            mimeType,
-          },
-        },
-      ],
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: "OBJECT",
-          properties: {
-            overall_safe: { type: "BOOLEAN" },
-            categories: {
-              type: "OBJECT",
-              properties: {
-                nudity: {
-                  type: "OBJECT",
-                  properties: {
-                    score: { type: "NUMBER" },
-                    detected: { type: "BOOLEAN" },
-                    reason: { type: "STRING" },
-                  },
-                  required: ["score", "detected", "reason"],
-                },
-                abuse: {
-                  type: "OBJECT",
-                  properties: {
-                    score: { type: "NUMBER" },
-                    detected: { type: "BOOLEAN" },
-                    reason: { type: "STRING" },
-                  },
-                  required: ["score", "detected", "reason"],
-                },
-                violence: {
-                  type: "OBJECT",
-                  properties: {
-                    score: { type: "NUMBER" },
-                    detected: { type: "BOOLEAN" },
-                    reason: { type: "STRING" },
-                  },
-                  required: ["score", "detected", "reason"],
-                },
-              },
-              required: ["nudity", "abuse", "violence"],
-            },
-          },
-          required: ["overall_safe", "categories"],
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: base64Data,
+          mimeType,
         },
       },
-    });
+    ]);
 
     console.log("Analysis Result:");
-    const text = response.text;
+    const text = result.response.text();
     if (text) {
       console.log(JSON.stringify(JSON.parse(text), null, 2));
-    res.status(200).json({success: true, data: JSON.stringify(JSON.parse(text), null, 2)});
     } else {
       console.log("No response text received.");
-    res.status(200).json({success: true, data: "No response text received."});
     }
   } catch (error) {
     console.error("Error during analysis:", error.message);
-    res.status(500).json({ error: "Error during analysis", errorMessage: error.message});     
   }
 });
 
