@@ -484,7 +484,7 @@ try {
 
 } catch (error) {
   // Catch technical API errors
-  res.status(500).json({ success: false, error: "Analysis failed.", errorReason: error });
+  res.status(500).json({ success: false, error: "Analysis failed.", errorReason: error.message });
   return;
 }
 //return; //TESTING
