@@ -487,7 +487,7 @@ try {
   res.status(500).json({ success: false, error: "Analysis failed.", errorReason: error.message });
   return;
 }
-//return; //TESTING
+return; //TESTING
 //VALIDATE UPLOADED PHOTO FOR SAFETY
   
 // Step 1: Analyse photo + build dynamic prompt
