@@ -764,7 +764,7 @@ Return results in JSON format.`;
     const text = result.response.text();
     if (text) {
       const str = JSON.stringify(JSON.parse(text), null, 2);
-      console.log(str);
+      console.log("STR",str);
       // Strip markdown code blocks if Gemini adds them anyway
     //text = text.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
 
