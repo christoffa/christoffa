@@ -697,6 +697,7 @@ app.post(
 Provide a score (0 to 1) for the likelihood of each category, a boolean 'detected', and a 'reason'.
 Return results in JSON format.`;
 
+  const mt = imageFile.mimetype;
   try {
     const response = await model.generateContent({
       model,
@@ -707,7 +708,7 @@ Return results in JSON format.`;
             {
               inlineData: {
                 data: base64Data,
-                imageFile.mimeType,
+                mt,
               },
             },
           ],
