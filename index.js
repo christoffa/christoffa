@@ -764,6 +764,9 @@ Return results in JSON format.`;
     const text = result.response.text();
     if (text) {
       console.log(JSON.stringify(JSON.parse(text), null, 2));
+      // Strip markdown code blocks if Gemini adds them anyway
+    text = text.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
+
     res.status(200).json({ success: true, data: text});
     } else {
       console.log("No response text received.");
