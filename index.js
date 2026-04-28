@@ -407,6 +407,38 @@ const model = genAI.getGenerativeModel({
   safetySettings // Apply settings here
 });
 
+try {
+  const result = await model.generateContent({
+    contents: [{ role: "user", parts: [ { text: json_prompt }, { inlineData: { data: base64, mimeType: "image/png" } } ] }]
+  });
+
+  const response = await result.response;
+
+  // Check if the prompt was blocked
+  if (response.promptFeedback && response.promptFeedback.blockReason) {
+    console.warn(`Blocked: ${response.promptFeedback.blockReason}`);
+    return res.status(400).json({ 
+      success: false, 
+      error: "Image violates safety policies (Harmful content detected)." 
+    });
+  }
+
+  // Check if the candidate was blocked (response generation)
+  if (!response.candidates || response.candidates[0].finishReason === 'SAFETY') {
+    return res.status(400).json({ 
+      success: false, 
+      error: "Content analysis blocked due to safety concerns." 
+    });
+  }
+
+  const data = JSON.parse(response.text());
+  res.json({ success: true, data });
+
+} catch (error) {
+  // Catch technical API errors
+  res.status(500).json({ success: false, error: "Analysis failed." });
+}
+
 //VALIDATE UPLOADED PHOTO FOR SAFETY
   
 // Step 1: Analyse photo + build dynamic prompt
@@ -415,6 +447,7 @@ const { analysis, prompt } = await buildPromptFromImage2(imageBuffer);
 // Step 2: Pass prompt to your existing image generator
 // const images = await yourExistingGenerator(imageBuffer, prompt);
 
+  //for testing retun response of analyse
 res.json({
   success: true,
   prompt,                    // remove in production
@@ -429,6 +462,10 @@ res.json({
   } 
 });
  // 
+
+
+
+
 //updated /generate-preview to accept files
 app.post(
   "/generate-preview",
