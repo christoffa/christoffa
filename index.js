@@ -412,11 +412,28 @@ const model = genai.getGenerativeModel({
 console.log(">>model",model);//LOGGING
 
 try {
+    const base64Image = imageBuffer.toString("base64");
+
+    // Detect mime type using sharp
+    const metadata = await sharp(imageBuffer).metadata();
+    const mimeType = `image/${metadata.format}` || "image/jpeg";
+
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: base64Image,
+          mimeType
+        }
+      }
+    ]);
+  
   console.log("await model.generateContent");//LOGGING
+  /*
   const result = await model.generateContent({
     contents: [{ role: "user", parts: [ { text: json_prompt }, { inlineData: { data: base64, mimeType: "image/png" } } ] }]
   });
-
+*/
   console.log("Preresponse",);//LOGGING
   const response = await result.response;
   console.log("response",response);//LOGGING
