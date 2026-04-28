@@ -397,8 +397,11 @@ app.post(
       if (!imageFile ) {
         return res.status(400).json({ error: "Missing image" });
       }  
+    else {
+      console.log("imageFile GOOD:");
+    }
     
-const imageBuffer = req.file.buffer;
+const imageBuffer = imageFile.buffer;//req.file.buffer;
 
 //VALIDATE UPLOADED PHOTO FOR SAFETY
 //const { HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
