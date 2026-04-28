@@ -654,7 +654,10 @@ app.post(
   upload.fields([
     { name: "image", maxCount: 1 }
   ]),
-  async (req, res) => {  
+  async (req, res) => { 
+    console.log("FILES:", req.files);
+      console.log("BODY:", req.body);
+
 //async function analyzeImage(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
   if (!apiKey) {
