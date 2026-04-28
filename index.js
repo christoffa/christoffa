@@ -656,7 +656,7 @@ app.post(
   ]),
   async (req, res) => {  
 //async function analyzeImage(imageBuffer) {
-  const apiKey = process.env.GEMI_API_KEY;
+  const apiKey = process.env.GEM_API_KEY;
   if (!apiKey) {
     console.error("Please set GEMINI_API_KEY environment variable.");
     return;
