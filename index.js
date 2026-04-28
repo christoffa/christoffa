@@ -378,7 +378,7 @@ app.get("/", (req, res) => {
 
 
 //app.post("/generate-previewG", upload.single("image"), async (req, res) => { 
-app.post("/generate-previewG", upload.fields([ { name: "image", maxCount: 1 }]),("image"), async (req, res) => { 
+app.post("/generate-previewG", upload.fields([ { name: "image", maxCount: 1 }]), async (req, res) => { 
   
   try {
       console.log(">>1");//LOGGING
