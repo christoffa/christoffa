@@ -761,6 +761,7 @@ Return results in JSON format.`;
     res.status(500).json({ error: "Error during analysis", errorMessage: error.message});     
   }
 }
+);
 //CHECK IMAGE
 
 
