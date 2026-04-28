@@ -738,7 +738,7 @@ app.post(
   // Read image and convert to base64
   //const imageBuffer = fs.readFileSync(imagePath);
   //const base64Data = imageBuffer.toString("base64");
-  const extension = 'png';//path.extname(imagePath).slice(1);
+  //const extension = 'png';//path.extname(imagePath).slice(1);
   const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
   const prompt = `Analyze this image for safety violations. Check for:
