@@ -378,7 +378,7 @@ app.get("/", (req, res) => {
 
     //
 app.post("/generate-previewG", upload.single("image"), async (req, res) => { try {
-consloe.log(">>1");//LOGGING
+console.log(">>1");//LOGGING
   
 const imageBuffer = req.file.buffer;
 
@@ -403,7 +403,7 @@ const safetySettings = [
     threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
   },
 ];
-consloe.log(">>safetySettings",safetySettings);//LOGGING
+console.log(">>safetySettings",safetySettings);//LOGGING
 
 const model = genai.getGenerativeModel({ 
   model: "gemini-3-flash-preview",
@@ -412,14 +412,14 @@ const model = genai.getGenerativeModel({
 consloe.log(">>model",model);//LOGGING
 
 try {
-  consloe.log("await model.generateContent");//LOGGING
+  console.log("await model.generateContent");//LOGGING
   const result = await model.generateContent({
     contents: [{ role: "user", parts: [ { text: json_prompt }, { inlineData: { data: base64, mimeType: "image/png" } } ] }]
   });
 
-  consloe.log("Preresponse",);//LOGGING
+  console.log("Preresponse",);//LOGGING
   const response = await result.response;
-  consloe.log("response",response);//LOGGING
+  console.log("response",response);//LOGGING
   // Check if the prompt was blocked
   if (response.promptFeedback && response.promptFeedback.blockReason) {
     console.warn(`Blocked: ${response.promptFeedback.blockReason}`);
