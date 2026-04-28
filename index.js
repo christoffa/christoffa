@@ -378,7 +378,8 @@ app.get("/", (req, res) => {
 
     //
 app.post("/generate-previewG", upload.single("image"), async (req, res) => { try {
-
+consloe.log(">>1");//LOGGING
+  
 const imageBuffer = req.file.buffer;
 
 //VALIDATE UPLOADED PHOTO FOR SAFETY
@@ -402,11 +403,13 @@ const safetySettings = [
     threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
   },
 ];
+consloe.log(">>safetySettings",safetySettings);//LOGGING
 
 const model = genai.getGenerativeModel({ 
   model: "gemini-3-flash-preview",
   safetySettings // Apply settings here
 });
+consloe.log(">>model",model);//LOGGING
 
 try {
   consloe.log("await model.generateContent");//LOGGING
