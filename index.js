@@ -482,7 +482,7 @@ console.log(">>5");//LOGGING
  console.log(">>6");//LOGGING
 
   const data = JSON.parse(response.text());
-  console.log(">>7 data",data);//LOGGING
+  console.log(">>7 response.text()",response.text());//LOGGING
   res.json({ success: true, data });
 
 } catch (error) {
