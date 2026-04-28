@@ -409,7 +409,7 @@ const model = genai.getGenerativeModel({
   model: "gemini-3-flash-preview",
   safetySettings // Apply settings here
 });
-consloe.log(">>model",model);//LOGGING
+console.log(">>model",model);//LOGGING
 
 try {
   console.log("await model.generateContent");//LOGGING
