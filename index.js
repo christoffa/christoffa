@@ -763,11 +763,12 @@ Return results in JSON format.`;
     console.log("Analysis Result:");
     const text = result.response.text();
     if (text) {
-      console.log(JSON.stringify(JSON.parse(text), null, 2));
+      const str = JSON.stringify(JSON.parse(text), null, 2);
+      console.log(str);
       // Strip markdown code blocks if Gemini adds them anyway
-    text = text.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
+    //text = text.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
 
-    res.status(200).json({ success: true, data: text});
+    res.status(200).json({ success: true, data: str});
     } else {
       console.log("No response text received.");
     res.status(500).json({ success: false, errorMessage: error.message});
