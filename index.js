@@ -36,7 +36,8 @@ async function analysePhoto(imageBuffer) {
   const prompt = `Analyse this photo carefully and return a JSON object.
 Be precise and concise. If you cannot determine something, use null.
 Return ONLY valid JSON, no explanation, no markdown, no code blocks.
-
+Only mark hearing_aid.present as true if you can see clear mechanical or electronic hardwar (tubing, casing, or a procssor).
+if you are not 100% certain, you MUST use false and set notable_features to "No visable devive"
 {
   "people_count": <integer>,
   "people": [
@@ -52,8 +53,9 @@ Return ONLY valid JSON, no explanation, no markdown, no code blocks.
       "skin_tone": "<very_light|light|medium|olive|dark|very_dark>",
       "hearing_aid": {
         "present": <true|false>,
-        "type": "<behind_ear|in_ear|cochlear_implant|unknown|null>",
-        "ear": "<left|right|both|unknown|null>"
+        "type": "<behind_ear|in_ear|cochlear_implant|unknown|BAHA|non-visable|null>",
+        "ear": "<left|right|both|unknown|null>",
+        "detection_confidence": <float 0.0 to 1.0> 
       },
       "notable_features": "<string describing any distinctive features or null>"
     }
