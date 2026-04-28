@@ -687,9 +687,8 @@ app.post(
   const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
   const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
-  //const model = "gemini-3-flash-preview";
-  const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
-
+  const model = "gemini-3-flash-preview";
+  
   const prompt = `Analyze this image for safety violations. Check for:
 1. Nudity or sexually explicit content.
 2. Abuse, harassment, or hate speech.
@@ -698,21 +697,16 @@ app.post(
 Provide a score (0 to 1) for the likelihood of each category, a boolean 'detected', and a 'reason'.
 Return results in JSON format.`;
 
-  const mt = imageFile.mimetype;
   try {
-    const response = await model.generateContent({
+    const response = await ai.models.generateContent({
       model,
       contents: [
+        { text: prompt },
         {
-          parts: [
-            { text: prompt },
-            {
-              inlineData: {
-                data: base64Data,
-                mimeType
-              },
-            },
-          ],
+          inlineData: {
+            data: base64Data,
+            mimeType,
+          },
         },
       ],
       config: {
@@ -759,6 +753,18 @@ Return results in JSON format.`;
         },
       },
     });
+
+    console.log("Analysis Result:");
+    const text = response.text;
+    if (text) {
+      console.log(JSON.stringify(JSON.parse(text), null, 2));
+    } else {
+      console.log("No response text received.");
+    }
+  } catch (error) {
+    console.error("Error during analysis:", error.message);
+  }
+});
 
     console.log("Analysis Result:");
     console.log(JSON.stringify(JSON.parse(response.text), null, 2));
