@@ -674,7 +674,8 @@ app.post(
   const imageBuffer = imageFile.buffer;//req.file.buffer;
 
 
-  const ai = new GoogleGenAI({ apiKey });
+  //const ai = new GoogleGenAI({ apiKey });
+  const ai = new GoogleGenerativeAI({ apiKey });//GoogleGenerativeAI
   
   // Read image and convert to base64
   //const imageBuffer = fs.readFileSync(imagePath);
