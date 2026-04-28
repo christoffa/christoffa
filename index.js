@@ -9,6 +9,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import  sharp  from "sharp";
+import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 //import { buildPromptFromImage } from "./vision-analysis.js";
 
 //
@@ -381,7 +382,7 @@ app.post("/generate-previewG", upload.single("image"), async (req, res) => { try
 const imageBuffer = req.file.buffer;
 
 //VALIDATE UPLOADED PHOTO FOR SAFETY
-const { HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
+//const { HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
 
 const safetySettings = [
   {
