@@ -470,7 +470,8 @@ try {
       error: "Image violates safety policies (Harmful content detected)." 
     });
   }
-
+console.log(">>5");//LOGGING
+  
   // Check if the candidate was blocked (response generation)
   if (!response.candidates || response.candidates[0].finishReason === 'SAFETY') {
     return res.status(400).json({ 
@@ -478,8 +479,10 @@ try {
       error: "Content analysis blocked due to safety concerns." 
     });
   }
+ console.log(">>6");//LOGGING
 
   const data = JSON.parse(response.text());
+  console.log(">>7 data",data);//LOGGING
   res.json({ success: true, data });
 
 } catch (error) {
