@@ -647,7 +647,121 @@ res.status(200).json({
         }
       }
     );
+
+//CHECK IMAGE
+app.post(
+  "/moderate",
+  upload.fields([
+    { name: "image", maxCount: 1 }
+  ]),
+  async (req, res) => {  
+//async function analyzeImage(imageBuffer) {
+  const apiKey = process.env.GEMI_API_KEY;
+  if (!apiKey) {
+    console.error("Please set GEMINI_API_KEY environment variable.");
+    return;
+  }    
+    const imageFile = req.files?.image?.[0];
+    const text = req.body?.text;
+
+     if (!imageFile ) {
+        return res.status(400).json({ error: "Missing image" });
+      }  
+    else {
+      console.log("imageFile GOOD:");
+    }
     
+  const imageBuffer = imageFile.buffer;//req.file.buffer;
+
+
+  const ai = new GoogleGenAI({ apiKey });
+  
+  // Read image and convert to base64
+  //const imageBuffer = fs.readFileSync(imagePath);
+  const base64Data = imageBuffer.toString("base64");
+  const extension = path.extname(imagePath).slice(1);
+  const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
+
+  const model = "gemini-3-flash-preview";
+  
+  const prompt = `Analyze this image for safety violations. Check for:
+1. Nudity or sexually explicit content.
+2. Abuse, harassment, or hate speech.
+3. Violence, gore, or physical harm.
+
+Provide a score (0 to 1) for the likelihood of each category, a boolean 'detected', and a 'reason'.
+Return results in JSON format.`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model,
+      contents: [
+        {
+          parts: [
+            { text: prompt },
+            {
+              inlineData: {
+                data: base64Data,
+                mimeType,
+              },
+            },
+          ],
+        },
+      ],
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            overall_safe: { type: Type.BOOLEAN },
+            categories: {
+              type: Type.OBJECT,
+              properties: {
+                nudity: {
+                  type: Type.OBJECT,
+                  properties: {
+                    score: { type: Type.NUMBER },
+                    detected: { type: Type.BOOLEAN },
+                    reason: { type: Type.STRING },
+                  },
+                  required: ["score", "detected", "reason"],
+                },
+                abuse: {
+                  type: Type.OBJECT,
+                  properties: {
+                    score: { type: Type.NUMBER },
+                    detected: { type: Type.BOOLEAN },
+                    reason: { type: Type.STRING },
+                  },
+                  required: ["score", "detected", "reason"],
+                },
+                violence: {
+                  type: Type.OBJECT,
+                  properties: {
+                    score: { type: Type.NUMBER },
+                    detected: { type: Type.BOOLEAN },
+                    reason: { type: Type.STRING },
+                  },
+                  required: ["score", "detected", "reason"],
+                },
+              },
+              required: ["nudity", "abuse", "violence"],
+            },
+          },
+          required: ["overall_safe", "categories"],
+        },
+      },
+    });
+
+    console.log("Analysis Result:");
+    console.log(JSON.stringify(JSON.parse(response.text), null, 2));
+    res.status(200).json({success: true, data: response.text});
+  } catch (error) {
+    console.error("Error during analysis:", error.message);
+    res.status(500).json({ error: "Error during analysis", errorMessage: error.message});     
+  }
+}
+//CHECK IMAGE
 
 
 
