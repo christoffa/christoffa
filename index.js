@@ -403,7 +403,7 @@ const safetySettings = [
   },
 ];
 
-const model = genAI.getGenerativeModel({ 
+const model = genai.getGenerativeModel({ 
   model: "gemini-3-flash-preview",
   safetySettings // Apply settings here
 });
