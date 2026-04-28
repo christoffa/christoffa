@@ -758,23 +758,18 @@ Return results in JSON format.`;
     const text = response.text;
     if (text) {
       console.log(JSON.stringify(JSON.parse(text), null, 2));
+    res.status(200).json({success: true, data: JSON.stringify(JSON.parse(text), null, 2)});
     } else {
       console.log("No response text received.");
+    res.status(200).json({success: true, data: "No response text received."});
     }
-  } catch (error) {
-    console.error("Error during analysis:", error.message);
-  }
-});
-
-    console.log("Analysis Result:");
-    console.log(JSON.stringify(JSON.parse(response.text), null, 2));
-    res.status(200).json({success: true, data: response.text});
   } catch (error) {
     console.error("Error during analysis:", error.message);
     res.status(500).json({ error: "Error during analysis", errorMessage: error.message});     
   }
-}
-);
+});
+
+    
 //CHECK IMAGE
 
 
