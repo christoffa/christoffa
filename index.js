@@ -409,10 +409,12 @@ const model = genai.getGenerativeModel({
 });
 
 try {
+  consloe.log("await model.generateContent");//LOGGING
   const result = await model.generateContent({
     contents: [{ role: "user", parts: [ { text: json_prompt }, { inlineData: { data: base64, mimeType: "image/png" } } ] }]
   });
 
+  consloe.log("Preresponse",);//LOGGING
   const response = await result.response;
   consloe.log("response",response);//LOGGING
   // Check if the prompt was blocked
