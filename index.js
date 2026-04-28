@@ -683,11 +683,12 @@ app.post(
   // Read image and convert to base64
   //const imageBuffer = fs.readFileSync(imagePath);
   const base64Data = imageBuffer.toString("base64");
-  const extension = "png";//path.extname(imagePath).slice(1);
-  const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
+  //const extension = "png";//path.extname(imagePath).slice(1);//mimetype
+  //const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
-  const model = "gemini-3-flash-preview";
-  
+  //const model = "gemini-3-flash-preview";
+  const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
   const prompt = `Analyze this image for safety violations. Check for:
 1. Nudity or sexually explicit content.
 2. Abuse, harassment, or hate speech.
@@ -697,7 +698,7 @@ Provide a score (0 to 1) for the likelihood of each category, a boolean 'detecte
 Return results in JSON format.`;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await model.generateContent({
       model,
       contents: [
         {
@@ -706,7 +707,7 @@ Return results in JSON format.`;
             {
               inlineData: {
                 data: base64Data,
-                mimeType,
+                imageFile.mimeType,
               },
             },
           ],
