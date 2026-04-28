@@ -7,9 +7,10 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, Type } from "@google/generative-ai";
 import  sharp  from "sharp";
 import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
+//const { GoogleGenAI, Type } = require("@google/genai");
 //import { buildPromptFromImage } from "./vision-analysis.js";
 
 //
@@ -657,7 +658,7 @@ app.post(
   async (req, res) => { 
     console.log("FILES:", req.files);
       console.log("BODY:", req.body);
-const { GoogleGenAI, Type } = require("@google/genai");
+
 //async function analyzeImage(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
   if (!apiKey) {
