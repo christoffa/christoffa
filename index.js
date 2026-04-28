@@ -377,9 +377,21 @@ app.get("/", (req, res) => {
 
 
     //
-app.post("/generate-previewG", upload.single("image"), async (req, res) => { try {
-console.log(">>1");//LOGGING
+app.post("/generate-previewG", upload.single("image"), async (req, res) => { 
   
+  try {
+      console.log(">>1");//LOGGING
+      console.log("Whai i got:", req);
+      console.log("FILES:", req.files);
+      console.log("BODY:", req.body);
+
+      const imageFile = req.files?.image?.[0];
+      const text = req.body?.text;
+
+      if (!imageFile ) {
+        return res.status(400).json({ error: "Missing image" });
+      }  
+    
 const imageBuffer = req.file.buffer;
 
 //VALIDATE UPLOADED PHOTO FOR SAFETY
@@ -413,11 +425,14 @@ console.log(">>model",model);//LOGGING
 
 try {
     const base64Image = imageBuffer.toString("base64");
-
+    console.log(">>>1");//LOGGING
+  
     // Detect mime type using sharp
     const metadata = await sharp(imageBuffer).metadata();
+    console.log(">>>2");//LOGGING
     const mimeType = `image/${metadata.format}` || "image/jpeg";
-
+    console.log(">>>3");//LOGGING
+  
     const result = await model.generateContent([
       prompt,
       {
@@ -427,6 +442,7 @@ try {
         }
       }
     ]);
+  console.log(">>>4");//LOGGING
   
   console.log("await model.generateContent");//LOGGING
   /*
