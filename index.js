@@ -10,7 +10,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import  sharp  from "sharp";
 import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
-import { Type }  from "@google/generative-ai";
+//import { Type }  from "@google/generative-ai";
 //import { buildPromptFromImage } from "./vision-analysis.js";
 
 //
@@ -718,36 +718,36 @@ Return results in JSON format.`;
       config: {
         responseMimeType: "application/json",
         responseSchema: {
-          type: Type.OBJECT,
+          type: "OBJECT",
           properties: {
-            overall_safe: { type: Type.BOOLEAN },
+            overall_safe: { type: "BOOLEAN" },
             categories: {
-              type: Type.OBJECT,
+              type: "OBJECT",
               properties: {
                 nudity: {
-                  type: Type.OBJECT,
+                  type: "OBJECT",
                   properties: {
-                    score: { type: Type.NUMBER },
-                    detected: { type: Type.BOOLEAN },
-                    reason: { type: Type.STRING },
+                    score: { type: "NUMBER" },
+                    detected: { type: "BOOLEAN" },
+                    reason: { type: "STRING" },
                   },
                   required: ["score", "detected", "reason"],
                 },
                 abuse: {
-                  type: Type.OBJECT,
+                  type: "OBJECT",
                   properties: {
-                    score: { type: Type.NUMBER },
-                    detected: { type: Type.BOOLEAN },
-                    reason: { type: Type.STRING },
+                    score: { type: "NUMBER" },
+                    detected: { type: "BOOLEAN" },
+                    reason: { type: "STRING" },
                   },
                   required: ["score", "detected", "reason"],
                 },
                 violence: {
-                  type: Type.OBJECT,
+                  type: "OBJECT",
                   properties: {
-                    score: { type: Type.NUMBER },
-                    detected: { type: Type.BOOLEAN },
-                    reason: { type: Type.STRING },
+                    score: { type: "NUMBER" },
+                    detected: { type: "BOOLEAN" },
+                    reason: { type: "STRING" },
                   },
                   required: ["score", "detected", "reason"],
                 },
