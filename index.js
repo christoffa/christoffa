@@ -10,7 +10,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import  sharp  from "sharp";
 import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
-import { GoogleGenAI, Type } = from "@google/genai";
+import { GoogleGenAI, Type }  from "@google/genai";
 //import { buildPromptFromImage } from "./vision-analysis.js";
 
 //
