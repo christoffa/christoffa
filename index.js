@@ -380,6 +380,35 @@ app.post("/generate-previewG", upload.single("image"), async (req, res) => { try
 
 const imageBuffer = req.file.buffer;
 
+//VALIDATE UPLOADED PHOTO FOR SAFETY
+const { HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
+
+const safetySettings = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE, // Most restrictive
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+];
+
+const model = genAI.getGenerativeModel({ 
+  model: "gemini-3-flash-preview",
+  safetySettings // Apply settings here
+});
+
+//VALIDATE UPLOADED PHOTO FOR SAFETY
+  
 // Step 1: Analyse photo + build dynamic prompt
 const { analysis, prompt } = await buildPromptFromImage2(imageBuffer);
 
