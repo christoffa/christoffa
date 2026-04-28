@@ -437,7 +437,7 @@ try {
 
 } catch (error) {
   // Catch technical API errors
-  res.status(500).json({ success: false, error: "Analysis failed." });
+  res.status(500).json({ success: false, error: "Analysis failed.", errorReason: error });
 }
 return; //TESTING
 //VALIDATE UPLOADED PHOTO FOR SAFETY
