@@ -439,7 +439,7 @@ try {
   // Catch technical API errors
   res.status(500).json({ success: false, error: "Analysis failed." });
 }
-
+return; //TESTING
 //VALIDATE UPLOADED PHOTO FOR SAFETY
   
 // Step 1: Analyse photo + build dynamic prompt
