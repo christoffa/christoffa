@@ -387,8 +387,6 @@ app.get("/", (req, res) => {
 
 
 
-//app.post("/generate-previewG", upload.single("image"), async (req, res) => { 
-//app.post("/generate-previewG", upload.fields([ { name: "image", maxCount: 1 }]), async (req, res) => { 
 app.post(
   "/generate-previewG",
   upload.fields([
@@ -396,8 +394,6 @@ app.post(
   ]),
   async (req, res) => {  
   try {
-      console.log(">>1");//LOGGING
-      console.log("Whai i got:", req);
       console.log("FILES:", req.files);
       console.log("BODY:", req.body);
 
@@ -414,8 +410,15 @@ app.post(
 const imageBuffer = imageFile.buffer;//req.file.buffer;
 const moderateResponse =  await moderateImage(imageBuffer); 
 console.log("moderateResponse",moderateResponse);
-    
-return res.status(200).json(moderateResponse);//FOR NOW
+/*
+ "success": true,
+    "data": {
+        "overall_safe": false,
+*/
+if  (!moderateResponse.success || !moderateResponse..data.overall_safe){
+      return res.status(200).json({"success": true, errorMessage: "Your uploaded image failed moderation" });
+}
+//return res.status(200).json(moderateResponse);//FOR NOW
       
     
 //VALIDATE UPLOADED PHOTO FOR SAFETY
