@@ -414,7 +414,7 @@ app.post(
 const imageBuffer = imageFile.buffer;//req.file.buffer;
 
 const moderateResponse =  moderateImage(imageBuffer); 
-return res.status(200).json({moderateResponse);//FOR NOW
+return res.status(200).json(moderateResponse);//FOR NOW
       
     
 //VALIDATE UPLOADED PHOTO FOR SAFETY
