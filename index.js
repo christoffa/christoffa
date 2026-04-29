@@ -415,7 +415,7 @@ console.log("moderateResponse",moderateResponse);
     "data": {
         "overall_safe": false,
 */
-if  (!moderateResponse.success || !moderateResponse..data.overall_safe){
+if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
       return res.status(200).json({"success": true, errorMessage: "Your uploaded image failed moderation" });
 }
 //return res.status(200).json(moderateResponse);//FOR NOW
