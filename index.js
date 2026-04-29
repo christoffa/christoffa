@@ -664,8 +664,7 @@ res.status(200).json({
 //CHECK IMAGE const { GoogleGenAI, Type } = require("@google/genai");
 
   //Analyze this image for safety violations. Check for: Nudity or sexually explicit content. Abuse, harassment, or hate speech. Violence, gore, or physical harm.
-  async function console.log("moderateResponse",moderateResponse);
-(imageBuffer) {
+  async function moderateImage(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
   if (!apiKey) {
     console.error("Please set GEMINI_API_KEY environment variable.");
