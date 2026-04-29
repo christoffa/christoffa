@@ -209,7 +209,7 @@ if (p.facial_hair && !["none", "unknown"].includes(p.facial_hair)) {
 // Glasses
 if (p.glasses) parts.push("wearing glasses");
 
-// Hearing aid — critical for your use case
+// Hearing aid — critical for our use case
 const ha = p.hearing_aid || {};
 if (ha.present) {
   const haType = (ha.type || "hearing aid").replace(/_/g, " ");
@@ -234,13 +234,14 @@ IMPORTANT:
 - Output image square 1:1
 - Make it a light, playful hearing-loss joke with clean composition.
 */
-  
+
+  const Joke = "Volume40 TV to loud ";//ADD DIFERENT Joke for each of 3 images
 return `Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
 White background, centred composition, upper body portrait.
-Important: Make it a light, playful hearing-loss joke with clean composition`; 
+Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition`; 
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
