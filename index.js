@@ -412,7 +412,7 @@ app.post(
     }
     
 const imageBuffer = imageFile.buffer;//req.file.buffer;
-const moderateResponse =  moderateImage(imageBuffer); 
+const moderateResponse =  await moderateImage(imageBuffer); 
 console.log("moderateResponse",moderateResponse);
     
 return res.status(200).json(moderateResponse);//FOR NOW
@@ -664,7 +664,8 @@ res.status(200).json({
 //CHECK IMAGE const { GoogleGenAI, Type } = require("@google/genai");
 
   //Analyze this image for safety violations. Check for: Nudity or sexually explicit content. Abuse, harassment, or hate speech. Violence, gore, or physical harm.
-  async function moderateImage(imageBuffer) {
+  async function console.log("moderateResponse",moderateResponse);
+(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
   if (!apiKey) {
     console.error("Please set GEMINI_API_KEY environment variable.");
