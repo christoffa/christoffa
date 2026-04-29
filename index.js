@@ -412,8 +412,9 @@ app.post(
     }
     
 const imageBuffer = imageFile.buffer;//req.file.buffer;
-
 const moderateResponse =  moderateImage(imageBuffer); 
+console.log("moderateResponse",moderateResponse);
+    
 return res.status(200).json(moderateResponse);//FOR NOW
       
     
