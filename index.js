@@ -38,8 +38,8 @@ async function analysePhoto(imageBuffer) {
   const prompt = `Analyse this photo carefully and return a JSON object.
 Be precise and concise. If you cannot determine something, use null.
 Return ONLY valid JSON, no explanation, no markdown, no code blocks.
-Only mark hearing_aid.present as true if you can see clear mechanical or electronic hardwar (tubing, casing, or a procssor).
-if you are not 100% certain, you MUST use false and set notable_features to "No visable devive"
+Only mark hearing_aid.present as true if you can see clear mechanical or electronic hardware (tubing, casing, or a processor).
+if you are not 100% certain, you MUST use false and set notable_features to "No visible device"
 {
   "people_count": <integer>,
   "people": [
@@ -226,12 +226,21 @@ return parts.join(", ");
 
 const peopleStr = descriptions.join(" and "); 
 const plural = count !== 1 ? "s" : "";
-
+/*
+IMPORTANT:
+- Preserve the exact facial features, likeness, and identity of the people
+- Do not change age, gender, or ethnicity
+- Keep it clearly recognisable as the same individuals
+- Output image square 1:1
+- Make it a light, playful hearing-loss joke with clean composition.
+*/
+  
 return `Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
-White background, centred composition, upper body portrait.`; 
+White background, centred composition, upper body portrait.
+Important: Make it a light, playful hearing-loss joke with clean composition`; 
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
@@ -404,9 +413,11 @@ app.post(
     
 const imageBuffer = imageFile.buffer;//req.file.buffer;
 
+const moderateResponse =  moderateImage(imageBuffer); 
+return res.status(200).json({moderateResponse);//FOR NOW
+      
+    
 //VALIDATE UPLOADED PHOTO FOR SAFETY
-//const { HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
-
 const safetySettings = [
   {
     category: HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -650,6 +661,7 @@ res.status(200).json({
     );
 
 //CHECK IMAGE const { GoogleGenAI, Type } = require("@google/genai");
+/*
 app.post(
   "/moderate",
   upload.fields([
@@ -658,8 +670,9 @@ app.post(
   async (req, res) => { 
     console.log("FILES:", req.files);
       console.log("BODY:", req.body);
-
-//async function analyzeImage(imageBuffer) {
+  */
+  //Analyze this image for safety violations. Check for: Nudity or sexually explicit content. Abuse, harassment, or hate speech. Violence, gore, or physical harm.
+  async function moderateImage(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
   if (!apiKey) {
     console.error("Please set GEMINI_API_KEY environment variable.");
@@ -735,13 +748,7 @@ app.post(
     },
   });
   
-  // Read image and convert to base64
-  //const imageBuffer = fs.readFileSync(imagePath);
-  //const base64Data = imageBuffer.toString("base64");
-  //const extension = 'png';//path.extname(imagePath).slice(1);
-  //const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
-
-  const prompt = `Analyze this image for safety violations. Check for:
+const prompt = `Analyze this image for safety violations. Check for:
 1. Nudity or sexually explicit content.
 2. Abuse, harassment, or hate speech.
 3. Violence, gore, or physical harm.
@@ -768,17 +775,20 @@ Return results in JSON format.`;
       // Strip markdown code blocks if Gemini adds them anyway
     //text = text.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
 
-    res.status(200).json({ success: true, data: JSON.parse(text)});
+    //res.status(200).json({ success: true, data: JSON.parse(text)});
+    return { success: true, data: JSON.parse(text)};
     } else {
       console.log("No response text received.");
-    res.status(500).json({ success: false, errorMessage: error.message});
+    //res.status(500).json({ success: false, errorMessage: error.message});
+    return { success: false, errorMessage: error.message};
     }
   } catch (error) {
     console.error("Error during analysis:", error.message);
-    res.status(500).json({ success: false, error: "Error during analysis",errorMessage: error.message});
+    //res.status(500).json({ success: false, error: "Error during analysis",errorMessage: error.message});
+    return { success: false, error: "Error during analysis",errorMessage: error.message};
         
   }
-});
+}//); //END OF async function moderateImage(imageBuffer) {
 
     
 //CHECK IMAGE
