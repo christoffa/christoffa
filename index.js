@@ -661,16 +661,7 @@ res.status(200).json({
     );
 
 //CHECK IMAGE const { GoogleGenAI, Type } = require("@google/genai");
-/*
-app.post(
-  "/moderate",
-  upload.fields([
-    { name: "image", maxCount: 1 }
-  ]),
-  async (req, res) => { 
-    console.log("FILES:", req.files);
-      console.log("BODY:", req.body);
-  */
+
   //Analyze this image for safety violations. Check for: Nudity or sexually explicit content. Abuse, harassment, or hate speech. Violence, gore, or physical harm.
   async function moderateImage(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
@@ -678,25 +669,9 @@ app.post(
     console.error("Please set GEMINI_API_KEY environment variable.");
     return;
   }    
-    const imageFile = req.files?.image?.[0];
-    const text = req.body?.text;
-
-     if (!imageFile ) {
-        return res.status(400).json({ error: "Missing image" });
-      }  
-    else {
-      console.log("imageFile GOOD:");
-    }
     
-  const ib = imageFile.buffer;//req.file.buffer;
 
-
-  //const ai = new GoogleGenAI({ apiKey });
-  //const ai = new GoogleGenerativeAI({ apiKey });//GoogleGenerativeAI
-  
-  // Read image and convert to base64
-  //const imageBuffer = fs.readFileSync(imagePath);
-  const base64Data = ib.toString("base64");
+  const base64Data = imageBuffer.toString("base64");
   const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
   const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
