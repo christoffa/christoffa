@@ -408,7 +408,8 @@ app.post(
     }
     
 const imageBuffer = imageFile.buffer;//req.file.buffer;
-const moderateResponse =  await moderateImage(imageBuffer); 
+//Step 1 Ayalyse photo for suxuaality, abause or hate    
+const moderateResponse =  await moderateImage(imageBuffer); //MODERATE UPLOADED IMAGE
 console.log("moderateResponse",moderateResponse);
 /*
  "success": true,
@@ -418,101 +419,11 @@ console.log("moderateResponse",moderateResponse);
 if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
       return res.status(200).json({"success": true, errorMessage: "Your uploaded image failed moderation" });
 }
-//return res.status(200).json(moderateResponse);//FOR NOW
-      
-    
-//VALIDATE UPLOADED PHOTO FOR SAFETY
-const safetySettings = [
-  {
-    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE, // Most restrictive
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-  },
-];
-console.log(">>safetySettings",safetySettings);//LOGGING
-
-const model = genai.getGenerativeModel({ 
-  model: "gemini-3-flash-preview",
-  safetySettings // Apply settings here
-});
-console.log(">>model",model);//LOGGING
-
-try {
-    const base64Image = imageBuffer.toString("base64");
-    console.log(">>>1");//LOGGING
   
-    // Detect mime type using sharp
-    const metadata = await sharp(imageBuffer).metadata();
-    console.log(">>>2");//LOGGING
-    const mimeType = `image/${metadata.format}` || "image/jpeg";
-    console.log(">>>3");//LOGGING
-  
-    const result = await model.generateContent([
-      "check safety settings in this image",
-      {
-        inlineData: {
-          data: base64Image,
-          mimeType
-        }
-      }
-    ]);
-  console.log(">>>4");//LOGGING
-  
-  console.log("await model.generateContent");//LOGGING
-  /*
-  const result = await model.generateContent({
-    contents: [{ role: "user", parts: [ { text: json_prompt }, { inlineData: { data: base64, mimeType: "image/png" } } ] }]
-  });
-*/
-  console.log("Preresponse",);//LOGGING
-  const response = await result.response;
-  console.log("response",response);//LOGGING
-  // Check if the prompt was blocked
-  if (response.promptFeedback && response.promptFeedback.blockReason) {
-    console.warn(`Blocked: ${response.promptFeedback.blockReason}`);
-    return res.status(400).json({ 
-      success: false, 
-      error: "Image violates safety policies (Harmful content detected)." 
-    });
-  }
-console.log(">>5");//LOGGING
-  
-  // Check if the candidate was blocked (response generation)
-  if (!response.candidates || response.candidates[0].finishReason === 'SAFETY') {
-    return res.status(400).json({ 
-      success: false, 
-      error: "Content analysis blocked due to safety concerns." 
-    });
-  }
- console.log(">>6");//LOGGING
-
-  const data = JSON.parse(response.text());
-  console.log(">>7 response.text()",response.text());//LOGGING
-  res.json({ success: true, data });
-
-} catch (error) {
-  // Catch technical API errors
-  res.status(500).json({ success: false, error: "Analysis failed.", errorReason: error.message });
-  return;
-}
-return; //TESTING
-//VALIDATE UPLOADED PHOTO FOR SAFETY
-  
-// Step 1: Analyse photo + build dynamic prompt
+// Step 2: Analyse photo + build dynamic prompt
 const { analysis, prompt } = await buildPromptFromImage2(imageBuffer);
 
-// Step 2: Pass prompt to your existing image generator
+// Step 3: Pass prompt to your existing image generator
 // const images = await yourExistingGenerator(imageBuffer, prompt);
 
   //for testing retun response of analyse
