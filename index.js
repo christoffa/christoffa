@@ -688,7 +688,7 @@ app.post(
       console.log("imageFile GOOD:");
     }
     
-  const imageBuffer = imageFile.buffer;//req.file.buffer;
+  const ib = imageFile.buffer;//req.file.buffer;
 
 
   //const ai = new GoogleGenAI({ apiKey });
@@ -696,7 +696,7 @@ app.post(
   
   // Read image and convert to base64
   //const imageBuffer = fs.readFileSync(imagePath);
-  const base64Data = imageBuffer.toString("base64");
+  const base64Data = ib.toString("base64");
   const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
   const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
