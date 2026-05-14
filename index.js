@@ -803,7 +803,7 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
   const model = 'gemini-3.1-flash-image-preview';
   
   try {
-  onst result = await model.generateContent([
+  const result = await model.generateContent([
       prompt,
       {
         inlineData: {
