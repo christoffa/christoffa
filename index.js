@@ -772,35 +772,12 @@ const base64Data = imageBuffer.toString("base64");
 const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
 const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
- const tools = [
-    {
-      googleSearch: {
-        searchTypes: {
-          webSearch: {},
-        },
-      }
-    },
-  ];
-  const config = {
-    thinkingConfig: {
-      //thinkingLevel: ThinkingLevel.HIGH,
-    },
-    imageConfig: {
-      aspectRatio: "1:1",
-      imageSize: "1K",
-      personGeneration: "",
-    },
-    responseModalities: [
-        'IMAGE',
-    ],
-    tools,
-    systemInstruction: [
-        {
-          text: `return as base64 nOT CHUNKED`,
-        }
-    ],
-  };
-  const model = 'gemini-3.1-flash-image-preview';
+//const model = 'gemini-3.1-flash-image-preview';
+const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
+
+async function analysePhoto(imageBuffer) {
+const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
   
   try {
   const result = await model.generateContent([
