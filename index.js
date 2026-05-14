@@ -446,7 +446,7 @@ console.log("Prompt 1...",prompt1);
 const  prompt2  = await buildPromptFromImage2(imageBuffer,2);
 console.log("Prompt 2..."),prompt2; 
 const  prompt3  = await buildPromptFromImage2(imageBuffer,3);
-console.log("Prompt 3...",3prompt); 
+console.log("Prompt 3...",prompt3); 
     
 
 // Step 4: Pass prompt to your existing image generator
