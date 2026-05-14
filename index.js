@@ -475,7 +475,7 @@ const  prompt3  = await buildCartoonPrompt(analysis,3);
 console.log("Prompt 3...",prompt3); 
 
 //CREATE  3 CARTOONS
-  try {
+ // try {
     // 1. Create an array of 3 promises
     const cartoonPromises = [
       CreateImageInGemini(imageBuffer, prompt1), 
@@ -495,7 +495,7 @@ console.log("Prompt 3...",prompt3);
     const finalUrls = await Promise.all(uploadPromises);
     
     return finalUrls; // Returns array of 3 Cloudinary URLs
-  } 
+  //} 
 //CREATE 3 CARTOONS    
   
 
