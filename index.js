@@ -495,10 +495,7 @@ console.log("Prompt 3...",prompt3);
     const finalUrls = await Promise.all(uploadPromises);
     
     return finalUrls; // Returns array of 3 Cloudinary URLs
-  } catch (error) {
-    console.error("Batch cartoon generation failed:", error);
-    throw error;
-  }
+  } 
 //CREATE 3 CARTOONS    
   
 
@@ -511,6 +508,10 @@ res.json({
   
 
   } 
+    catch (error) {
+    console.error("Batch cartoon generation failed:", error);
+    throw error;
+  }
  
 });
 
