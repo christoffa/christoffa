@@ -440,7 +440,7 @@ if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
 // Step 2: Analyse photo
 console.log("Analysing photo with Gemini Vision..."); 
 const analysis = await analysePhoto(imageBuffer);
-console.log("Detected " + ${analysis.people_count + " person(s)"); 
+console.log("Detected " + analysis.people_count + " person(s)"); 
 console.log("Photo quality: ",analysis.photo_quality);
 
 if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
