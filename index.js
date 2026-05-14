@@ -783,7 +783,7 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
   ];
   const config = {
     thinkingConfig: {
-      thinkingLevel: ThinkingLevel.HIGH,
+      //thinkingLevel: ThinkingLevel.HIGH,
     },
     imageConfig: {
       aspectRatio: "1:1",
