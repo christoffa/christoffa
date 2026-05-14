@@ -41,6 +41,7 @@ Return ONLY valid JSON, no explanation, no markdown, no code blocks.
 Only mark hearing_aid.present as true if you can see clear mechanical or electronic hardware (tubing, casing, or a processor).
 if you are not 100% certain, you MUST use false and set notable_features to "No visible device"
 {
+  "hearing_aid_count": <integer>,
   "people_count": <integer>,
   "people": [
     {
@@ -123,6 +124,7 @@ notable_features: null
 };
 
 const topDefaults = {
+hearing_aid_count: 0,
 people_count: 1,
 people: [],
 setting: "unknown",
@@ -161,6 +163,7 @@ validated.people = validatedPeople; return validated; }
 
 function getFallbackAnalysis() { 
 return {
+  hearing_aid_count: 0,
   people_count: 1,
   people: [{
   person_id: 1,
