@@ -31,7 +31,7 @@ cloudinary.config({
 const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
 // ─── Analyse photo with Gemini Vision ────────────────────────────────────────
-
+//CHANGED ON 14/5/26 to only get info on gender and hearing devices
 async function analysePhoto(imageBuffer) {
   const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
@@ -47,12 +47,12 @@ if you are not 100% certain, you MUST use false and set notable_features to "No 
       "person_id": <integer starting at 1>,
       "gender": "<male|female|unknown>",
       "age_group": "<child|teenager|young_adult|middle_aged|elderly>",
-      "hair_colour": "<black|brown|blonde|red|grey|white|bald|unknown>",
-      "hair_length": "<bald|short|medium|long>",
-      "hair_style": "<straight|curly|wavy|afro|unknown>",
-      "facial_hair": "<none|stubble|beard|moustache|unknown>",
-      "glasses": <true|false>,
-      "skin_tone": "<very_light|light|medium|olive|dark|very_dark>",
+      //"hair_colour": "<black|brown|blonde|red|grey|white|bald|unknown>",
+      //"hair_length": "<bald|short|medium|long>",
+      //"hair_style": "<straight|curly|wavy|afro|unknown>",
+      //"facial_hair": "<none|stubble|beard|moustache|unknown>",
+      //"glasses": <true|false>,
+      //"skin_tone": "<very_light|light|medium|olive|dark|very_dark>",
       "hearing_aid": {
         "present": <true|false>,
         "type": "<behind_ear|in_ear|cochlear_implant|unknown|BAHA|non-visable|null>",
@@ -62,8 +62,8 @@ if you are not 100% certain, you MUST use false and set notable_features to "No 
       "notable_features": "<string describing any distinctive features or null>"
     }
   ],
-  "setting": "<indoor|outdoor|unknown>",
-  "mood": "<happy|serious|neutral|laughing|unknown>",
+  //"setting": "<indoor|outdoor|unknown>",
+  //"mood": "<happy|serious|neutral|laughing|unknown>",
   "photo_quality": "<good|low_light|blurry|partially_obscured>"
 }`;
 
@@ -108,12 +108,12 @@ const personDefaults = {
 person_id: 1,
 gender: "unknown",
 age_group: "young_adult",
-hair_colour: "unknown",
-hair_length: "short",
-hair_style: "unknown",
-facial_hair: "none",
-glasses: false,
-skin_tone: "medium",
+//hair_colour: "unknown",
+//hair_length: "short",
+//hair_style: "unknown",
+//facial_hair: "none",
+//glasses: false,
+//skin_tone: "medium",
 hearing_aid: {
   present: false,
   type: null,
@@ -126,7 +126,7 @@ const topDefaults = {
 people_count: 1,
 people: [],
 setting: "unknown",
-mood: "happy",
+//mood: "happy",
 photo_quality: "good"
   
 };
@@ -166,12 +166,12 @@ return {
   person_id: 1,
   gender: "unknown",
   age_group: "young_adult",
-  hair_colour: "unknown",
-  hair_length: "short",
-  hair_style: "unknown",
-  facial_hair: "none",
-  glasses: false,
-  skin_tone: "medium",
+  //hair_colour: "unknown",
+  //hair_length: "short",
+  //hair_style: "unknown",
+  //facial_hair: "none",
+  //glasses: false,
+  //skin_tone: "medium",
   hearing_aid: { present: false, type: null, ear: null },
   notable_features: null
   }],
@@ -183,7 +183,7 @@ return {
 }
 
 // ─── Build dynamic cartoon prompt ────────────────────────────────────────────
-function buildCartoonPrompt(analysis) { 
+function buildCartoonPrompt(analysis, instance) { //CALL 3 times for different joke
 const { people, people_count: count, mood = "happy" } = analysis;
 const descriptions = people.map(p => {
 const parts = [];
@@ -193,6 +193,7 @@ const age = (p.age_group || "adult").replace(/_/g, " ");
 const gender = p.gender || "person";
 parts.push(`${age} ${gender}`);
 
+/***********************************  
 // Hair
 if (p.hair_length === "bald") {
   parts.push("bald");
@@ -208,7 +209,8 @@ if (p.facial_hair && !["none", "unknown"].includes(p.facial_hair)) {
 
 // Glasses
 if (p.glasses) parts.push("wearing glasses");
-
+**************************************************/
+  
 // Hearing aid — critical for our use case
 const ha = p.hearing_aid || {};
 if (ha.present) {
@@ -235,7 +237,19 @@ IMPORTANT:
 - Make it a light, playful hearing-loss joke with clean composition.
 */
 
-  const Joke = "Volume40 TV to loud ";//ADD DIFERENT Joke for each of 3 images
+const Joke = "";
+switch (instance){
+  case 1:
+  Joke = "Volume40 TV to loud ";
+  break;  
+case 2:
+  Joke = "misheard - Pass the salt!";
+  break;  
+case 3:
+  Joke = "calling from another room";
+  break;  
+}
+  
 return `Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
@@ -246,21 +260,22 @@ Important: Make it a light, playful hearing-loss ${Joke} joke with clean composi
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
 
-async function buildPromptFromImage2(imageBuffer) { 
-console.log("Analysing photo with Gemini Vision..."); 
-const analysis = await analysePhoto(imageBuffer);
+async function buildPromptFromImage2(imageBuffer, instance) { 
+//console.log("Analysing photo with Gemini Vision..."); //only call once move befor buildPrompt
+//const analysis = await analysePhoto(imageBuffer);
 
-console.log("Detected ${analysis.people_count} person(s), mood: ${analysis.mood}"); 
+console.log("Detected ${analysis.people_count} person(s)"); 
 console.log("Photo quality: ${analysis.photo_quality}");
 
 if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
   console.warn("Warning: low quality photo — cartoon results may vary");
 }
 
-const prompt = buildCartoonPrompt(analysis); 
+const prompt = buildCartoonPrompt(analysis, instance); 
 console.log("Built prompt:", prompt);
 
-return { analysis, prompt }; 
+//return { analysis, prompt }; 
+return  prompt; 
 }
 //NOT SURE export { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
 
@@ -418,13 +433,23 @@ console.log("moderateResponse",moderateResponse);
         "overall_safe": false,
 */
 if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
-      return res.status(200).json({"success": true, errorMessage: "Your uploaded image failed moderation" });
+      return res.status(200).json({"success": false, errorMessage: "Your uploaded image failed moderation" });
 }
-  
-// Step 2: Analyse photo + build dynamic prompt
-const { analysis, prompt } = await buildPromptFromImage2(imageBuffer);
 
-// Step 3: Pass prompt to your existing image generator
+// Step 2: Analyse photo
+console.log("Analysing photo with Gemini Vision..."); 
+const analysis = await analysePhoto(imageBuffer);
+
+// Step 3: Build dynamic prompt
+const  prompt1  = await buildPromptFromImage2(imageBuffer,1);
+console.log("Prompt 1...",prompt1); 
+const  prompt2  = await buildPromptFromImage2(imageBuffer,2);
+console.log("Prompt 2..."),prompt2; 
+const  prompt3  = await buildPromptFromImage2(imageBuffer,3);
+console.log("Prompt 3...",3prompt); 
+    
+
+// Step 4: Pass prompt to your existing image generator
 // const images = await yourExistingGenerator(imageBuffer, prompt);
 
   //for testing retun response of analyse
