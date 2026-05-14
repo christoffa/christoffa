@@ -264,6 +264,7 @@ async function buildPromptFromImage2(imageBuffer, instance) {
 //console.log("Analysing photo with Gemini Vision..."); //only call once move befor buildPrompt
 //const analysis = await analysePhoto(imageBuffer);
 
+/***********************
 console.log("Detected ${analysis.people_count} person(s)"); 
 console.log("Photo quality: ${analysis.photo_quality}");
 
@@ -273,7 +274,7 @@ if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
 
 const prompt = buildCartoonPrompt(analysis, instance); 
 console.log("Built prompt:", prompt);
-
+***********************/
 //return { analysis, prompt }; 
 return  prompt; 
 }
@@ -439,13 +440,22 @@ if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
 // Step 2: Analyse photo
 console.log("Analysing photo with Gemini Vision..."); 
 const analysis = await analysePhoto(imageBuffer);
+console.log("Detected ${analysis.people_count} person(s)"); 
+console.log("Photo quality: ${analysis.photo_quality}");
 
-// Step 3: Build dynamic prompt
-const  prompt1  = await buildPromptFromImage2(imageBuffer,1);
+if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
+  console.warn("Warning: low quality photo — cartoon results may vary");
+}
+
+//const prompt = buildCartoonPrompt(analysis, instance); 
+//console.log("Built prompt:", prompt);
+    
+// Step 3: Build dynamic prompts
+const  prompt1  = await buildCartoonPrompt(analysis,1);
 console.log("Prompt 1...",prompt1); 
-const  prompt2  = await buildPromptFromImage2(imageBuffer,2);
+const  prompt2  = await buildCartoonPrompt(analysis,2);
 console.log("Prompt 2..."),prompt2; 
-const  prompt3  = await buildPromptFromImage2(imageBuffer,3);
+const  prompt3  = await buildCartoonPrompt(analysis,3);
 console.log("Prompt 3...",prompt3); 
     
 
@@ -455,7 +465,9 @@ console.log("Prompt 3...",prompt3);
   //for testing retun response of analyse
 res.json({
   success: true,
-  prompt,                    // remove in production
+  prompt1,                    // remove in production
+  prompt2,                    // remove in production
+  prompt3,                    // remove in production
   analysis,                  // remove in production
   // images
 });
