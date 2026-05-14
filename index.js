@@ -774,8 +774,6 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
 //const model = 'gemini-3.1-flash-image-preview';
 const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
-
-async function analysePhoto(imageBuffer) {
 const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
   
