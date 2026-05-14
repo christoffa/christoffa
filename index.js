@@ -444,10 +444,15 @@ if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
 console.log("Analysing photo with Gemini Vision..."); 
 const analysis = await analysePhoto(imageBuffer);
 console.log("Detected " + analysis.people_count + " person(s)"); 
+console.log("Detected " + analysis.hearing_aid_count + " Hearing aid(s)"); 
 console.log("Photo quality: ",analysis.photo_quality);
 
 if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
   console.warn("Warning: low quality photo — cartoon results may vary");
+}
+
+if  (analysis.hearing_aid_count === 0){
+      return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
 }
 
 //const prompt = buildCartoonPrompt(analysis, instance); 
