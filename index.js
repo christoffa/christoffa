@@ -799,8 +799,6 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
     console.error("Cartoon generation failed:", error);
     throw error;
   }
-}
-
 
 } //END OF async function CreateImageInGemini(imageBuffer)
 
