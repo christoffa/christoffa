@@ -462,7 +462,8 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
   }
   
   if  (analysis.hearing_aid_count === 0){
-        return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
+  console.log("No hearing aids detected: ");
+  //      return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
   }
 //}//END OF SECOND PASS
 // Step 3: Build dynamic prompts
