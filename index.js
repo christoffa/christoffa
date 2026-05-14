@@ -789,7 +789,7 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
       generationConfig: {
         responseModalities: ["IMAGE"],
         // 'Thinking' tokens help with complex style adherence
-        thinking_level: "HIGH" 
+        //thinking_level: "HIGH" 
       },
     });
 
