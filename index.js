@@ -451,12 +451,12 @@ if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
 //console.log("Built prompt:", prompt);
     
 // Step 3: Build dynamic prompts
-const intstance = 1;    
-const  prompt1  = await buildCartoonPrompt(analysis,instance++);
+    
+const  prompt1  = await buildCartoonPrompt(analysis,1);
 console.log("Prompt 1...",prompt1); 
-const  prompt2  = await buildCartoonPrompt(analysis,instance++);
+const  prompt2  = await buildCartoonPrompt(analysis,2);
 console.log("Prompt 2..."),prompt2; 
-const  prompt3  = await buildCartoonPrompt(analysis,instance++);
+const  prompt3  = await buildCartoonPrompt(analysis,3);
 console.log("Prompt 3...",prompt3); 
     
 
