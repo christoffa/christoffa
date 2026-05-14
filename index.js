@@ -476,7 +476,7 @@ const  prompt3  = await buildCartoonPrompt(analysis,3);
 console.log("Prompt 3...",prompt3); 
 
 //CREATE  3 CARTOONS
- // try {
+  try {
     // 1. Create an array of 3 promises
     const cartoonPromises = [
       CreateImageInGemini(imageBuffer, prompt1), 
@@ -496,7 +496,11 @@ console.log("Prompt 3...",prompt3);
     const finalUrls = await Promise.all(uploadPromises);
     
     return finalUrls; // Returns array of 3 Cloudinary URLs
-  //} 
+  }
+    catch (error) {
+    console.error("Batch cartoon generation failed:", error);
+    throw error;
+  }
 //CREATE 3 CARTOONS    
   
 
@@ -776,7 +780,7 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
         role: "user",
         parts: [
           // 1. The original image (base64)
-          { inlineData: { data: base64Image, mimeType: mimeType } },
+          { inlineData: { data: base64Data, mimeType: mimeType } },
           // 2. The instruction to turn it into a cartoon
           { text: prompt
           }
