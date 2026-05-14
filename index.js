@@ -492,7 +492,7 @@ console.log("Prompt 3...",prompt3);
       // Assuming you have your cloudinary upload function ready:
       //return uploadToCloudinary(base64Data); 
       //upload to cloudinary
-      retyrn cloudinary.uploader.upload(,${base64Data}`,{ folder: "toffa/faces" });
+      return cloudinary.uploader.upload(base64Data,{ folder: "toffa/faces" });
     });
 
     const finalUrls = await Promise.all(uploadPromises);
