@@ -1,4 +1,4 @@
-import express from "express";
+Fimport express from "express";
 import cors from "cors";
 import OpenAI, { toFile } from "openai";
 import multer from "multer";
@@ -196,7 +196,7 @@ const age = (p.age_group || "adult").replace(/_/g, " ");
 const gender = p.gender || "person";
 parts.push(`${age} ${gender}`);
 
-/***********************************  
+  
 // Hair
 if (p.hair_length === "bald") {
   parts.push("bald");
@@ -212,7 +212,7 @@ if (p.facial_hair && !["none", "unknown"].includes(p.facial_hair)) {
 
 // Glasses
 if (p.glasses) parts.push("wearing glasses");
-**************************************************/
+
   
 // Hearing aid — critical for our use case
 const ha = p.hearing_aid || {};
@@ -252,13 +252,20 @@ case 3:
   Joke = "calling from another room";
   break;  
 }
-  
+return `Create a fun, warm, high-quality cartoon illustration using this image.
+Expression should be Happy and full of personality.
+Style: clean line art, vibrant colours, professional cartoon portrait.
+Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
+White background, centred composition, upper body portrait.
+Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition`;   
+/********************************
 return `Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
 White background, centred composition, upper body portrait.
 Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition`; 
+****************************************/
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
@@ -418,7 +425,7 @@ app.post(
       console.log("BODY:", req.body);
 
       const imageFile = req.files?.image?.[0];
-      const text = req.body?.text;
+      const text = req.body?.text;//THIS WILL PASS BACK THE P{OSITION OF HEARING LOSS INDIVIDUALS
 
       if (!imageFile ) {
         return res.status(400).json({ error: "Missing image" });
@@ -428,36 +435,36 @@ app.post(
     }
     
 const imageBuffer = imageFile.buffer;//req.file.buffer;
-//Step 1 Ayalyse photo for suxuaality, abause or hate    
-const moderateResponse =  await moderateImage(imageBuffer); //MODERATE UPLOADED IMAGE
-console.log("moderateResponse",moderateResponse);
-/*
- "success": true,
-    "data": {
-        "overall_safe": false,
-*/
-if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
-      return res.status(200).json({"success": false, errorMessage: "Your uploaded image failed moderation" });
-}
 
-// Step 2: Analyse photo
-console.log("Analysing photo with Gemini Vision..."); 
-const analysis = await analysePhoto(imageBuffer);
-console.log("Detected " + analysis.people_count + " person(s)"); 
-console.log("Detected " + analysis.hearing_aid_count + " Hearing aid(s)"); 
-console.log("Photo quality: ",analysis.photo_quality);
-
-if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
-  console.warn("Warning: low quality photo — cartoon results may vary");
-}
-
-if  (analysis.hearing_aid_count === 0){
-      return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
-}
-
-//const prompt = buildCartoonPrompt(analysis, instance); 
-//console.log("Built prompt:", prompt);
-    
+ //IF TEXT PRESENT ITS A SECOND CALL SO SKIP ANALYSE
+  if (text.length === 0){
+  //Step 1 Ayalyse photo for suxuaality, abause or hate    
+  const moderateResponse =  await moderateImage(imageBuffer); //MODERATE UPLOADED IMAGE
+  console.log("moderateResponse",moderateResponse);
+  /*
+   "success": true,
+      "data": {
+          "overall_safe": false,
+  */
+  if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
+        return res.status(200).json({"success": false, errorMessage: "Your uploaded image failed moderation" });
+  }
+  
+  // Step 2: Analyse photo
+  console.log("Analysing photo with Gemini Vision..."); 
+  const analysis = await analysePhoto(imageBuffer);
+  console.log("Detected " + analysis.people_count + " person(s)"); 
+  console.log("Detected " + analysis.hearing_aid_count + " Hearing aid(s)"); 
+  console.log("Photo quality: ",analysis.photo_quality);
+  
+  if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
+    console.warn("Warning: low quality photo — cartoon results may vary");
+  }
+  
+  if  (analysis.hearing_aid_count === 0){
+        return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
+  }
+}//END OF SECOND PASS
 // Step 3: Build dynamic prompts
     
 const  prompt1  = await buildCartoonPrompt(analysis,1);
@@ -466,28 +473,47 @@ const  prompt2  = await buildCartoonPrompt(analysis,2);
 console.log("Prompt 2..."),prompt2; 
 const  prompt3  = await buildCartoonPrompt(analysis,3);
 console.log("Prompt 3...",prompt3); 
+
+//CREATE  3 CARTOONS
+  try {
+    // 1. Create an array of 3 promises
+    const cartoonPromises = [
+      CreateImageInGemini(imageBuffer, prompt1), 
+      CreateImageInGemini(imageBuffer, prompt2), 
+      CreateImageInGemini(imageBuffer, prompt3)
+    ];
+
+    // 2. Await all of them to complete
+    const base64Results = await Promise.all(cartoonPromises);
+
+    // 3. Now you can map those results to your Cloudinary upload function
+    const uploadPromises = base64Results.map(base64Data => {
+      // Assuming you have your cloudinary upload function ready:
+      return uploadToCloudinary(base64Data); 
+    });
+
+    const finalUrls = await Promise.all(uploadPromises);
     
+    return finalUrls; // Returns array of 3 Cloudinary URLs
+  } catch (error) {
+    console.error("Batch cartoon generation failed:", error);
+    throw error;
+  }
+//CREATE 3 CARTOONS    
+  
 
-// Step 4: Pass prompt to your existing image generator
-// const images = await yourExistingGenerator(imageBuffer, prompt);
-
-  //for testing retun response of analyse
+ 
 res.json({
   success: true,
-  prompt1,                    // remove in production
-  prompt2,                    // remove in production
-  prompt3,                    // remove in production
-  analysis,                  // remove in production
-  // images
+  finalUrls
 });
 
   
-} catch (err) {
-  console.error(err);
-  res.status(500).json({ success: false, error: err.message });  
+
   } 
-});
- // 
+ 
+} 
+
 
 
 
@@ -725,11 +751,57 @@ Return results in JSON format.`;
     return { success: false, error: "Error during analysis",errorMessage: error.message};
         
   }
-}//); //END OF async function moderateImage(imageBuffer) {
+}//); //END OF async function moderateImage(imageBuffer)
 
     
 //CHECK IMAGE
 
+//CREATE CARTOON IN GEMNI
+async function CreateImageInGemini(imageBuffer, prompt) {
+ const apiKey = process.env.GEM_API_KEY;
+ 
+const genAI = new GoogleGenerativeAI(apiKey);
+const base64Data = imageBuffer.toString("base64");
+const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
+const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
+
+  // Use Nano Banana 2 for image transformation
+  const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-image-preview" });
+
+  try {
+    const result = await model.generateContent({
+      contents: [{
+        role: "user",
+        parts: [
+          // 1. The original image (base64)
+          { inlineData: { data: base64Image, mimeType: mimeType } },
+          // 2. The instruction to turn it into a cartoon
+          { text: prompt
+          }
+        ]
+      }],
+      generationConfig: {
+        responseModalities: ["IMAGE"],
+        // 'Thinking' tokens help with complex style adherence
+        thinking_level: "HIGH" 
+      },
+    });
+
+    const response = await result.response;
+    const imagePart = response.candidates[0].content.parts.find(p => p.inlineData);
+
+    if (imagePart) {
+      // This is the cartoonized image data
+      return imagePart.inlineData.data;
+    }
+  } catch (error) {
+    console.error("Cartoon generation failed:", error);
+    throw error;
+  }
+}
+
+
+} //END OF async function CreateImageInGemini(imageBuffer)
 
 
 const PORT = process.env.PORT || 3000;
