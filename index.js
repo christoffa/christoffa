@@ -237,7 +237,7 @@ IMPORTANT:
 - Make it a light, playful hearing-loss joke with clean composition.
 */
 
-Joke = "";
+var Joke = "";
 switch (instance){
   case 1:
   Joke = "Volume40 TV to loud ";
