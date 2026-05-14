@@ -766,42 +766,57 @@ Return results in JSON format.`;
 
 //CREATE CARTOON IN GEMNI
 async function CreateImageInGemini(imageBuffer, prompt) {
- const apiKey = process.env.GEM_API_KEY;
- 
+const apiKey = process.env.GEM_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 const base64Data = imageBuffer.toString("base64");
 const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
 const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
-  // Use Nano Banana 2 for image transformation
-  const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-image-preview" });
-
+ const tools = [
+    {
+      googleSearch: {
+        searchTypes: {
+          webSearch: {},
+        },
+      }
+    },
+  ];
+  const config = {
+    thinkingConfig: {
+      thinkingLevel: ThinkingLevel.HIGH,
+    },
+    imageConfig: {
+      aspectRatio: "1:1",
+      imageSize: "1K",
+      personGeneration: "",
+    },
+    responseModalities: [
+        'IMAGE',
+    ],
+    tools,
+    systemInstruction: [
+        {
+          text: `return as base64 nOT CHUNKED`,
+        }
+    ],
+  };
+  const model = 'gemini-3.1-flash-image-preview';
+  const contents = [
+    {
+      role: 'user',
+      parts: [
+        {
+          text: prompt,
+        },
+      ],
+    },
+  ];
   try {
-    const result = await model.generateContent({
-      contents: [{
-        role: "user",
-        parts: [
-          // 1. The original image (base64)
-          { inlineData: { data: base64Data, mimeType: mimeType } },
-          // 2. The instruction to turn it into a cartoon
-          { text: prompt
-          }
-        ]
-      }],
-      generationConfig: {
-        responseModalities: ["IMAGE"],
-        // 'Thinking' tokens help with complex style adherence
-        //thinking_level: "HIGH" 
-      },
-    });
-
-    const response = await result.response;
-    const imagePart = response.candidates[0].content.parts.find(p => p.inlineData);
-
-    if (imagePart) {
-      // This is the cartoonized image data
-      return imagePart.inlineData.data;
-    }
+  const response = await ai.models.generateContentStream({
+    model,
+    config,
+    contents,
+  });
   } catch (error) {
     console.error("Cartoon generation failed:", error);
     throw error;
