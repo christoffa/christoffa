@@ -35,7 +35,7 @@ const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 async function analysePhoto(imageBuffer) {
   const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
-  const prompt = `Analyse this photo carefully and return a JSON object.
+  const prompt = `Analyse this photo carefully scaning from left to right and return a JSON object.
 Be precise and concise. If you cannot determine something, use null.
 Return ONLY valid JSON, no explanation, no markdown, no code blocks.
 Only mark hearing_aid.present as true if you can see clear mechanical or electronic hardware (tubing, casing, or a processor).
