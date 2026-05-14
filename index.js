@@ -812,7 +812,7 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
     },
   ];
   try {
-  const response = await ai.models.generateContentStream({
+  const response = await amodel.model.generateContent({
     model,
     config,
     contents,
