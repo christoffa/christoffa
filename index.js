@@ -801,22 +801,17 @@ const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
     ],
   };
   const model = 'gemini-3.1-flash-image-preview';
-  const contents = [
-    {
-      role: 'user',
-      parts: [
-        {
-          text: prompt,
-        },
-      ],
-    },
-  ];
+  
   try {
-  const response = await amodel.model.generateContent({
-    model,
-    config,
-    contents,
-  });
+  onst result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: base64Data,
+          mimeType,
+        },
+      },
+    ]);
   } catch (error) {
     console.error("Cartoon generation failed:", error);
     throw error;
