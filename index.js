@@ -478,6 +478,8 @@ console.log("Prompt 3...",prompt3);
 //CREATE  3 CARTOONS
   try {
     // 1. Create an array of 3 promises
+    console.error("1. Create an array of 3 promises");
+    
     const cartoonPromises = [
       CreateImageInGemini(imageBuffer, prompt1), 
       CreateImageInGemini(imageBuffer, prompt2), 
@@ -485,9 +487,11 @@ console.log("Prompt 3...",prompt3);
     ];
 
     // 2. Await all of them to complete
+    console.error("2. Await all of them to complete");
     const base64Results = await Promise.all(cartoonPromises);
 
     // 3. Now you can map those results to your Cloudinary upload function
+    console.error("3. Now you can map those results to your Cloudinary upload function");
     const uploadPromises = base64Results.map(base64Data => {
       // Assuming you have your cloudinary upload function ready:
       //return uploadToCloudinary(base64Data); 
