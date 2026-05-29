@@ -766,8 +766,11 @@ Return results in JSON format.`;
 
 //CREATE CARTOON IN GEMNI
 async function CreateImageInGemini(imageBuffer, prompt) {
-const apiKey = process.env.GEM_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey);
+
+  console.log(`CreateImageInGemini`,prompt);
+  
+//const apiKey = process.env.GEM_API_KEY;
+//const genAI = new GoogleGenerativeAI(apiKey);
 const base64Data = imageBuffer.toString("base64");
 const extension = 'png';//path.extname(imagePath).slice(1);//mimetype
 const mimeType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
