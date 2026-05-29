@@ -496,9 +496,14 @@ console.log("Prompt 3...",prompt3);
       // Assuming you have your cloudinary upload function ready:
       //return uploadToCloudinary(base64Data); 
       //upload to cloudinary
-      return cloudinary.uploader.upload(base64Data,{ folder: "toffa/faces" });
+      //return cloudinary.uploader.upload(base64Data,{ folder: "toffa/faces" });
+      return cloudinary.uploader.upload(
+  `data:image/png;base64,${imageBase64}`,
+  { folder: "toffa/faces" }
+);
     });
 
+    console.error("4. finalUrls = await Promise.all(uploadPromises);");
     const finalUrls = await Promise.all(uploadPromises);
     
     return finalUrls; // Returns array of 3 Cloudinary URLs
