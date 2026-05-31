@@ -625,7 +625,7 @@ if (!images) {
 }
 
 // TODO: store this in DB (for now just return it)
-res.status(200).json({
+return res.status(200).json({
   success: true,
   job_id: jobId,
   images: images.map(i => ({
