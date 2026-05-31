@@ -463,7 +463,7 @@ console.log("Prompt 3...",prompt3);
     console.error("1. Create an array of 3 promises");
     
     const cartoonPromises = [
-      CreateCartoonInGemini(imageBuffer);
+      CreateCartoonInGemini(imageBuffer)
       //CreateImageInGemini(imageBuffer, prompt1), 
       //CreateImageInGemini(imageBuffer, prompt2), 
       //CreateImageInGemini(imageBuffer, prompt3)
