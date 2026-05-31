@@ -767,7 +767,7 @@ app.listen(PORT, () => {
 
 //TESTING
 /**********************************************************/
-function saveBinaryFile(fileName: string, content: Buffer) {
+function saveBinaryFile(fileName, content) {
   writeFile(fileName, content, 'utf8', (err) => {
     if (err) {
       console.error(`Error writing file ${fileName}:`, err);
