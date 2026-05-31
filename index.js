@@ -837,8 +837,11 @@ app.post(
       },
     },
   ];
+//
+const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
-  const response = await ai.models.generateContent({
+    //
+  const response = model.generateContent({
     model: "gemini-3.1-flash-image",
     contents: prompt,
   });
