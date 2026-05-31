@@ -823,37 +823,27 @@ app.post(
   const imageFile = req.files?.image?.[0];
   const text = req.body?.text;
   const imageBuffer = imageFile.buffer;//req.file.buffer;
- 
+ //
 
-  //const ai = new GoogleGenAI({});
-  const ai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
+// Initialize the API with your API Key
+const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
-  const prompt = [
-    { text: "Create a hearing loss cartoon from this photo " },
-    {
-      inlineData: {
-        mimeType: "image/png",
-        data: imageBuffer,
-      },
-    },
-  ];
-//
-const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
-    //
-  const response = model.generateContent({
-    model: "gemini-3.1-flash-image",
-    contents: prompt,
-  });
-  for (const part of response.candidates[0].content.parts) {
-    if (part.text) {
-      console.log(part.text);
-    } else if (part.inlineData) {
-      const imageData = part.inlineData.data;
-      const buffer = Buffer.from(imageData, "base64");
-      fs.writeFileSync("gemini-native-image.png", buffer);
-      console.log("Image saved as gemini-native-image.png");
-    }
+  // Use the gemini-2.0-flash (or the latest flash preview available)
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+  const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon character. Retain their key features but give them oversized expressive eyes and vibrant colors.";
+
+  try {
+    const result = await model.generateContent([prompt, imageBuffer]);
+    const response = await result.response;
+    const text = response.text();
+    
+    console.log("Gemini's Description/Analysis:", text);
+  } catch (error) {
+    console.error("Error calling Gemini:", error);
   }
-});
+}
+  
+);
 //
