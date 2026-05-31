@@ -498,7 +498,7 @@ console.log("Prompt 3...",prompt3);
       //upload to cloudinary
       //return cloudinary.uploader.upload(base64Data,{ folder: "toffa/faces" });
       return cloudinary.uploader.upload(
-  `data:image/png;base64,${imageBase64}`,
+  `data:image/png;base64,${base64Data}`,
   { folder: "toffa/faces" }
 );
     });
