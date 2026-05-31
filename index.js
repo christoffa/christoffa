@@ -851,5 +851,5 @@ app.post(
       console.log("Image saved as gemini-native-image.png");
     }
   }
-}
+});
 //
