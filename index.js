@@ -498,7 +498,7 @@ console.log("Prompt 3...",prompt3);
       //upload to cloudinary
       //return cloudinary.uploader.upload(base64Data,{ folder: "toffa/faces" });
       return cloudinary.uploader.upload(
-  `data:image/png;base64,${base64Data}`,
+  `data:image/png;base64,base64Data`,
   { folder: "toffa/faces" }
 );
     });
@@ -812,3 +812,44 @@ app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
 
+//TESTING
+app.post(
+  "/generate-GemTest",
+  upload.fields([
+    { name: "image", maxCount: 1 }
+  ]),
+  async (req, res) => {  
+
+  const imageFile = req.files?.image?.[0];
+  const text = req.body?.text;
+  const imageBuffer = imageFile.buffer;//req.file.buffer;
+ 
+
+  const ai = new GoogleGenAI({});
+
+  const prompt = [
+    { text: "Create a hearing loss cartoon from this photo " },
+    {
+      inlineData: {
+        mimeType: "image/png",
+        data: imageBuffer,
+      },
+    },
+  ];
+
+  const response = await ai.models.generateContent({
+    model: "gemini-3.1-flash-image",
+    contents: prompt,
+  });
+  for (const part of response.candidates[0].content.parts) {
+    if (part.text) {
+      console.log(part.text);
+    } else if (part.inlineData) {
+      const imageData = part.inlineData.data;
+      const buffer = Buffer.from(imageData, "base64");
+      fs.writeFileSync("gemini-native-image.png", buffer);
+      console.log("Image saved as gemini-native-image.png");
+    }
+  }
+}
+//
