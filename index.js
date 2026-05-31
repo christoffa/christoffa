@@ -830,7 +830,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
 
   // Use the gemini-2.0-flash (or the latest flash preview available)
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
   const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon character. Retain their key features but give them oversized expressive eyes and vibrant colors.";
 
