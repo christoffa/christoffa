@@ -463,9 +463,10 @@ console.log("Prompt 3...",prompt3);
     console.error("1. Create an array of 3 promises");
     
     const cartoonPromises = [
-      CreateImageInGemini(imageBuffer, prompt1), 
-      CreateImageInGemini(imageBuffer, prompt2), 
-      CreateImageInGemini(imageBuffer, prompt3)
+      CreateCartoonInGemini(imageBuffer);
+      //CreateImageInGemini(imageBuffer, prompt1), 
+      //CreateImageInGemini(imageBuffer, prompt2), 
+      //CreateImageInGemini(imageBuffer, prompt3)
     ];
 
     // 2. Await all of them to complete
@@ -764,4 +765,45 @@ app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
 
+//TESTING
+/****************************************************************************/
+async function CreateCartoonInGemini(imageBuffer) {
+  const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
+  const prompt = `Cretae a hearing loss cartoon using this image`;
+
+  try {
+    // Convert buffer to base64
+    const base64Image = imageBuffer.toString("base64");
+
+    // Detect mime type using sharp
+    const metadata = await sharp(imageBuffer).metadata();
+    const mimeType = `image/${metadata.format}` || "image/jpeg";
+
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: base64Image,
+          mimeType
+        }
+      }
+    ]);
+
+    console.log("generateContent result...",result); 
+
+    //let raw = result.response.text().trim();
+
+    // Strip markdown code blocks if Gemini adds them anyway
+    //raw = raw.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
+
+    //const analysis = JSON.parse(raw);
+    return;// validateAnalysis(analysis);
+
+  
+  } 
+catch (err) {
+    console.error("Gemini vision error:", err.message);
+return getFallbackAnalysis();
+  } 
+}//  END async function CreateCartoonInGemini(imageBuffer)
