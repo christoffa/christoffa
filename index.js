@@ -8,7 +8,7 @@ import FormData from "form-data";
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
-import  sharp  from "sharp";
+//import  sharp  from "sharp";
 import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 //import { Type }  from "@google/generative-ai";
 //import { buildPromptFromImage } from "./vision-analysis.js";
