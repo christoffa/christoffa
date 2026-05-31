@@ -825,7 +825,8 @@ app.post(
   const imageBuffer = imageFile.buffer;//req.file.buffer;
  
 
-  const ai = new GoogleGenAI({});
+  //const ai = new GoogleGenAI({});
+  const ai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
   const prompt = [
     { text: "Create a hearing loss cartoon from this photo " },
