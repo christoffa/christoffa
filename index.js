@@ -766,39 +766,87 @@ app.listen(PORT, () => {
 });
 
 //TESTING
+/**********************************************************/
+function saveBinaryFile(fileName: string, content: Buffer) {
+  writeFile(fileName, content, 'utf8', (err) => {
+    if (err) {
+      console.error(`Error writing file ${fileName}:`, err);
+      return;
+    }
+    console.log(`File ${fileName} saved to file system.`);
+  });
+}
 /****************************************************************************/
 async function CreateCartoonInGemini(imageBuffer) {
-  const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
+  //const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
-  const prompt = `Cretae a hearing loss cartoon using this image`;
+  // To run this code you need to install the following dependencies:
+// npm install @google/genai mime
+// npm install -D @types/node
 
-  try {
-    // Convert buffer to base64
-    const base64Image = imageBuffer.toString("base64");
 
-    // Detect mime type using sharp
-    const metadata = await sharp(imageBuffer).metadata();
-    const mimeType = `image/${metadata.format}` || "image/jpeg";
 
-    const result = await model.generateContent([
-      prompt,
-      {
-        inlineData: {
-          data: base64Image,
-          mimeType
-        }
+  const ai = new GoogleGenAI({
+    apiKey: process.env['GEM_API_KEY'],
+  });
+  const tools = [
+    {
+      googleSearch: {
       }
-    ]);
+    },
+  ];
+  const config = {
+    thinkingConfig: {
+      thinkingLevel: ThinkingLevel.MINIMAL,
+    },
+    imageConfig: {
+      aspectRatio: "",
+      imageSize: "1K",
+      personGeneration: "",
+    },
+    responseModalities: [
+        'IMAGE',
+        'TEXT',
+    ],
+    tools,
+  };
+  const model = 'gemini-3.1-flash-image';
+  const prompt = "cretag a hearing loss cartoon using this image";
+  const contents = [
+    {
+      role: 'user',
+      parts: [
+        {
+          text: prompt,
+        },
+      ],
+    },
+  ];
 
-    console.log("generateContent result...",result); 
-
-    //let raw = result.response.text().trim();
-
-    // Strip markdown code blocks if Gemini adds them anyway
-    //raw = raw.replace(/^ json\s/i, "").replace(/^```\s/i, "").replace(/\s*```$/i, "").trim();
-
-    //const analysis = JSON.parse(raw);
-    return;// validateAnalysis(analysis);
+  const response = await ai.models.generateContentStream({
+    model,
+    config,
+    contents,
+  });
+  let fileIndex = 0;
+  for await (const chunk of response) {
+    if (!chunk.candidates || !chunk.candidates[0].content || !chunk.candidates[0].content.parts) {
+      continue;
+    }
+    if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
+      const fileName = `ENTER_FILE_NAME_${fileIndex++}`;
+      const inlineData = chunk.candidates[0].content.parts[0].inlineData;
+      const fileExtension = mime.getExtension(inlineData.mimeType || '');
+      const buffer = Buffer.from(inlineData.data || '', 'base64');
+      saveBinaryFile(`${fileName}.${fileExtension}`, buffer);
+      console.log(("generateContentStream Buffer... ", buffer);
+    }
+    else {
+      console.log(chunk.text);
+    }
+  }
+} 
+  return;// validateAnalysis(analysis);
 
   
   } 
