@@ -776,7 +776,90 @@ Return results in JSON format.`;
 //CREATE CARTOON IN GEMNI
 async function CreateImageInGemini(imageBuffer, prompt) {
 
-  console.log(`CreateImageInGemini`,prompt);
+  // To run this code you need to install the following dependencies:
+// npm install @google/genai mime
+// npm install -D @types/node
+
+import {
+  GoogleGenAI,
+} from '@google/genai';
+import mime from 'mime';
+import { writeFile } from 'fs';
+
+function saveBinaryFile(fileName: string, content: Buffer) {
+  writeFile(fileName, content, 'utf8', (err) => {
+    if (err) {
+      console.error(`Error writing file ${fileName}:`, err);
+      return;
+    }
+    console.log(`File ${fileName} saved to file system.`);
+  });
+}
+
+async function main() {
+  const ai = new GoogleGenAI({
+    apiKey: process.env['GEMINI_API_KEY'],
+  });
+  const tools = [
+    {
+      googleSearch: {
+      }
+    },
+  ];
+  const config = {
+    thinkingConfig: {
+      thinkingLevel: ThinkingLevel.MINIMAL,
+    },
+    imageConfig: {
+      aspectRatio: "",
+      imageSize: "1K",
+      personGeneration: "",
+    },
+    responseModalities: [
+        'IMAGE',
+        'TEXT',
+    ],
+    tools,
+  };
+  const model = 'gemini-3.1-flash-image';
+  const contents = [
+    {
+      role: 'user',
+      parts: [
+        {
+          text: `INSERT_INPUT_HERE`,
+        },
+      ],
+    },
+  ];
+
+  const response = await ai.models.generateContentStream({
+    model,
+    config,
+    contents,
+  });
+  let fileIndex = 0;
+  for await (const chunk of response) {
+    if (!chunk.candidates || !chunk.candidates[0].content || !chunk.candidates[0].content.parts) {
+      continue;
+    }
+    if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
+      const fileName = `ENTER_FILE_NAME_${fileIndex++}`;
+      const inlineData = chunk.candidates[0].content.parts[0].inlineData;
+      const fileExtension = mime.getExtension(inlineData.mimeType || '');
+      const buffer = Buffer.from(inlineData.data || '', 'base64');
+      saveBinaryFile(`${fileName}.${fileExtension}`, buffer);
+    }
+    else {
+      console.log(chunk.text);
+    }
+  }
+}
+
+main();
+
+
+
   
 //const apiKey = process.env.GEM_API_KEY;
 //const genAI = new GoogleGenerativeAI(apiKey);
@@ -812,6 +895,16 @@ app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
 
+function saveBinaryFile(fileName: string, content: Buffer) {
+  writeFile(fileName, content, 'utf8', (err) => {
+    if (err) {
+      console.error(`Error writing file ${fileName}:`, err);
+      return;
+    }
+    console.log(`File ${fileName} saved to file system.`);
+  });
+}
+
 //TESTING
 app.post(
   "/generate-GemTest",
@@ -826,24 +919,68 @@ app.post(
  //
 
 // Initialize the API with your API Key
-const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
+const ai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
+const model = ai.getGenerativeModel({ model: "gemini-3-flash-preview" });
+const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon character. Retain their key features but give them oversized expressive eyes and vibrant colors.";
+//TEST
 
+  const tools = [
+    {
+      googleSearch: {
+      }
+    },
+  ];
+  const config = {
+    thinkingConfig: {
+      thinkingLevel: ThinkingLevel.MINIMAL,
+    },
+    imageConfig: {
+      aspectRatio: "",
+      imageSize: "1K",
+      personGeneration: "",
+    },
+    responseModalities: [
+        'IMAGE',
+        'TEXT',
+    ],
+    tools,
+  };
+  //const model = 'gemini-3.1-flash-image';
+  const contents = [
+    {
+      role: 'user',
+      parts: [
+        {
+          text: prompt,
+        },
+      ],
+    },
+  ];
 
-  // Use the gemini-2.0-flash (or the latest flash preview available)
-  const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
-
-  const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon character. Retain their key features but give them oversized expressive eyes and vibrant colors.";
-
-  try {
-    const result = await model.generateContent([prompt, imageBuffer]);
-    const response = await result.response;
-    const text = response.text();
-    
-    console.log("Gemini's Description/Analysis:", text);
-  } catch (error) {
-    console.error("Error calling Gemini:", error);
+  const response = await ai.models.generateContentStream({
+    model,
+    config,
+    contents,
+  });
+  let fileIndex = 0;
+  for await (const chunk of response) {
+    if (!chunk.candidates || !chunk.candidates[0].content || !chunk.candidates[0].content.parts) {
+      continue;
+    }
+    if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
+      const fileName = `ENTER_FILE_NAME_${fileIndex++}`;
+      const inlineData = chunk.candidates[0].content.parts[0].inlineData;
+      const fileExtension = mime.getExtension(inlineData.mimeType || '');
+      const buffer = Buffer.from(inlineData.data || '', 'base64');
+      saveBinaryFile(`${fileName}.${fileExtension}`, buffer);
+      
+    }
+    else {
+      console.log(chunk.text);
+    }
   }
 }
+//TEST
   
 );
 //
