@@ -12,6 +12,11 @@ import  sharp  from "sharp";
 import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 //import { Type }  from "@google/generative-ai";
 //import { buildPromptFromImage } from "./vision-analysis.js";
+import {
+  GoogleGenAI,
+} from '@google/genai';
+import mime from 'mime';
+import { writeFile } from 'fs';
 
 //
 //const express = require("express"); 
@@ -919,11 +924,13 @@ app.post(
  //
 
 // Initialize the API with your API Key
-const ai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
-const model = ai.getGenerativeModel({ model: "gemini-3-flash-preview" });
+//const ai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
+//const model = ai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon character. Retain their key features but give them oversized expressive eyes and vibrant colors.";
 //TEST
-
+  const ai = new GoogleGenAI({
+    apiKey: process.env['GEM_API_KEY'],
+  });
   const tools = [
     {
       googleSearch: {
@@ -945,7 +952,7 @@ const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon
     ],
     tools,
   };
-  //const model = 'gemini-3.1-flash-image';
+  const model = 'gemini-3.1-flash-image';
   const contents = [
     {
       role: 'user',
@@ -973,13 +980,17 @@ const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon
       const fileExtension = mime.getExtension(inlineData.mimeType || '');
       const buffer = Buffer.from(inlineData.data || '', 'base64');
       saveBinaryFile(`${fileName}.${fileExtension}`, buffer);
-      
     }
     else {
       console.log(chunk.text);
     }
   }
 }
+
+
+
+
+    
 //TEST
   
 );
