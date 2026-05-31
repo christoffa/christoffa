@@ -839,7 +839,7 @@ async function CreateCartoonInGemini(imageBuffer) {
       const fileExtension = mime.getExtension(inlineData.mimeType || '');
       const buffer = Buffer.from(inlineData.data || '', 'base64');
       saveBinaryFile(`${fileName}.${fileExtension}`, buffer);
-      console.log(("generateContentStream Buffer... ", buffer);
+      console.log("generateContentStream Buffer... ", buffer);
     }
     else {
       console.log(chunk.text);
