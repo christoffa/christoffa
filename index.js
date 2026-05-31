@@ -35,6 +35,7 @@ const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 
 // ─── Analyse photo with Gemini Vision ────────────────────────────────────────
 //CHANGED ON 14/5/26 to only get info on gender and hearing devices
+/****************************************************************************/
 async function analysePhoto(imageBuffer) {
   const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
@@ -105,8 +106,9 @@ return getFallbackAnalysis();
   } 
 }//  END async function analysePhoto(imageBuffer)
 
-// ─── Validate and fill safe defaults ─────────────────────────────────────────
 
+// ─── Validate and fill safe defaults ─────────────────────────────────────────
+/************************************************************************/
 function validateAnalysis(analysis) { 
 const personDefaults = {
 person_id: 1,
@@ -153,17 +155,16 @@ return merged;
 });
 
 // If no people detected, add one default 
-if (validatedPeople.length === 0) {
+  if (validatedPeople.length === 0) {
+  validatedPeople.push(personDefaults);
+  validated.people_count = 1;
+  }
 
-validatedPeople.push(personDefaults);
-validated.people_count = 1;
-  
+validated.people = validatedPeople; return validated; 
 }
 
-validated.people = validatedPeople; return validated; }
-
 // ─── Fallback if vision fails entirely ───────────────────────────────────────
-
+/*******************************************************/
 function getFallbackAnalysis() { 
 return {
   hearing_aid_count: 0,
@@ -189,6 +190,7 @@ return {
 }
 
 // ─── Build dynamic cartoon prompt ────────────────────────────────────────────
+/*******************************************************************************/
 function buildCartoonPrompt(analysis, instance) { //CALL 3 times for different joke
 const { people, people_count: count, mood = "happy" } = analysis;
 const descriptions = people.map(p => {
@@ -272,45 +274,20 @@ Important: Make it a light, playful hearing-loss ${Joke} joke with clean composi
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
-
+/***************************************************************/
 async function buildPromptFromImage2(imageBuffer, instance) { 
 //console.log("Analysing photo with Gemini Vision..."); //only call once move befor buildPrompt
 //const analysis = await analysePhoto(imageBuffer);
 
-/***********************
-console.log("Detected ${analysis.people_count} person(s)"); 
-console.log("Photo quality: ${analysis.photo_quality}");
-
-if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
-  console.warn("Warning: low quality photo — cartoon results may vary");
-}
-
-const prompt = buildCartoonPrompt(analysis, instance); 
-console.log("Built prompt:", prompt);
-***********************/
-//return { analysis, prompt }; 
 return  prompt; 
 }
-//NOT SURE export { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
-
-//module.exports = { buildPromptFromImage, analysePhoto, buildCartoonPrompt };
-
-/*Then in your existing Express endpoint:*/
-//SOME OF THIS MAT BE DUPS
-//const express = require("express"); 
-//const multer = require("multer"); 
-//const { buildPromptFromImage } = require("./vision-analysis");
-
-//const upload = multer({ storage: multer.memoryStorage() }); 
-//const app = express();
 
 
-//GOOGEL BITS
 
 
 
 //UPLOAD TO CLOUDINARY3
-
+/*******************************************************/
 async function uploadMultipleToCloudinary3(data, jobId) {
   console.log("Uploading masters + previews jobId ",jobId);
 
@@ -361,8 +338,10 @@ async function uploadMultipleToCloudinary3(data, jobId) {
     return null;
   }
 }
-//UPLOAD TO CLOUDINARY3
 
+
+//UPLOAD TO CLOUDINARY2
+/*********************************************************/
 async function uploadMultipleToCloudinary2(data) {
 //Map through ALL returned images
   
@@ -390,9 +369,10 @@ console.log("uploadMultipleToCloudinary2:");
     console.error("One or more uploads failed:", error);
     retrun;     
   }
-
 } 
-//const app = express();
+
+
+/*****************************************************/
 app.use(cors({
   origin: 'https://toffa.ai',
   methods: ['GET', 'POST' ],
@@ -400,7 +380,7 @@ app.use(cors({
 }));
 app.use(express.json({ limit: "10mb" }));
 
-
+/*****************************************************/
 const uploadImage = async (base64) => {
   return await cloudinary.uploader.upload(
     `data:image/png;base64,${base64}`,
@@ -410,13 +390,13 @@ const uploadImage = async (base64) => {
   );
 };
 
-
+/*******************************************************/
 app.get("/", (req, res) => {
   res.send("Toffa backend is running 🚀");
 });
 
 
-
+/*************************************************************/
 app.post(
   "/generate-previewG",
   upload.fields([
@@ -537,7 +517,7 @@ res.json({
 
 
 
-
+/**************************************************************************/
 //updated /generate-preview to accept files
 app.post(
   "/generate-preview",
@@ -669,7 +649,7 @@ res.status(200).json({
     );
 
 //CHECK IMAGE const { GoogleGenAI, Type } = require("@google/genai");
-
+/********************************************************************/
   //Analyze this image for safety violations. Check for: Nudity or sexually explicit content. Abuse, harassment, or hate speech. Violence, gore, or physical harm.
   async function moderateImage(imageBuffer) {
   const apiKey = process.env.GEM_API_KEY;
@@ -785,98 +765,4 @@ app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
 
-function saveBinaryFile(fileName: string, content: Buffer) {
-  writeFile(fileName, content, 'utf8', (err) => {
-    if (err) {
-      console.error(`Error writing file ${fileName}:`, err);
-      return;
-    }
-    console.log(`File ${fileName} saved to file system.`);
-  });
-}
 
-//TESTING
-app.post(
-  "/generate-GemTest",
-  upload.fields([
-    { name: "image", maxCount: 1 }
-  ]),
-  async (req, res) => {  
-
-  const imageFile = req.files?.image?.[0];
-  const text = req.body?.text;
-  const imageBuffer = imageFile.buffer;//req.file.buffer;
- //
-
-// Initialize the API with your API Key
-//const ai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
-//const model = ai.getGenerativeModel({ model: "gemini-3-flash-preview" });
-const prompt = "Transform the person in this photo into a 3D Pixar-style cartoon character. Retain their key features but give them oversized expressive eyes and vibrant colors.";
-//TEST
-  const ai = new GoogleGenAI({
-    apiKey: process.env['GEM_API_KEY'],
-  });
-  const tools = [
-    {
-      googleSearch: {
-      }
-    },
-  ];
-  const config = {
-    thinkingConfig: {
-      thinkingLevel: ThinkingLevel.MINIMAL,
-    },
-    imageConfig: {
-      aspectRatio: "",
-      imageSize: "1K",
-      personGeneration: "",
-    },
-    responseModalities: [
-        'IMAGE',
-        'TEXT',
-    ],
-    tools,
-  };
-  const model = 'gemini-3.1-flash-image';
-  const contents = [
-    {
-      role: 'user',
-      parts: [
-        {
-          text: prompt,
-        },
-      ],
-    },
-  ];
-
-  const response = await ai.models.generateContentStream({
-    model,
-    config,
-    contents,
-  });
-  let fileIndex = 0;
-  for await (const chunk of response) {
-    if (!chunk.candidates || !chunk.candidates[0].content || !chunk.candidates[0].content.parts) {
-      continue;
-    }
-    if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
-      const fileName = `ENTER_FILE_NAME_${fileIndex++}`;
-      const inlineData = chunk.candidates[0].content.parts[0].inlineData;
-      const fileExtension = mime.getExtension(inlineData.mimeType || '');
-      const buffer = Buffer.from(inlineData.data || '', 'base64');
-      saveBinaryFile(`${fileName}.${fileExtension}`, buffer);
-    }
-    else {
-      console.log(chunk.text);
-    }
-  }
-}
-
-
-
-
-    
-//TEST
-  
-);
-//
