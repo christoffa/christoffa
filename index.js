@@ -269,7 +269,8 @@ Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
 White background, centred composition, upper body portrait.
-Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition`; 
+Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition
+ONLY add hearing device if if noted, DO NOT guess`; 
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
