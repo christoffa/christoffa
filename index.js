@@ -647,8 +647,8 @@ const response = await openai.images.edit({
     image: [imageFile2],//[imageUpload.buffer],
     size: "1024x1024",
     quality:"high",
-    prompt: prompt,
-    n:3
+    prompt: prompt
+    //n:3
     });
     
     // Extract image
