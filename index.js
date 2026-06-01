@@ -256,20 +256,20 @@ case 3:
   Joke = "calling from another room";
   break;  
 }
+/*****************************************************************************
 return `Create a fun, warm, high-quality cartoon illustration using this image.
 Expression should be Happy and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
 White background, centred composition, upper body portrait.
 Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition`;   
-/********************************
+***************************************************************************/
 return `Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
 White background, centred composition, upper body portrait.
 Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition`; 
-****************************************/
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
@@ -576,7 +576,7 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
   
   if  (analysis.hearing_aid_count === 0){
   console.log("No hearing aids detected: ");
-  //      return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
+  //return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
   }   
 
 const  prompt  = await buildCartoonPrompt(analysis,1);
