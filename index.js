@@ -266,7 +266,6 @@ Important: Make it a light, playful hearing-loss ${Joke} joke with clean composi
 ***************************************************************************/
 
   return `Create a modern, high-quality cartoon illustration of the people in the uploaded image.
-
 CRITICAL CHARACTER ACCURACY:
 
 * Preserve the exact facial features, hairstyle, body shape, age range, ethnicity, and overall likeness
