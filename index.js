@@ -392,7 +392,7 @@ async function uploadMultipleToCloudinary3(data, jobId) {
         folder: `toffa/${jobId}/previews`,
         public_id: `img_${index}`,
         resource_type: "image",
-       transformation: ["sample_watermark_ef4f55"]
+       transformation: ["sample_watermark2"]
        //transformation: ["sample_watermark"]
         });
         /*
