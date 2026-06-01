@@ -66,8 +66,8 @@ if you are not 100% certain, you MUST use false and set notable_features to "No 
       "notable_features": "<string describing any distinctive features or null>"
     }
   ],
-  //"setting": "<indoor|outdoor|unknown>",
-  //"mood": "<happy|serious|neutral|laughing|unknown>",
+  "setting": "<indoor|outdoor|unknown>",
+  "mood": "<happy|serious|neutral|laughing|unknown>",
   "photo_quality": "<good|low_light|blurry|partially_obscured>"
 }`;
 
@@ -132,7 +132,7 @@ hearing_aid_count: 0,
 people_count: 1,
 people: [],
 setting: "unknown",
-//mood: "happy",
+mood: "happy",
 photo_quality: "good"
   
 };
@@ -542,13 +542,45 @@ app.post(
       const imageBase64 = imageFile.buffer.toString("base64");
       //console.log("imageBase64:", imageBase64);
       
-      //upload to cloudinary
+      //upload to cloudinary >>> DO WE REALLY NEED TO SAVE UPLOADED IMAGE?
       const imageUpload = await cloudinary.uploader.upload(
   `data:image/png;base64,${imageBase64}`,
   { folder: "toffa/faces" }
 );
-     
+
+//Step 1 Ayalyse photo for suxuaality, abause or hate    
+  const moderateResponse =  await moderateImage(imageBuffer); //MODERATE UPLOADED IMAGE
+  console.log("moderateResponse",moderateResponse);
+  /*
+   "success": true,
+      "data": {
+          "overall_safe": false,
+  */
+  if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
+    //FAILED MODERATION PASS ERROR BACK TO SHOPIFY
+    return res.status(200).json({"success": false, errorMessage: "Your uploaded image failed moderation" });
+  }
+  
+  // Step 2: Analyse photo
+  console.log("Analysing photo with Gemini Vision..."); 
+  const analysis = await analysePhoto(imageBase64);
+  console.log("Detected " + analysis.people_count + " person(s)"); 
+  console.log("Detected " + analysis.hearing_aid_count + " Hearing aid(s)"); 
+  console.log("Photo quality: ",analysis.photo_quality);
+  
+  if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
+    console.warn("Warning: low quality photo — cartoon results may vary");
+  }
+  
+  if  (analysis.hearing_aid_count === 0){
+  console.log("No hearing aids detected: ");
+  //      return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
+  }   
+
+const  prompt  = await buildCartoonPrompt(analysis,1);
+console.log("Prompt 1...",prompt); 
       
+/********************************************************************************     
 //BUILD PROMPT NEED TO IMPROVE PROMPT - NEED TO SWITCH ON HEARING LOSS JOKE TYPE
       const OLDprompt = `Create ONE single square modern comic-style cartoon image based on the uploaded  photo.
 Use the uploaded image as the exact facial reference for each character and preserve likeness.
@@ -585,7 +617,7 @@ Tone:
 
 Consistency:
 - Same people, same face, consistent features across all generated images`;
-
+**************************************************************************/
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
