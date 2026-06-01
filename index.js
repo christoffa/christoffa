@@ -309,15 +309,17 @@ HUMOUR STYLE:
 * Never offensive or mocking
 * Avoid exaggerated stereotypes
 * Make the humour situation-based rather than disability-based
+* use speech bubbles to tell joke
 
 JOKE THEME:
-Volume 40
+ ${Joke}
 
 ADDITIONAL RULES:
 
 * Do not add extra people
 * Do not change clothing unless relevant to the joke
 * Do not add random props
+* Do not add graphics
 * Avoid over-the-top comedy expressions
 * Keep the humour believable and relatable`;
 
