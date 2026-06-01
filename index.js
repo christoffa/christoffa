@@ -548,6 +548,8 @@ app.post(
   { folder: "toffa/faces" }
 );
 
+const imageBuffer = imageFile.buffer;//req.file.buffer;
+
 //Step 1 Ayalyse photo for suxuaality, abause or hate    
   const moderateResponse =  await moderateImage(imageBuffer); //MODERATE UPLOADED IMAGE
   console.log("moderateResponse",moderateResponse);
@@ -563,7 +565,7 @@ app.post(
   
   // Step 2: Analyse photo
   console.log("Analysing photo with Gemini Vision..."); 
-  const analysis = await analysePhoto(imageBase64);
+  const analysis = await analysePhoto(imageBuffer);
   console.log("Detected " + analysis.people_count + " person(s)"); 
   console.log("Detected " + analysis.hearing_aid_count + " Hearing aid(s)"); 
   console.log("Photo quality: ",analysis.photo_quality);
