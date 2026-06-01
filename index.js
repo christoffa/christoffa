@@ -269,8 +269,30 @@ Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
 Accurately represent ALL physical features — especially any hearing devices, glasses, and hair details.
 White background, centred composition, upper body portrait.
-Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition
-ONLY add hearing device if if noted, DO NOT guess`; 
+IMPORTANT: 
+- Make it a light, playful hearing-loss ${Joke} joke with clean composition
+- DO NOT add hearing aid if not stated
+- Preserve the exact facial features, likeness, and identity of the people
+- Do not change age, gender, or ethnicity
+- Keep it clearly recognisable as the same individuals
+- Output image square 1:1
+- Make it a light, playful hearing-loss joke with clean composition.
+- Make each cartoon to have a different Hearing Loss Joke theme
+
+Style:
+- Clean line art
+- Soft shading
+- Warm, friendly, likeable expression
+- Slightly exaggerated cartoon style, but not distorted
+
+Scene:
+- Simple, uncluttered background
+- Focus on the characters
+
+Tone:
+- Light humour around hearing loss
+- Subtle and relatable, not offensive
+`; 
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
