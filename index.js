@@ -264,6 +264,64 @@ Accurately represent ALL physical features — especially any hearing devices, g
 White background, centred composition, upper body portrait.
 Important: Make it a light, playful hearing-loss ${Joke} joke with clean composition`;   
 ***************************************************************************/
+
+  return `Create a modern, high-quality cartoon illustration of the people in the uploaded image.
+
+CRITICAL CHARACTER ACCURACY:
+
+* Preserve the exact facial features, hairstyle, body shape, age range, ethnicity, and overall likeness
+* Keep the people immediately recognisable as the original individuals
+* Do not beautify, redesign, or replace facial features
+* Maintain consistent appearance across all generated images
+
+VERY IMPORTANT DEVICE RULE:
+
+* ONLY include hearing aids or cochlear implants if they are CLEARLY visible in the original uploaded image
+* NEVER invent, add, assume, or exaggerate hearing devices
+* If no hearing device is visible, do not include one
+* Do not imply disability visually unless confirmed by the image or user
+
+OUTPUT:
+
+* Square 1:1 composition
+* High-quality modern cartoon style
+* Clean composition focused on characters
+
+STYLE:
+
+* Clean line art
+* Soft shading
+* Friendly expressive faces
+* Slightly exaggerated cartoon style
+* Warm, natural colours
+* Modern social-media cartoon aesthetic
+
+BACKGROUND:
+
+* Simple uncluttered background
+* Environment can subtly support the joke theme
+* Keep focus on the people
+
+HUMOUR STYLE:
+
+* Light relatable hearing-loss humour
+* Warm, observational, and human
+* Never offensive or mocking
+* Avoid exaggerated stereotypes
+* Make the humour situation-based rather than disability-based
+
+JOKE THEME:
+Volume 40
+
+ADDITIONAL RULES:
+
+* Do not add extra people
+* Do not change clothing unless relevant to the joke
+* Do not add random props
+* Avoid over-the-top comedy expressions
+* Keep the humour believable and relatable`;
+
+  /*******************
 return `Create a fun, warm, high-quality cartoon illustration of ${count} person${plural}: ${peopleStr}.
 Expression should be ${mood} and full of personality.
 Style: clean line art, vibrant colours, professional cartoon portrait, comic book quality.
@@ -293,6 +351,7 @@ Tone:
 - Light humour around hearing loss
 - Subtle and relatable, not offensive
 `; 
+********************************/
 }
 
 // ─── Main pipeline ────────────────────────────────────────────────────────────
