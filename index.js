@@ -616,11 +616,7 @@ res.json({
  
 });
 
-
-
-
-/**************************************************************************/
-//updated /generate-preview to accept files
+/*********************** SAVED COPY OF generate-preview BEFORE ASYNC CHANGES
 app.post(
   "/generate-preview",
   upload.fields([
@@ -784,6 +780,112 @@ return res.status(200).json({
       }
     );
 
+
+
+**********************************************************************/
+
+
+/**************************************************************************/
+//updated ASYNC CHANGES
+  // In-memory job store (use Redis in production)
+const jobs = {};
+
+// POST - starts job immediately, returns job_id
+app.post(
+  "/generate-preview",
+  upload.fields([{ name: "image", maxCount: 1 }]),
+  async (req, res) => {
+    try {
+      const imageFile = req.files?.image?.[0];
+      if (!imageFile) {
+        return res.status(400).json({ error: "Missing image" });
+      }
+
+      const jobId = `job_${Date.now()}`;
+      jobs[jobId] = { status: "processing" };
+
+      // Return job_id IMMEDIATELY before any async work
+      res.status(200).json({ success: true, job_id: jobId });
+
+      // Now do all the slow work in the background
+      (async () => {
+        try {
+          const imageBuffer = imageFile.buffer;
+          const imageBase64 = imageBuffer.toString("base64");
+
+          // Moderation
+          const moderateResponse = await moderateImage(imageBuffer);
+          if (!moderateResponse.success || !moderateResponse.data.overall_safe) {
+            jobs[jobId] = { status: "failed", errorMessage: "Your uploaded image failed moderation" };
+            return;
+          }
+
+          // Upload to Cloudinary
+          const imageUpload = await cloudinary.uploader.upload(
+            `data:image/png;base64,${imageBase64}`,
+            { folder: "toffa/faces" }
+          );
+
+          // Analyse
+          const analysis = await analysePhoto(imageBuffer);
+          const prompt = await buildCartoonPrompt(analysis, 1);
+
+          // Download uploaded image for OpenAI
+          const response2 = await fetch(imageUpload.url);
+          const arrayBuffer = await response2.arrayBuffer();
+          const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
+            type: "image/jpeg",
+          });
+
+          // OpenAI generation (the slow part)
+          const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+          const response = await openai.images.edit({
+            model: "gpt-image-1.5",
+            image: [imageFile2],
+            size: "1024x1024",
+            quality: "high",
+            prompt: prompt,
+          });
+
+          // Upload results to Cloudinary
+          const images = await uploadMultipleToCloudinary3(response.data, jobId);
+          if (!images) {
+            jobs[jobId] = { status: "failed", errorMessage: "Upload failed" };
+            return;
+          }
+
+          jobs[jobId] = {
+            status: "complete",
+            images: images.map(i => ({
+              image_id: i.image_id,
+              preview_url: i.preview_url,
+            })),
+          };
+        } catch (err) {
+          console.error("Background job failed:", err);
+          jobs[jobId] = { status: "failed", errorMessage: "Generation failed" };
+        }
+      })();
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Failed to start job" });
+    }
+  }
+);
+
+// GET - poll for job status
+app.get("/generate-preview", async (req, res) => {
+  const jobId = req.query.job_id;
+  if (!jobId || !jobs[jobId]) {
+    return res.status(404).json({ status: "not_found" });
+  }
+  return res.status(200).json(jobs[jobId]);
+});
+//END OF ASYNC CHANGES
+
+
+  
 //CHECK IMAGE const { GoogleGenAI, Type } = require("@google/genai");
 /********************************************************************/
   //Analyze this image for safety violations. Check for: Nudity or sexually explicit content. Abuse, harassment, or hate speech. Violence, gore, or physical harm.
