@@ -651,11 +651,7 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
 //Step 1 Ayalyse photo for suxuaality, abause or hate    
   const moderateResponse =  await moderateImage(imageBuffer); //MODERATE UPLOADED IMAGE
   console.log("moderateResponse",moderateResponse);
-  /*
-   "success": true,
-      "data": {
-          "overall_safe": false,
-  */
+ 
   if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
     //FAILED MODERATION PASS ERROR BACK TO SHOPIFY
     return res.status(200).json({"success": false, errorMessage: "Your uploaded image failed moderation" });
@@ -718,7 +714,7 @@ Tone:
 Consistency:
 - Same people, same face, consistent features across all generated images`;
 **************************************************************************/
-
+/*
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -765,14 +761,7 @@ return res.status(200).json({
     preview_url: i.preview_url
   }))
 });
-      //
-      /*
-    const URLS = await uploadMultipleToCloudinary2(response.data);
-    if (!URLS){
-      res.status(500).json({ error: "uploadMultipleToCloudinary2 failed" });;
-    }
-    res.status(200).json({success: true, data: URLS});
-    */
+     
         } catch (err) {
           console.error(err);
           res.status(500).json({ error: "MAP failed" });
