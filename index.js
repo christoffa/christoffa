@@ -456,11 +456,29 @@ console.log("uploadMultipleToCloudinary2:");
 
 
 /*****************************************************/
+
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowed = [
+      'https://toffa.ai',
+      'https://app.example.com'
+    ];
+
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
+/*
 app.use(cors({
   origin: 'https://toffa.ai',
   methods: ['GET', 'POST' ],
   credentials: true
 }));
+*/
 app.use(express.json({ limit: "10mb" }));
 
 /*****************************************************/
