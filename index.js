@@ -34,9 +34,10 @@ cloudinary.config({
 // ADD SHOPIFY CRYPTO BITS
 //const crypto = require('crypto');
 
-function verifyShopifyProxy(query) {
-  console.log("verifyShopifyProxy(query) ",query);
-  const { signature, ...rest } = query;
+function verifyShopifyProxy(req) {
+  console.log("verifyShopifyProxy(req) ",req);
+  return;
+  const { signature, ...rest } = req.query;
   const secret = process.env.SHOPIFY_APP_SECRET; // from your app settings
   
   const message = Object.keys(rest)
@@ -812,9 +813,9 @@ app.post(
   upload.fields([{ name: "image", maxCount: 1 }]),
   async (req, res) => {
   // Add to both your POST and GET routes at the top:
-    console.log("verifyShopifyProxy(query) ",req);
+    console.log("verifyShopifyProxy(req) ",req);
   
-  if (!verifyShopifyProxy(req.query)) {
+  if (!verifyShopifyProxy(req)) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -901,7 +902,7 @@ app.post(
 app.get("/generate-preview", async (req, res) => {
 
 // Add to both your POST and GET routes at the top:
-if (!verifyShopifyProxy(req.query)) {
+if (!verifyShopifyProxy(req)) {
   return res.status(403).json({ error: 'Forbidden' });
 }
 
