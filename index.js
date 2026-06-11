@@ -518,10 +518,6 @@ const uploadImage = async (base64) => {
 
 /*******************************************************/
 app.get("/", (req, res) => {
-// Add to both your POST and GET routes at the top:
-if (!verifyShopifyProxy(req.query)) {
-  return res.status(403).json({ error: 'Forbidden' });
-}
 
   res.send("Toffa backend is running 🚀");
 });
