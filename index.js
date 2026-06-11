@@ -51,11 +51,17 @@ function verifyShopifyProxy(req) {
     .createHmac('sha256', secret)
     .update(message)
     .digest('hex');
-console.log("digest ",digest);
-console.log("Message string:", message); 
-console.log("Shop making request:", req.query.shop);
-console.log("Secret being used:", process.env.SHOPIFY_APP_SECRET?.slice(0, 6) + "..."); // first 6 chars only
-  
+
+  // Temporary debug - remove after fixing
+  console.log("=== HMAC DEBUG ===");
+  console.log("Secret length:", secret.length);
+  console.log("Secret first 8 chars:", secret.substring(0, 8));
+  console.log("Message:", message);
+  console.log("Digest:   ", digest);
+  console.log("Signature:", signature);
+  console.log("Match:", digest === signature);
+  console.log("=================");
+
   return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
 }
 
