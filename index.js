@@ -828,7 +828,13 @@ app.post(
   async (req, res) => {
   // Add to both your POST and GET routes at the top:
     console.log("verifyShopifyProxy(req) ",req);
+  //
+ // Add this at the very top
+  console.log("Raw query string:", req.url);
+  console.log("req.query keys:", Object.keys(req.query).sort());
+  console.log("Full req.query:", JSON.stringify(req.query));
   
+  //
   if (!verifyShopifyProxy(req)) {
     return res.status(403).json({ error: 'Forbidden' });
   }
