@@ -38,21 +38,27 @@ cloudinary.config({
 
 
 function verifyShopifyProxy(rawUrl) {
-  // Parse the raw query string to preserve encoding
   const queryString = rawUrl.split('?')[1] || '';
-  const params = new URLSearchParams(queryString);
   
-  const signature = params.get('signature');
-  params.delete('signature');
+  // Split manually to avoid any URL decoding
+  const parts = queryString.split('&');
+  
+  let signature = '';
+  const otherParts = [];
 
-  // Sort and build message from raw (still-encoded) values
-  const message = Array.from(params.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([k, v]) => `${k}=${v}`)
-    .join('&');
+  for (const part of parts) {
+    if (part.startsWith('signature=')) {
+      signature = part.slice('signature='.length);
+    } else {
+      otherParts.push(part);
+    }
+  }
+
+  // Sort and join — values stay raw/encoded as Shopify sent them
+  const message = otherParts.sort().join('&');
 
   const secret = process.env.SHOPIFY_APP_SECRET.trim();
-  
+
   const digest = crypto
     .createHmac('sha256', secret)
     .update(message)
