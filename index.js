@@ -4,7 +4,7 @@ import OpenAI, { toFile } from "openai";
 import multer from "multer";
 import fs from "fs";
 import fetch from "node-fetch";
-import FormData from "form-data";
+import FormData from "form-data"; 
 const upload = multer({ storage: multer.memoryStorage() });
 import { v2 as cloudinary } from "cloudinary";
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
