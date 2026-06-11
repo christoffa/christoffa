@@ -67,6 +67,9 @@ function verifyShopifyProxy(rawUrl) {
   console.log("Message:", message);
   console.log("Digest:   ", digest);
   console.log("Signature:", signature);
+  console.log("Secret length:", secret.length); // should be 38
+  console.log("Secret first 8:", secret.substring(0, 8)); // should be shpss_d1
+
 
   return crypto.timingSafeEqual(
     Buffer.from(digest, 'hex'),
