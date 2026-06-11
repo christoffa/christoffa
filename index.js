@@ -812,6 +812,8 @@ app.post(
   upload.fields([{ name: "image", maxCount: 1 }]),
   async (req, res) => {
   // Add to both your POST and GET routes at the top:
+    console.log("verifyShopifyProxy(query) ",req);
+  
   if (!verifyShopifyProxy(req.query)) {
     return res.status(403).json({ error: 'Forbidden' });
   }
