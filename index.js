@@ -16,7 +16,7 @@ import {GoogleGenAI} from "@google/genai";
 import { writeFile } from 'fs';
 
 import crypto from "crypto";
-import qs = from "querystring";
+import qs from "querystring";
 
 //
 //const express = require("express"); 
