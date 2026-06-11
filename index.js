@@ -53,6 +53,8 @@ function verifyShopifyProxy(req) {
     .digest('hex');
 console.log("digest ",digest);
 console.log("Message string:", message); 
+console.log("Shop making request:", req.query.shop);
+console.log("Secret being used:", process.env.SHOPIFY_APP_SECRET?.slice(0, 6) + "..."); // first 6 chars only
   
   return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
 }
