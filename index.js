@@ -40,6 +40,7 @@ function verifyShopifyProxy(req) {
   const { signature, ...rest } = req.query;
   console.log("signature ",signature);
   const secret = process.env.SHOPIFY_APP_SECRET; // from your app settings
+
   
   const message = Object.keys(rest)
     .sort()
@@ -50,6 +51,8 @@ function verifyShopifyProxy(req) {
     .createHmac('sha256', secret)
     .update(message)
     .digest('hex');
+console.log("digest ",digest);
+  
   
   return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
 }
