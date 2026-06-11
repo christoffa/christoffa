@@ -15,6 +15,8 @@ import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 import {GoogleGenAI} from "@google/genai";
 import { writeFile } from 'fs';
 
+import crypto from "crypto";
+
 //
 //const express = require("express"); 
 //const multer = require("multer"); 
@@ -28,6 +30,29 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+// ADD SHOPIFY CRYPTO BITS
+//const crypto = require('crypto');
+
+function verifyShopifyProxy(query) {
+  const { signature, ...rest } = query;
+  const secret = process.env.SHOPIFY_APP_SECRET; // from your app settings
+  
+  const message = Object.keys(rest)
+    .sort()
+    .map(k => `${k}=${rest[k]}`)
+    .join('&');
+  
+  const digest = crypto
+    .createHmac('sha256', secret)
+    .update(message)
+    .digest('hex');
+  
+  return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
+}
+
+
+// ADD SHOPIFY CRYPTO BITS
 // GOOGLE BITS
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
@@ -493,6 +518,11 @@ const uploadImage = async (base64) => {
 
 /*******************************************************/
 app.get("/", (req, res) => {
+// Add to both your POST and GET routes at the top:
+if (!verifyShopifyProxy(req.query)) {
+  return res.status(403).json({ error: 'Forbidden' });
+}
+
   res.send("Toffa backend is running 🚀");
 });
 
@@ -784,6 +814,11 @@ app.post(
   "/generate-preview",
   upload.fields([{ name: "image", maxCount: 1 }]),
   async (req, res) => {
+  // Add to both your POST and GET routes at the top:
+  if (!verifyShopifyProxy(req.query)) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
     try {
       const imageFile = req.files?.image?.[0];
       if (!imageFile) {
@@ -865,6 +900,12 @@ app.post(
 
 // GET - poll for job status
 app.get("/generate-preview", async (req, res) => {
+
+// Add to both your POST and GET routes at the top:
+if (!verifyShopifyProxy(req.query)) {
+  return res.status(403).json({ error: 'Forbidden' });
+}
+
   const jobId = req.query.job_id;
   if (!jobId || !jobs[jobId]) {
     return res.status(404).json({ status: "not_found" });
