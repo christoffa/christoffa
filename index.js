@@ -824,7 +824,7 @@ app.post(
   upload.fields([{ name: "image", maxCount: 1 }]),
   async (req, res) => {
   // Add to both your POST and GET routes at the top:
-    console.log("verifyShopifyProxy(req.url) ",req.url);
+    console.log("verifyShopifyProxy(req) ",req);
   //
  // Add this at the very top
   console.log("Raw query string:", req.url);
@@ -832,7 +832,7 @@ app.post(
   console.log("Full req.query:", JSON.stringify(req.query));
   
   //
-  if (!verifyShopifyProxy(req.url)) {
+  if (!verifyShopifyProxy(req)) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -919,7 +919,7 @@ app.post(
 app.get("/generate-preview", async (req, res) => {
 
 // Add to both your POST and GET routes at the top:
-if (!verifyShopifyProxy(req.url)) {
+if (!verifyShopifyProxy(req)) {
   return res.status(403).json({ error: 'Forbidden' });
 }
 
