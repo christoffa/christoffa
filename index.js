@@ -35,9 +35,10 @@ cloudinary.config({
 //const crypto = require('crypto');
 
 function verifyShopifyProxy(req) {
-  console.log("verifyShopifyProxy(req) ",req);
+  console.log("verifyShopifyProxy(req.query) ",req.query);
   //return false;
-  const { signature, ...rest } = req;//.query;
+  const { signature, ...rest } = req.query;
+  console.log("signature ",signature);
   const secret = process.env.SHOPIFY_APP_SECRET; // from your app settings
   
   const message = Object.keys(rest)
