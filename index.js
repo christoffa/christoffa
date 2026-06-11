@@ -16,6 +16,7 @@ import {GoogleGenAI} from "@google/genai";
 import { writeFile } from 'fs';
 
 import crypto from "crypto";
+import qs = from "querystring";
 
 //
 //const express = require("express"); 
@@ -34,39 +35,38 @@ cloudinary.config({
 // ADD SHOPIFY CRYPTO BITS
 //const crypto = require('crypto');
 
-function verifyShopifyProxy(req) {
-  console.log("verifyShopifyProxy(req.query) ",req.query);
-  //return false;
-  const { signature, ...rest } = req.query;
-  console.log("signature ",signature);
-  //const secret = process.env.SHOPIFY_APP_SECRET; // from your app settings
-  const raw = process.env.SHOPIFY_APP_SECRET.trim();
-  const secret = raw.startsWith('shpss_') ? raw.slice(6) : raw;
 
+
+function verifyShopifyProxy(rawUrl) {
+  // Parse the raw query string to preserve encoding
+  const queryString = rawUrl.split('?')[1] || '';
+  const params = new URLSearchParams(queryString);
   
-  const message = Object.keys(rest)
-    .sort()
-    .map(k => `${k}=${rest[k]}`)
+  const signature = params.get('signature');
+  params.delete('signature');
+
+  // Sort and build message from raw (still-encoded) values
+  const message = Array.from(params.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
     .join('&');
+
+  const secret = process.env.SHOPIFY_APP_SECRET.trim();
   
   const digest = crypto
     .createHmac('sha256', secret)
     .update(message)
     .digest('hex');
 
-  // Temporary debug - remove after fixing
-  console.log("=== HMAC DEBUG ===");
-  console.log("Secret length:", secret.length);
-  console.log("Secret first 8 chars:", secret.substring(0, 8));
   console.log("Message:", message);
   console.log("Digest:   ", digest);
   console.log("Signature:", signature);
-  console.log("Match:", digest === signature);
-  console.log("=================");
 
-  return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
+  return crypto.timingSafeEqual(
+    Buffer.from(digest, 'hex'),
+    Buffer.from(signature, 'hex')
+  );
 }
-
 
 // ADD SHOPIFY CRYPTO BITS
 // GOOGLE BITS
@@ -827,7 +827,7 @@ app.post(
   upload.fields([{ name: "image", maxCount: 1 }]),
   async (req, res) => {
   // Add to both your POST and GET routes at the top:
-    console.log("verifyShopifyProxy(req) ",req);
+    console.log("verifyShopifyProxy(req.url) ",req.url);
   //
  // Add this at the very top
   console.log("Raw query string:", req.url);
@@ -835,7 +835,7 @@ app.post(
   console.log("Full req.query:", JSON.stringify(req.query));
   
   //
-  if (!verifyShopifyProxy(req)) {
+  if (!verifyShopifyProxy(req.url)) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
@@ -922,7 +922,7 @@ app.post(
 app.get("/generate-preview", async (req, res) => {
 
 // Add to both your POST and GET routes at the top:
-if (!verifyShopifyProxy(req)) {
+if (!verifyShopifyProxy(req.url)) {
   return res.status(403).json({ error: 'Forbidden' });
 }
 
