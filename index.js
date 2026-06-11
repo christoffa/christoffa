@@ -13,7 +13,7 @@ import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 //import { Type }  from "@google/generative-ai";
 //import { buildPromptFromImage } from "./vision-analysis.js";
 import {GoogleGenAI} from "@google/genai";
-import { writeFile } from 'fs';
+import { writeFile } from 'fs'; 
 
 import crypto from "crypto";
 import qs from "querystring";
