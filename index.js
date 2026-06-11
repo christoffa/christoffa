@@ -39,7 +39,9 @@ function verifyShopifyProxy(req) {
   //return false;
   const { signature, ...rest } = req.query;
   console.log("signature ",signature);
-  const secret = process.env.SHOPIFY_APP_SECRET; // from your app settings
+  //const secret = process.env.SHOPIFY_APP_SECRET; // from your app settings
+  const raw = process.env.SHOPIFY_APP_SECRET.trim();
+  const secret = raw.startsWith('shpss_') ? raw.slice(6) : raw;
 
   
   const message = Object.keys(rest)
