@@ -56,7 +56,7 @@ function verifyShopifyProxy(req) {
   console.log("Secret length:", secret.length); // should be 38
   console.log("Secret first 8:", secret.substring(0, 8)); // should be shpss_d1
 
-return digest !=== secret;
+return digest !== secret;
 /****
   return crypto.timingSafeEqual(
     Buffer.from(digest, 'hex'),
