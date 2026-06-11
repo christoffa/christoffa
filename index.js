@@ -37,25 +37,11 @@ cloudinary.config({
 
 
 
-function verifyShopifyProxy(rawUrl) {
-  const queryString = rawUrl.split('?')[1] || '';
+function verifyShopifyProxy(req) {
+  const map = Object.assign({},req.qurey);
+  delete map['signature'];
+  const message = qureystring.stringify(map);
   
-  // Split manually to avoid any URL decoding
-  const parts = queryString.split('&');
-  
-  let signature = '';
-  const otherParts = [];
-
-  for (const part of parts) {
-    if (part.startsWith('signature=')) {
-      signature = part.slice('signature='.length);
-    } else {
-      otherParts.push(part);
-    }
-  }
-
-  // Sort and join — values stay raw/encoded as Shopify sent them
-  const message = otherParts.sort().join('&');
 
   const secret = process.env.SHOPIFY_APP_SECRET.trim();
 
@@ -70,11 +56,13 @@ function verifyShopifyProxy(rawUrl) {
   console.log("Secret length:", secret.length); // should be 38
   console.log("Secret first 8:", secret.substring(0, 8)); // should be shpss_d1
 
-
+return digest !=== secret;
+/****
   return crypto.timingSafeEqual(
     Buffer.from(digest, 'hex'),
     Buffer.from(signature, 'hex')
   );
+  ***/
 }
 
 // ADD SHOPIFY CRYPTO BITS
