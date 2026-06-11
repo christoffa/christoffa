@@ -43,7 +43,7 @@ function verifyShopifyProxy(req) {
   const message = qureystring.stringify(map);
   
 
-  const secret = process.env.SHOPIFY_APP_SECRET.trim();
+  const secret = process.env.SHOPIFY_APP_SECRET;
 
   const digest = crypto
     .createHmac('sha256', secret)
