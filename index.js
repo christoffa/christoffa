@@ -52,7 +52,7 @@ function verifyShopifyProxy(req) {
     .update(message)
     .digest('hex');
 console.log("digest ",digest);
-  
+console.log("Message string:", message); 
   
   return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
 }
