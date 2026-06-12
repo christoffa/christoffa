@@ -824,7 +824,7 @@ if (req.headers['ts'] !== ts) {
         try {
           const imageBuffer = imageFile.buffer;
           const imageBase64 = imageBuffer.toString("base64");
-
+          /****************************** REMOVE GEMINI MODERATION, DONE IN OPEN AI
           // Moderation
           jobs[jobId] = { Message: "Moderating your uploaded image" };
             
@@ -833,7 +833,7 @@ if (req.headers['ts'] !== ts) {
             jobs[jobId] = { status: "failed", Message: "Your uploaded image failed moderation" };
             return;
           }
-
+          *********************************************************************/
           // Upload to Cloudinary
           const imageUpload = await cloudinary.uploader.upload(
             `data:image/png;base64,${imageBase64}`,
