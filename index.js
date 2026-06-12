@@ -537,7 +537,7 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
           "overall_safe": false,
   */
   if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
-        return res.status(200).json({"success": false, errorMessage: "Your uploaded image failed moderation" });
+        return res.status(200).json({"success": false, Message: "Your uploaded image failed moderation" });
   }
   
   // Step 2: Analyse photo
@@ -553,7 +553,7 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
   
   if  (analysis.hearing_aid_count === 0){
   console.log("No hearing aids detected: ");
-  //      return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
+  //      return res.status(200).json({"success": false, Message: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
   }
 //}//END OF SECOND PASS
 // Step 3: Build dynamic prompts
@@ -660,7 +660,7 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
  
   if  (!moderateResponse.success || !moderateResponse.data.overall_safe){
     //FAILED MODERATION PASS ERROR BACK TO SHOPIFY
-    return res.status(200).json({"success": false, errorMessage: "Your uploaded image failed moderation" });
+    return res.status(200).json({"success": false, Message: "Your uploaded image failed moderation" });
   }
   
   // Step 2: Analyse photo
@@ -676,7 +676,7 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
   
   if  (analysis.hearing_aid_count === 0){
   console.log("No hearing aids detected: ");
-  //return res.status(200).json({"success": false, errorMessage: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
+  //return res.status(200).json({"success": false, Message: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
   }   
 
 const  prompt  = await buildCartoonPrompt(analysis,1);
@@ -869,7 +869,7 @@ if (req.headers['ts'] !== ts) {
           // Upload results to Cloudinary
           const images = await uploadMultipleToCloudinary3(response.data, jobId);
           if (!images) {
-            jobs[jobId] = { status: "failed", errorMessage: "Upload failed" };
+            jobs[jobId] = { status: "failed", Message: "Upload failed" };
             return;
           }
 
@@ -882,7 +882,7 @@ if (req.headers['ts'] !== ts) {
           };
         } catch (err) {
           console.error("Background job failed:", err);
-          jobs[jobId] = { status: "failed", errorMessage: "Generation failed" };
+          jobs[jobId] = { status: "failed", Message: "Generation failed" };
         }
       })();
 
@@ -1009,13 +1009,13 @@ Return results in JSON format.`;
     return { success: true, data: JSON.parse(text)};
     } else {
       console.log("No response text received.");
-    //res.status(500).json({ success: false, errorMessage: error.message});
-    return { success: false, errorMessage: error.message};
+    //res.status(500).json({ success: false, Message: error.message});
+    return { success: false, Message: error.message};
     }
   } catch (error) {
     console.error("Error during analysis:", error.message);
-    //res.status(500).json({ success: false, error: "Error during analysis",errorMessage: error.message});
-    return { success: false, error: "Error during analysis",errorMessage: error.message};
+    //res.status(500).json({ success: false, error: "Error during analysis",Message: error.message});
+    return { success: false, error: "Error during analysis",Message: error.message};
         
   }
 }//); //END OF async function moderateImage(imageBuffer)
