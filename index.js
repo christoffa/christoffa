@@ -40,7 +40,7 @@ cloudinary.config({
 function verifyShopifyProxy(req) {
   const map = Object.assign({},req.qurey);
   delete map['signature'];
-  const message = qureystring.stringify(map);
+  const message = qs.stringify(map);
   
 
   const secret = process.env.SHOPIFY_APP_SECRET;
