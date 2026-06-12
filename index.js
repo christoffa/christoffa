@@ -65,7 +65,7 @@ return digest !== secret;
   ***/
 }
 
-// ADD SHOPIFY CRYPTO BITS
+// ADD SHOPIFY CRYPTO BITS....
 // GOOGLE BITS
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
