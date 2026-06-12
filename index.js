@@ -841,7 +841,7 @@ if (req.headers['ts'] !== ts) {
           );
 
           // Analyse
-          jobs[jobId] = { Message: "Analysing your uploaded image" };
+          jobs[jobId] = { status: "success", Message: "Analysing your uploaded image" };
           
           const analysis = await analysePhoto(imageBuffer);
           //TODO
@@ -854,7 +854,7 @@ if (req.headers['ts'] !== ts) {
           const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
             type: "image/jpeg",
           });
-          jobs[jobId] = { Message: "Building your sample images" };
+          jobs[jobId] = {  status: "success", Message: "Building your sample images" };
           
           // OpenAI generation (the slow part)
           const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
