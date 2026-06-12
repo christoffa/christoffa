@@ -883,7 +883,7 @@ if (req.headers['ts'] !== ts) {
         } catch (err) {
           console.error("Background job failed:", err);
         //jobs[jobId] = { status: "failed", Message: "Generation failed" };
-        jobs[jobId] = { status: "failed", Message: err.errorMessage };
+        jobs[jobId] = { status: "failed", Message: err.message };
         }
       })();
 
