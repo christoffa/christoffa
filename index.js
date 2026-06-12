@@ -790,6 +790,12 @@ app.post(
   async (req, res) => {
 // Add to POST /generate-preview
 const ts = process.env.ts;
+
+console.log("ts",ts);
+console.log("req.headers['Ts']",req.headers['Ts']);
+console.log("req.headers",req.headers);
+
+    
 if (req.headers['Ts'] !== ts) {
   return res.status(403).json({ error: 'Forbidden' });
 }
