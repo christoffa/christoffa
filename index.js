@@ -792,11 +792,11 @@ app.post(
 const ts = process.env.ts;
 
 console.log("ts",ts);
-console.log("req.headers['Ts']",req.headers['Ts']);
+console.log("req.headers['ts']",req.headers['ts']);
 console.log("req.headers",req.headers);
 
     
-if (req.headers['Ts'] !== ts) {
+if (req.headers['ts'] !== ts) {
   return res.status(403).json({ error: 'Forbidden' });
 }
 
@@ -888,9 +888,9 @@ app.get("/generate-preview", async (req, res) => {
 // Add to POST /generate-preview
 const ts = process.env.ts;
    console.log("ts",ts);
-   console.log("req.headers['Ts']",req.headers['Ts']);
+   console.log("req.headers['ts']",req.headers['ts']);
       
-if (req.headers['Ts'] !== ts) {
+if (req.headers['ts'] !== ts) {
   return res.status(403).json({ error: 'Forbidden' });
 }
 
