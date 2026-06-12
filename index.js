@@ -37,7 +37,9 @@ cloudinary.config({
 
 
 
-function verifyShopifyProxy(req) {
+function verifyShopifyProxy(req) { 
+  const { signature } = req.qurey;
+
   const map = Object.assign({},req.qurey);
   delete map['signature'];
   const message = qs.stringify(map);
