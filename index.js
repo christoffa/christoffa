@@ -883,7 +883,16 @@ if (req.headers['ts'] !== ts) {
         } catch (err) {
           console.error("Background job failed:", err);
         //jobs[jobId] = { status: "failed", Message: "Generation failed" };
+          /*
+          type: 'image_generation_user_error',
+    param: null,
+    code: 'moderation_blocked',
+          */
         jobs[jobId] = { status: "failed", Message: err.message };
+          if (err.type == 'image_generation_user_error'
+             && err.code == 'moderation_blocked'){
+          jobs[jobId] = { status: "failed", Message: "Your uploaded Image failed Moderation" };    
+          }
         }
       })();
 
