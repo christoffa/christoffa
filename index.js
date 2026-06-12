@@ -882,9 +882,9 @@ app.get("/generate-preview", async (req, res) => {
 // Add to POST /generate-preview
 const ts = process.env.ts;
    console.log("ts",ts);
-   console.log("req.headers['Ts']",req.headers['ts']);
+   console.log("req.headers['Ts']",req.headers['Ts']);
       
-if (req.headers['ts'] !== ts) {
+if (req.headers['Ts'] !== ts) {
   return res.status(403).json({ error: 'Forbidden' });
 }
 
