@@ -18,6 +18,8 @@ import { writeFile } from 'fs';
 import crypto from "crypto";
 import qs from "querystring";
 
+let progreesMessage = "";
+
 //DEPLOY ISUES
 //const express = require("express"); 
 //const multer = require("multer"); 
@@ -789,6 +791,7 @@ app.post(
   upload.fields([{ name: "image", maxCount: 1 }]),
   async (req, res) => {
 // Add to POST /generate-preview
+progreesMessage = "";
 const ts = process.env.ts;
 
 console.log("ts",ts);
@@ -810,8 +813,7 @@ if (req.headers['ts'] !== ts) {
       }
 
       const jobId = `job_${Date.now()}`;
-      jobs[jobId] = { status: "processing",
-                    Message: "DETAILED MESSAGE"
+      jobs[jobId] = { status: "processing"
                     };
 
       // Return job_id IMMEDIATELY before any async work
@@ -824,9 +826,11 @@ if (req.headers['ts'] !== ts) {
           const imageBase64 = imageBuffer.toString("base64");
 
           // Moderation
+          jobs[jobId] = { Message: "Moderating your uploaded image" };
+            
           const moderateResponse = await moderateImage(imageBuffer);
           if (!moderateResponse.success || !moderateResponse.data.overall_safe) {
-            jobs[jobId] = { status: "failed", errorMessage: "Your uploaded image failed moderation" };
+            jobs[jobId] = { status: "failed", Message: "Your uploaded image failed moderation" };
             return;
           }
 
@@ -837,7 +841,11 @@ if (req.headers['ts'] !== ts) {
           );
 
           // Analyse
+          jobs[jobId] = { Message: "Analysing your uploaded image" };
+          
           const analysis = await analysePhoto(imageBuffer);
+          //TODO
+          //IF CANNOT IDENTIFY HEARING LOSS INDIVIDUAL(S) REQUEST MORE INFO
           const prompt = await buildCartoonPrompt(analysis, 1);
 
           // Download uploaded image for OpenAI
@@ -846,7 +854,8 @@ if (req.headers['ts'] !== ts) {
           const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
             type: "image/jpeg",
           });
-
+          jobs[jobId] = { Message: "Building your sample images" };
+          
           // OpenAI generation (the slow part)
           const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
           const response = await openai.images.edit({
