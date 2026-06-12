@@ -31,48 +31,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
-
-// ADD SHOPIFY CRYPTO BITS
-//const crypto = require('crypto');
-
-
-
-function verifyShopifyProxy(req) { 
-  console.log("verifyShopifyProxy: IN");
-  
-  const { signature } = req.qurey;
-  console.log("verifyShopifyProxy: signature",signature);
-  
-  const map = Object.assign({},req.qurey);
-  console.log("verifyShopifyProxy: map",map);
-  
-  delete map['signature'];
-  const message = qs.stringify(map);
-  
-
-  const secret = process.env.SHOPIFY_APP_SECRET;
-
-  const digest = crypto
-    .createHmac('sha256', secret)
-    .update(message)
-    .digest('hex');
-
-  console.log("Message:", message);
-  console.log("Digest:   ", digest);
-  console.log("Signature:", signature);
-  console.log("Secret length:", secret.length); // should be 38
-  console.log("Secret first 8:", secret.substring(0, 8)); // should be shpss_d1
-
-return digest !== secret;
-/****
-  return crypto.timingSafeEqual(
-    Buffer.from(digest, 'hex'),
-    Buffer.from(signature, 'hex')
-  );
-  ***/
-}
-
-// ADD SHOPIFY CRYPTO BITS....
 // GOOGLE BITS
 //const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
@@ -830,18 +788,14 @@ app.post(
   "/generate-preview",
   upload.fields([{ name: "image", maxCount: 1 }]),
   async (req, res) => {
-  // Add to both your POST and GET routes at the top:
-    console.log("verifyShopifyProxy(req) ",req);
-  //
- // Add this at the very top
-  console.log("Raw query string:", req.url);
-  console.log("req.query keys:", Object.keys(req.query).sort());
-  console.log("Full req.query:", JSON.stringify(req.query));
+// Add to POST /generate-preview
+const ts = process.env.ts;
+if (req.headers['ts'] !== ts) {
+  return res.status(403).json({ error: 'Forbidden' });
+}
+
+    
   
-  //
-  if (!verifyShopifyProxy(req)) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
 
     try {
       const imageFile = req.files?.image?.[0];
@@ -925,8 +879,9 @@ app.post(
 // GET - poll for job status
 app.get("/generate-preview", async (req, res) => {
 
-// Add to both your POST and GET routes at the top:
-if (!verifyShopifyProxy(req)) {
+// Add to POST /generate-preview
+const ts = process.env.ts;
+if (req.headers['ts'] !== ts) {
   return res.status(403).json({ error: 'Forbidden' });
 }
 
