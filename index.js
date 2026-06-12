@@ -989,7 +989,7 @@ if (req.headers['ts'] !== ts) {
   });
   
 const prompt = `Analyze this image for safety violations. Check for:
-1. Nudity or sexually explicit content.
+1. Nudity or sexually explicit content, be really strict.
 2. Abuse, harassment, or hate speech.
 3. Violence, gore, or physical harm.
 
