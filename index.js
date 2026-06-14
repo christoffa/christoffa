@@ -816,7 +816,8 @@ if (req.headers['ts'] !== ts) {
         return res.status(400).json({ error: "Missing image" });
       }
       const text = req.body?.text;//THIS WILL PASS BACK THE P{OSITION OF HEARING LOSS INDIVIDUALS IE 1 or 2 or 1,2,3 or all
-
+      console.log("req ",req);   
+          
       const jobId = `job_${Date.now()}`;
       jobs[jobId] = { status: "processing"
                     };
@@ -836,7 +837,6 @@ if (req.headers['ts'] !== ts) {
           );
           
           //IF WE HAVE text THEY THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
-          console.log("text ",text,text.length);   
           if(text.length === 0){
             // Moderation
             jobs[jobId] = { Message: "Moderating your uploaded image" };
