@@ -855,9 +855,13 @@ if (req.headers['ts'] !== ts) {
             console.warn("Warning: low quality photo — cartoon results may vary");
           }
           
-          if  (analysis.hearing_aid_count === 0){
+          if  (analysis.hearing_aid_count === 0
+              && analysis.people_count !== 1){
                 console.log("No hearing aids detected: ");
-                jobs[jobId] = { status: "info", Message: "Sorry I was unable to detect anyone with hearing loss in your image, I can build a better image if I know who has hearing loss, from Left to Right say 1,2 or 4 etc." };
+                jobs[jobId] = { status: "info",
+                                Message: "Sorry I was unable to detect anyone with hearing loss in your image, I can build a better image if I know who has hearing loss, from Left to Right say 1,2 or 4 etc.",
+                                people_count: analysis.people_count
+                              };
                 return;
           }
           
