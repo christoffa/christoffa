@@ -829,6 +829,12 @@ if (req.headers['ts'] !== ts) {
         try {
           const imageBuffer = imageFile.buffer;
           const imageBase64 = imageBuffer.toString("base64");
+          // Upload to Cloudinary
+          const imageUpload = await cloudinary.uploader.upload(
+            `data:image/png;base64,${imageBase64}`,
+            { folder: "toffa/faces" }
+          );
+          
           //IF WE HAVE text THEY THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
           if(text.length === 0){
             // Moderation
@@ -840,11 +846,7 @@ if (req.headers['ts'] !== ts) {
               return;
             }
             /*********************************************************************/
-            // Upload to Cloudinary
-            const imageUpload = await cloudinary.uploader.upload(
-              `data:image/png;base64,${imageBase64}`,
-              { folder: "toffa/faces" }
-            );
+            
   
             // Analyse
             jobs[jobId] = { status: "success", Message: "Analysing your uploaded image" };
