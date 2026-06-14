@@ -836,8 +836,8 @@ if (req.headers['ts'] !== ts) {
             { folder: "toffa/faces" }
           );
           
-          //IF WE HAVE text THEY THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
-          if(text.length === 0){
+          //IF WE HAVE text THEN THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
+          if(text === "object PointerEvent"){//object PointerEvent
             // Moderation
             jobs[jobId] = { Message: "Moderating your uploaded image" };
               
