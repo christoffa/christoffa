@@ -553,7 +553,7 @@ const imageBuffer = imageFile.buffer;//req.file.buffer;
   
   if  (analysis.hearing_aid_count === 0){
   console.log("No hearing aids detected: ");
-        return res.status(200).json({"success": false, Message: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image? from Left to Right say 1,2 or 4 etc." });
+        return res.status(200).json({"success": false, Message: "unable to detect anyone with hearing loss in image, please tell me who has hearing loss in this image?" });
   }
 //}//END OF SECOND PASS
 // Step 3: Build dynamic prompts
@@ -811,6 +811,7 @@ if (req.headers['ts'] !== ts) {
       if (!imageFile) {
         return res.status(400).json({ error: "Missing image" });
       }
+      const text = req.body?.text;//THIS WILL PASS BACK THE P{OSITION OF HEARING LOSS INDIVIDUALS IE 1 or 2 or 1,2,3 or all
 
       const jobId = `job_${Date.now()}`;
       jobs[jobId] = { status: "processing"
@@ -824,49 +825,51 @@ if (req.headers['ts'] !== ts) {
         try {
           const imageBuffer = imageFile.buffer;
           const imageBase64 = imageBuffer.toString("base64");
-          // Moderation
-          jobs[jobId] = { Message: "Moderating your uploaded image" };
+          //IF WE HAVE text THEY THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
+          if(text.length === 0){
+            // Moderation
+            jobs[jobId] = { Message: "Moderating your uploaded image" };
+              
+            const moderateResponse = await moderateImage(imageBuffer);
+            if (!moderateResponse.success || !moderateResponse.data.overall_safe) {
+              jobs[jobId] = { status: "failed", Message: "Your uploaded image failed moderation" };
+              return;
+            }
+            /*********************************************************************/
+            // Upload to Cloudinary
+            const imageUpload = await cloudinary.uploader.upload(
+              `data:image/png;base64,${imageBase64}`,
+              { folder: "toffa/faces" }
+            );
+  
+            // Analyse
+            jobs[jobId] = { status: "success", Message: "Analysing your uploaded image" };
             
-          const moderateResponse = await moderateImage(imageBuffer);
-          if (!moderateResponse.success || !moderateResponse.data.overall_safe) {
-            jobs[jobId] = { status: "failed", Message: "Your uploaded image failed moderation" };
-            return;
+            const analysis = await analysePhoto(imageBuffer);
+  
+            
+            //TODO
+            //IF CANNOT IDENTIFY HEARING LOSS INDIVIDUAL(S) REQUEST MORE INFO
+            console.log("Detected " + analysis.people_count + " person(s)"); 
+            console.log("Detected " + analysis.hearing_aid_count + " Hearing aid(s)"); 
+            console.log("Photo quality: ",analysis.photo_quality);
+            
+            if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
+              console.warn("Warning: low quality photo — cartoon results may vary");
+            }
+            
+            if  (analysis.hearing_aid_count === 0
+                && analysis.people_count !== 1){
+                  console.log("No hearing aids detected: ");
+                  jobs[jobId] = { status: "info",
+                                  Message: "Sorry I was unable to detect anyone with hearing loss in your image, I can build a better image if I know who has hearing loss?",
+                                  people_count: analysis.people_count
+                                };
+                  return;
+            }
+            
+            
           }
-          /*********************************************************************/
-          // Upload to Cloudinary
-          const imageUpload = await cloudinary.uploader.upload(
-            `data:image/png;base64,${imageBase64}`,
-            { folder: "toffa/faces" }
-          );
-
-          // Analyse
-          jobs[jobId] = { status: "success", Message: "Analysing your uploaded image" };
-          
-          const analysis = await analysePhoto(imageBuffer);
-
-          
-          //TODO
-          //IF CANNOT IDENTIFY HEARING LOSS INDIVIDUAL(S) REQUEST MORE INFO
-          console.log("Detected " + analysis.people_count + " person(s)"); 
-          console.log("Detected " + analysis.hearing_aid_count + " Hearing aid(s)"); 
-          console.log("Photo quality: ",analysis.photo_quality);
-          
-          if (["blurry", "partially_obscured"].includes(analysis.photo_quality)) {
-            console.warn("Warning: low quality photo — cartoon results may vary");
-          }
-          
-          if  (analysis.hearing_aid_count === 0
-              && analysis.people_count !== 1){
-                console.log("No hearing aids detected: ");
-                jobs[jobId] = { status: "info",
-                                Message: "Sorry I was unable to detect anyone with hearing loss in your image, I can build a better image if I know who has hearing loss, from Left to Right say 1,2 or 4 etc.",
-                                people_count: analysis.people_count
-                              };
-                return;
-          }
-          
-          
-          
           const prompt = await buildCartoonPrompt(analysis, 1);
 
           // Download uploaded image for OpenAI
