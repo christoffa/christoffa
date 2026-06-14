@@ -837,7 +837,7 @@ if (req.headers['ts'] !== ts) {
           );
           
           //IF WE HAVE text THEN THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
-          if(text === "object PointerEvent"){//object PointerEvent
+          if(text === "[object PointerEvent]"){//object PointerEvent
             // Moderation
             jobs[jobId] = { Message: "Moderating your uploaded image" };
               
