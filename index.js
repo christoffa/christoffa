@@ -836,6 +836,7 @@ if (req.headers['ts'] !== ts) {
           );
           
           //IF WE HAVE text THEY THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
+          console.log("text ",text,text.length);   
           if(text.length === 0){
             // Moderation
             jobs[jobId] = { Message: "Moderating your uploaded image" };
