@@ -195,7 +195,9 @@ return {
 
 // ─── Build dynamic cartoon prompt ────────────────────────────────────────────
 /*******************************************************************************/
-function buildCartoonPrompt(analysis, instance) { //CALL 3 times for different joke
+//function buildCartoonPrompt(analysis, instance) { //CALL 3 times for different joke
+function buildCartoonPrompt(HearingAidInfo, instance) { //CALL 3 times for different joke
+/*******************************************************************  
 const { people, people_count: count, mood = "happy" } = analysis;
 const descriptions = people.map(p => {
 const parts = [];
@@ -240,6 +242,8 @@ return parts.join(", ");
 
 const peopleStr = descriptions.join(" and "); 
 const plural = count !== 1 ? "s" : "";
+*****************************************************************/
+
 /*
 IMPORTANT:
 - Preserve the exact facial features, likeness, and identity of the people
@@ -859,7 +863,7 @@ if (req.headers['ts'] !== ts) {
             }
             
             if  (analysis.hearing_aid_count === 0
-                && analysis.people_count !== 1){
+                && analysis.people_count > 1){
                   console.log("No hearing aids detected: ");
                   jobs[jobId] = { status: "info",
                                   Message: "Sorry I was unable to detect anyone with hearing loss in your image, I can build a better image if I know who has hearing loss?",
@@ -870,7 +874,8 @@ if (req.headers['ts'] !== ts) {
             
             
           }
-          const prompt = await buildCartoonPrompt(analysis, 1);
+          //const prompt = await buildCartoonPrompt(analysis, 1);
+          const prompt = await buildCartoonPrompt(text, 1);
 
           // Download uploaded image for OpenAI
           const response2 = await fetch(imageUpload.url);
