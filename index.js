@@ -881,6 +881,7 @@ if (req.headers['ts'] !== ts) {
   
 
     try {
+      let analysis = {};
       const imageFile = req.files?.image?.[0];
       if (!imageFile) {
         return res.status(400).json({ error: "Missing image" });
@@ -920,10 +921,13 @@ if (req.headers['ts'] !== ts) {
             
   
             // Analyse
-            jobs[jobId] = { status: "success", Message: "Analysing your uploaded image" };
+            analysis = await analysePhoto(imageBuffer);
+            jobs[jobId] = { 
+                          status: "success", 
+                          Message: "Analysing your uploaded image" 
+                        };
             
-            const analysis = await analysePhoto(imageBuffer);
-  
+            
             
             //TODO
             //IF CANNOT IDENTIFY HEARING LOSS INDIVIDUAL(S) REQUEST MORE INFO
@@ -949,7 +953,7 @@ if (req.headers['ts'] !== ts) {
           }
           else {// USER PASSED INFO ABOUT HEARING LOSS PEOPLE SO UPDATE analysis
 
-            updateAnalysis(analysis, text);
+            updateAnalysis( analysis, text);
 
           }
           const prompt = await buildCartoonPrompt(analysis, 1);
