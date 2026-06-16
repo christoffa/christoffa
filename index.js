@@ -42,8 +42,35 @@ const genai = new GoogleGenerativeAI(process.env.GEM_API_KEY);
 /****************************************************************************/
 async function analysePhoto(imageBuffer) {
   const model = genai.getGenerativeModel({ model: "gemini-3-flash-preview" });
+/** UPDATED STRUCT
+{
+"hearing_aid_count": 1,
+"people_count": 4,
+"hearing_loss_wearers": [1, 3],
+"hearing_loss_source": "user_confirmed",
+"needs_hearing_loss_confirmation": false,
+"people": [
+{
+"person_id": 1,
+"gender": "male",
+"age_group": "middle_aged",
+  "hearing_loss": {
+    "has_hearing_loss": true,
+    "source": "user_confirmed"
+  },
 
-  const prompt = `Analyse this photo carefully scaning from left to right and return a JSON object.
+  "hearing_aid": {
+    "present": false,
+    "type": null,
+    "ear": null,
+    "detection_confidence": 0.0
+  }
+}
+]
+}
+
+**/
+const prompt = `Analyse this photo carefully scaning from left to right and return a JSON object.
 Be precise and concise. If you cannot determine something, use null.
 Return ONLY valid JSON, no explanation, no markdown, no code blocks.
 Only mark hearing_aid.present as true if you can see clear mechanical or electronic hardware (tubing, casing, or a processor).
@@ -51,17 +78,18 @@ if you are not 100% certain, you MUST use false and set notable_features to "No 
 {
   "hearing_aid_count": <integer>,
   "people_count": <integer>,
+  "hearing_loss_wearers": [],
+  "hearing_loss_source": "<user_confirmed|ai_confirmed|unknown>",
+  "needs_hearing_loss_confirmation": <true|false>,
   "people": [
     {
       "person_id": <integer starting at 1>,
       "gender": "<male|female|unknown>",
       "age_group": "<child|teenager|young_adult|middle_aged|elderly>",
-      //"hair_colour": "<black|brown|blonde|red|grey|white|bald|unknown>",
-      //"hair_length": "<bald|short|medium|long>",
-      //"hair_style": "<straight|curly|wavy|afro|unknown>",
-      //"facial_hair": "<none|stubble|beard|moustache|unknown>",
-      //"glasses": <true|false>,
-      //"skin_tone": "<very_light|light|medium|olive|dark|very_dark>",
+      "hearing_loss": {
+      "has_hearing_loss": <true|false>,
+      "source": "<user_confirmed|ai_confirmed|unknown>"
+      },
       "hearing_aid": {
         "present": <true|false>,
         "type": "<behind_ear|in_ear|cochlear_implant|unknown|BAHA|non-visable|null>",
@@ -110,6 +138,45 @@ return getFallbackAnalysis();
   } 
 }//  END async function analysePhoto(imageBuffer)
 
+/*** ─── updateAnalysis with hearinAidInfo ─────────────────────────────────────────
+****  hearinAidInfo is a string of like 
+1 = first (leftmoat user has hearing device)
+1,2  first and second user has hearing device
+1,3,4 first, third and forth  users has hearing device
+all All users have hearing deivce
+************************************************************************************/
+function updateAnalysis(analysis),hearingAidInfo{
+/*************************** STRUCTURE
+{
+  "hearing_aid_count": <integer>,
+  "people_count": <integer>,
+  "people": [
+    {
+      "person_id": <integer starting at 1>,
+      "gender": "<male|female|unknown>",
+      "age_group": "<child|teenager|young_adult|middle_aged|elderly>",
+      //"hair_colour": "<black|brown|blonde|red|grey|white|bald|unknown>",
+      //"hair_length": "<bald|short|medium|long>",
+      //"hair_style": "<straight|curly|wavy|afro|unknown>",
+      //"facial_hair": "<none|stubble|beard|moustache|unknown>",
+      //"glasses": <true|false>,
+      //"skin_tone": "<very_light|light|medium|olive|dark|very_dark>",
+      "hearing_aid": {
+        "present": <true|false>,
+        "type": "<behind_ear|in_ear|cochlear_implant|unknown|BAHA|non-visable|null>",
+        "ear": "<left|right|both|unknown|null>",
+        "detection_confidence": <float 0.0 to 1.0> 
+      },
+      "notable_features": "<string describing any distinctive features or null>"
+    }
+  ],
+  "setting": "<indoor|outdoor|unknown>",
+  "mood": "<happy|serious|neutral|laughing|unknown>",
+  "photo_quality": "<good|low_light|blurry|partially_obscured>"
+}
+
+**************************************/
+}
 
 // ─── Validate and fill safe defaults ─────────────────────────────────────────
 /************************************************************************/
@@ -118,23 +185,24 @@ const personDefaults = {
 person_id: 1,
 gender: "unknown",
 age_group: "young_adult",
-//hair_colour: "unknown",
-//hair_length: "short",
-//hair_style: "unknown",
-//facial_hair: "none",
-//glasses: false,
-//skin_tone: "medium",
 hearing_aid: {
   present: false,
   type: null,
   ear: null
 },
+hearing_loss: {
+    has_hearing_loss: false,
+    source: "unknown"
+     },
 notable_features: null  
 };
 
 const topDefaults = {
 hearing_aid_count: 0,
 people_count: 1,
+hearing_loss_wearers: [],
+hearing_loss_source: "unknown",
+needs_hearing_loss_confirmation: false, 
 people: [],
 setting: "unknown",
 mood: "happy",
@@ -153,6 +221,10 @@ merged.hearing_aid = {
   present: person.hearing_aid?.present ?? false,
   type: person.hearing_aid?.type ?? null,
   ear: person.hearing_aid?.ear ?? null
+};
+  merged.hearing_loss = { 
+  has_hearing_loss: person.hearing_loss?.has_hearing_loss ?? false,
+  has_hearing_loss: person.hearing_loss?.has_hearing_loss ?? null,
 };
 return merged;
   
@@ -173,17 +245,15 @@ function getFallbackAnalysis() {
 return {
   hearing_aid_count: 0,
   people_count: 1,
+  hearing_loss_wearers: [],
+  hearing_loss_source: "unknown",
+  needs_hearing_loss_confirmation: false,
   people: [{
   person_id: 1,
   gender: "unknown",
   age_group: "young_adult",
-  //hair_colour: "unknown",
-  //hair_length: "short",
-  //hair_style: "unknown",
-  //facial_hair: "none",
-  //glasses: false,
-  //skin_tone: "medium",
   hearing_aid: { present: false, type: null, ear: null },
+  hearing_loss: {has_hearing_loss: false, source: "unknown"},
   notable_features: null
   }],
   setting: "unknown",
@@ -195,9 +265,7 @@ return {
 
 // ─── Build dynamic cartoon prompt ────────────────────────────────────────────
 /*******************************************************************************/
-//function buildCartoonPrompt(analysis, instance) { //CALL 3 times for different joke
-function buildCartoonPrompt(HearingAidInfo, instance) { //CALL 3 times for different joke
-/*******************************************************************  
+function buildCartoonPrompt(analysis, instance) { //CALL 3 times for different joke//function buildCartoonPrompt(HearingAidInfo, instance) { //CALL 3 times for different joke
 const { people, people_count: count, mood = "happy" } = analysis;
 const descriptions = people.map(p => {
 const parts = [];
@@ -232,7 +300,9 @@ if (ha.present) {
   const haEar = ha.ear && ha.ear !== "unknown" ? ` on ${ha.ear} ear` : "";
   parts.push(`wearing ${haType}${haEar}`);
 }
-
+//Hearing loss  hearing_loss: {has_hearing_loss: false, source: "unknown"},
+if (p.hearing_loss) parts.push(p.hearing_loss);
+  
 // Notable features
 if (p.notable_features) parts.push(p.notable_features);
 
@@ -242,7 +312,6 @@ return parts.join(", ");
 
 const peopleStr = descriptions.join(" and "); 
 const plural = count !== 1 ? "s" : "";
-*****************************************************************/
 
 /*
 IMPORTANT:
@@ -252,7 +321,7 @@ IMPORTANT:
 - Output image square 1:1
 - Make it a light, playful hearing-loss joke with clean composition.
 */
-
+//NEED A JOKE ENGINE THAT STREERED BY PASSED analysis 
 let Joke = "";
 switch (instance){
   case 1:
@@ -877,9 +946,13 @@ if (req.headers['ts'] !== ts) {
             
             
           }
-          //const prompt = await buildCartoonPrompt(analysis, 1);
-          const prompt = await buildCartoonPrompt(text, 1);
+          else {// USER PASSED INFO ABOUT HEARING LOSS PEOPLE SO UPDATE analysis
 
+            this.Update(analysis);
+
+          }
+          const prompt = await buildCartoonPrompt(analysis, 1);
+          
           // Download uploaded image for OpenAI
           const response2 = await fetch(imageUpload.url);
           const arrayBuffer = await response2.arrayBuffer();
