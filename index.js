@@ -145,7 +145,7 @@ return getFallbackAnalysis();
 1,3,4 first, third and forth  users has hearing device
 all All users have hearing deivce
 ************************************************************************************/
-function updateAnalysis(analysis),hearingAidInfo{
+function updateAnalysis(analysis, hearingAidInfo){
 /*************************** STRUCTURE
 {
   "hearing_aid_count": <integer>,
