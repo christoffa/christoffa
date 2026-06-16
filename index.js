@@ -887,7 +887,7 @@ if (req.headers['ts'] !== ts) {
         return res.status(400).json({ error: "Missing image" });
       }
       const text = req.body?.text;//THIS WILL PASS BACK THE P{OSITION OF HEARING LOSS INDIVIDUALS IE 1 or 2 or 1,2,3 or all
-      console.log("req ",req);   
+      console.log("req >>>>>>>>>>>",req);   
 
       const jobId = req.query.job_id  === null ? req.query.job_id : `job_${Date.now()}`;
           
