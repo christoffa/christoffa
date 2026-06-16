@@ -892,8 +892,8 @@ if (req.headers['ts'] !== ts) {
       //const jobId = req.query.job_id  === null ? req.query.job_id : `job_${Date.now()}`;
           
       const jobId = `job_${Date.now()}`;
-      //jobs[jobId] = { status: "processing"};
-      jobs[jobId].status = "processing";
+      jobs[jobId] = { status: "processing"};
+      //jobs[jobId].status = "processing";
 
       // Return job_id IMMEDIATELY before any async work
       res.status(200).json({ success: true, job_id: jobId });
