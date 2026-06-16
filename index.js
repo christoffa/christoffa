@@ -881,17 +881,19 @@ if (req.headers['ts'] !== ts) {
   
 
     try {
-      let analysis = {};
+      //let analysis = {};
       const imageFile = req.files?.image?.[0];
       if (!imageFile) {
         return res.status(400).json({ error: "Missing image" });
       }
       const text = req.body?.text;//THIS WILL PASS BACK THE P{OSITION OF HEARING LOSS INDIVIDUALS IE 1 or 2 or 1,2,3 or all
       console.log("req ",req);   
+
+      const jobId = req.query.job_id  === null ? 'req.query.job_id : `job_${Date.now()}`;
           
-      const jobId = `job_${Date.now()}`;
-      jobs[jobId] = { status: "processing"
-                    };
+      //const jobId = `job_${Date.now()}`;
+      //jobs[jobId] = { status: "processing"};
+      jobs[jobId].status = "processing";
 
       // Return job_id IMMEDIATELY before any async work
       res.status(200).json({ success: true, job_id: jobId });
@@ -910,8 +912,9 @@ if (req.headers['ts'] !== ts) {
           //IF WE HAVE text THEN THIS IS SECOND PASS, NO NEED TO MoDERATE OR ANALYSE
           if(text === "[object PointerEvent]"){//object PointerEvent
             // Moderation
-            jobs[jobId] = { Message: "Moderating your uploaded image" };
-              
+            //jobs[jobId] = { Message: "Moderating your uploaded image" };
+            jobs[jobId].Message = "Moderating your uploaded image";
+  
             const moderateResponse = await moderateImage(imageBuffer);
             if (!moderateResponse.success || !moderateResponse.data.overall_safe) {
               jobs[jobId] = { status: "failed", Message: "Your uploaded image failed moderation" };
@@ -921,8 +924,9 @@ if (req.headers['ts'] !== ts) {
             
   
             // Analyse
-            analysis = await analysePhoto(imageBuffer);
+            let analysis = await analysePhoto(imageBuffer);
             jobs[jobId] = { 
+                          analysis: analysis,
                           status: "success", 
                           Message: "Analysing your uploaded image" 
                         };
@@ -944,7 +948,7 @@ if (req.headers['ts'] !== ts) {
                   console.log("No hearing aids detected: ");
                   jobs[jobId] = { status: "info",
                                   Message: "Sorry I was unable to detect anyone with hearing loss in your image, I can build a better image if I know who has hearing loss?",
-                                  people_count: analysis.people_count
+                                  analysis: analysis
                                 };
                   return;
             }
@@ -953,10 +957,10 @@ if (req.headers['ts'] !== ts) {
           }
           else {// USER PASSED INFO ABOUT HEARING LOSS PEOPLE SO UPDATE analysis
 
-            updateAnalysis( analysis, text);
+            updateAnalysis( jobs[jobId].analysis, text);
 
           }
-          const prompt = await buildCartoonPrompt(analysis, 1);
+          const prompt = await buildCartoonPrompt(jobs[jobId].analysis, 1);
           
           // Download uploaded image for OpenAI
           const response2 = await fetch(imageUpload.url);
@@ -964,7 +968,7 @@ if (req.headers['ts'] !== ts) {
           const imageFile2 = await toFile(Buffer.from(arrayBuffer), "family-photo.jpg", {
             type: "image/jpeg",
           });
-          jobs[jobId] = {  status: "success", Message: "Building your sample images" };
+          jobs[jobId] = {  status: "success", Message: "Building your sample images", analysis: analysis };
           
           // OpenAI generation (the slow part)
           const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -979,7 +983,7 @@ if (req.headers['ts'] !== ts) {
           // Upload results to Cloudinary
           const images = await uploadMultipleToCloudinary3(response.data, jobId);
           if (!images) {
-            jobs[jobId] = { status: "failed", Message: "Upload failed" };
+            jobs[jobId] = { status: "failed", Message: "Upload failed", analysis: analysis };
             return;
           }
 
