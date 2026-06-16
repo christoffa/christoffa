@@ -891,7 +891,7 @@ if (req.headers['ts'] !== ts) {
 
       //const jobId = req.query.job_id  === null ? req.query.job_id : `job_${Date.now()}`;
           
-    /const jobId = `job_${Date.now()}`;
+      const jobId = `job_${Date.now()}`;
       //jobs[jobId] = { status: "processing"};
       jobs[jobId].status = "processing";
 
