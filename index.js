@@ -146,6 +146,7 @@ return getFallbackAnalysis();
 all All users have hearing deivce
 ************************************************************************************/
 function updateAnalysis(analysis, hearingAidInfo){
+ console.log("updateAnalysis - ",hearingAidInfo); 
 /*************************** STRUCTURE
 {
   "hearing_aid_count": <integer>,
@@ -948,7 +949,7 @@ if (req.headers['ts'] !== ts) {
           }
           else {// USER PASSED INFO ABOUT HEARING LOSS PEOPLE SO UPDATE analysis
 
-            this.Update(analysis);
+            this.updateAnalysis(analysis, text);
 
           }
           const prompt = await buildCartoonPrompt(analysis, 1);
