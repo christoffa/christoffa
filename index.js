@@ -949,7 +949,7 @@ if (req.headers['ts'] !== ts) {
           }
           else {// USER PASSED INFO ABOUT HEARING LOSS PEOPLE SO UPDATE analysis
 
-            this.updateAnalysis(analysis, text);
+            updateAnalysis(analysis, text);
 
           }
           const prompt = await buildCartoonPrompt(analysis, 1);
