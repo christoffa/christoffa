@@ -18,6 +18,7 @@ import { writeFile } from 'fs';
 import crypto from "crypto";
 import qs from "querystring";
 
+import path = from "path";
 let progreesMessage = "";
 
 //DEPLOY ISUES
@@ -577,7 +578,7 @@ app.get("/", (req, res) => {
 });
 
 
-const path = require('path');
+
 
 app.get('/baha', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'baha-2026.html'));
