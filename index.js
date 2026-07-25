@@ -27,6 +27,7 @@ let progreesMessage = "";
 //const upload = multer({ storage: multer.memoryStorage() }); 
 //const sharp = require("sharp");
 
+
 const app = express();
 //
 cloudinary.config({
@@ -560,6 +561,7 @@ app.use(cors({
 }));
 */
 app.use(express.json({ limit: "10mb" }));
+app.use(express.static('public'));
 
 /*****************************************************/
 const uploadImage = async (base64) => {
