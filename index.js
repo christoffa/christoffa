@@ -581,7 +581,7 @@ app.get("/", (req, res) => {
 
 
 app.get('/baha', (req, res) => {
-    res.sendFile('/BAHA_User_Group_2026.html'); 
+    res.sendFile('/BAHA_User_Group_2026'); 
 });
 
 /*************************************************************/
