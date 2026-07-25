@@ -581,7 +581,14 @@ app.get("/", (req, res) => {
 
 
 app.get('/baha', (req, res) => {
-    res.sendFile('/BAHA_User_Group_2026'); 
+
+//import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+  
+    res.sendFile(path.join(__dirname, 'public', 'BAHA_User_Group_2026.html'));
 });
 
 /*************************************************************/
