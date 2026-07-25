@@ -581,7 +581,7 @@ app.get("/", (req, res) => {
 
 
 app.get('/baha', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'baha-2026.html'));
+    res.sendFile('baha-2026.html');
 });
 
 /*************************************************************/
