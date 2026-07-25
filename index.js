@@ -576,45 +576,11 @@ app.get("/", (req, res) => {
   res.send("Toffa backend is running 🚀");
 });
 
-app.get("BAHA", (req, res) => {
 
-  res.send("BAHA User Group logo
-West Midlands Bone Anchored Hearing Aid – User Group
+const path = require('path');
 
-Meeting Dates for 2026:
-
-Venue: The Tettenhall Wood Institute
-Time: 2:30pm – 4:30pm
-Wednesday 18th February 2026
-Wednesday 13th May 2026
-Wednesday 19th August 2026
-Wednesday 25th November 2026
-These meetings are arranged by a voluntary committee who are all BAHA recipients. There may be a representative from the Audiology department present, however this cannot be guaranteed on every occasion. Parking is free; although spaces are limited. Please feel free to bring a friend or family member with you to the session. Cost of admission is £1.00 per person, refreshments are included.
-
-A raffle is generally held during the meeting to raise funds; any donations would be greatly appreciated. A ‘battery Service’ will also be available. Please bring your White ID cards should you wish to use the service.
-
-Any queries please contact Audiology on Tel: 01902 44055 Alternatively please contact via email: rwh-tr.baha-audiology@nhs.net
-
-Full address : Tettenhall Wood Institute, Wood Road, Wolverhampton, WV6 8NF
-
-Tettenhall Wood Institute
-Website: tettenhallwoodinstitute.org
-
-The TW Institute is located at the traffic lights on the corner of the crossroads off School Road, Wood Road, Mount Road & Church Road/The Holloway in Tettenhall Wood.
-
-Bus routes:
-
-No 1 bus (via the Tettenhall Road).
-
-No 10, 10a, 10b (via the Compton Road).
-
-No 62,62a (via Tettenhall)
-
-A public car park is located next to The Institute accessed from School Road. There is an alternative car park further down on the other side of School Road behind the row of shops.
-
-To access the building press number 4 on the keypad and wait for the door to be released by a committee member. The room is upstairs, accessible by the stairs or a lift. Toilets are downstairs.
-
-Map showing Tettenhall Wood Institute");
+app.get('/baha', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'baha-2026.html'));
 });
 
 /*************************************************************/
