@@ -18,7 +18,7 @@ import { writeFile } from 'fs';
 import crypto from "crypto";
 import qs from "querystring";
 
-import path = from "path";
+import path from "path";
 let progreesMessage = "";
 
 //DEPLOY ISUES
